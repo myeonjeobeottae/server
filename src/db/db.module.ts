@@ -1,16 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { DbService } from './db.service';
-import { DbController } from './db.controller';
-import dbConfig from 'src/config/db.config';
-
+import { databaseProviders } from './db.provider';
 @Module({
-  imports: [ConfigModule.forFeature(dbConfig)],
-  providers: [
-    DbService,
-    { provide: 'DATA_SOURCE', useValue: dbService.dataSource },
-  ],
-  controllers: [DbController],
-  exports: [DbService],
+  providers: [...databaseProviders],
+  exports: [...databaseProviders],
 })
 export class DbModule {}
