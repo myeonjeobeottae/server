@@ -1,0 +1,56 @@
+name: Deploy
+
+on:
+ push:
+  branches:
+   - main
+
+env:
+ S3_BUCKET_NAME: mjat-bucket
+ RESOURCE_PATH: ./src/main/resources/application.yaml
+ CODE_DEPLOY_APPLICATION_NAME: mjat-code-deploy
+ CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: mjat-server
+
+jobs:
+ build:
+  runs-on: ubuntu-latest
+  steps:
+   # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+   - uses: actions/checkout@v3
+
+   # Runs a single command using the runners shell
+   - name: Check Node
+     run: node -v
+     
+   - name: Install dependencies
+     run: yarn install // 8
+
+   - name: Test unit
+     run: yarn test // 9
+
+   - name: build
+     run: yarn build
+
+   - name : zip create
+     run : zip -r ./$GITHUB_SHA.zip .
+     shell : bash 
+     
+   - name: Configure AWS credentials
+     uses: aws-actions/configure-aws-credentials@v1
+     with: 
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      aws-region: ${{ secrets.AWS_REGION }} 
+      
+   - name: Upload to S3
+     env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+     run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip  s3://mjat-bucket/$GITHUB_SHA.zip
+     
+   - name: Deploy
+     run: aws deploy create-deployment
+      --application-name mjat-code-deploy
+      --deployment-config-name CodeDeployDefault.AllAtOnce
+      --deployment-group-name mjat-server
+      --s3-location bucket=mjat-bucket,key=$GITHUB_SHA.zip,bundleType=zip
