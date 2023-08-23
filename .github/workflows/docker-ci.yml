@@ -1,4 +1,13 @@
-name: Github Actions
+# 이 워크플로는 GitHub에서 인증되지 않은 작업을 사용합니다.
+# 작업은 타사에서 제공하며
+# 별도의 서비스 약관, 개인정보처리방침, 지원 설명서에서 규정됩니다.
+# 참조하세요.
+
+# 커밋 SHA에 작업을 고정하는 것이 좋습니다.
+# 최신 버전을 얻으려면 SHA를 업데이트해야 합니다.
+# 태그 또는 분기를 참조할 수도 있지만 경고 없이 작업이 변경될 수 있습니다.
+
+name: Publish Docker image
 
 on:
   push:
@@ -8,32 +17,30 @@ on:
       - '**'
 
 jobs:
-  build:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Docker meta
-        id: docker_meta
-        uses: crazy-max/ghaction-docker-meta@v1
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
-          images: teichae/node
-          tag-semver: |
-            {{version}}
-            {{major}}.{{minor}}
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
-        uses: docker/build-push-action@v2
+          images: my-docker-hub-namespace/my-docker-hub-repository
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64
           push: true
-          tags: ${{ steps.docker_meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
