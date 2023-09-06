@@ -51,6 +51,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd project_dir
-            docker-compose down # 기존 컨테이너 중지
-            docker-compose pull # 이미지 업데이트
-            docker-compose up --force-recreate --build -d # 컨테이너 다시 실행
+            docker-compose down 
+            docker-compose pull 
+            docker-compose up --force-recreate --build -d
