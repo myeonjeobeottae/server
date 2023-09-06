@@ -51,7 +51,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            cd project_dir
+            cd server
             docker-compose down 
             docker-compose pull 
             docker-compose up --force-recreate --build -d
