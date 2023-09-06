@@ -1,7 +1,7 @@
 import { Provider } from '@nestjs/common';
 import OpenAI from 'openai';
 import { ConfigType } from '@nestjs/config';
-import openAiConfig from '/Users/yeek0620/Desktop/mjproject/src/config/openAi.config';
+import openAiConfig from '../config/openAi.config';
 
 export const OpenAiProvider: Provider = {
   provide: 'OpenAi', // Provide an identifier for the provider

@@ -27,6 +27,7 @@
     "@nestjs/core": "^9.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^7.1.10",
     "@nestjs/typeorm": "^10.0.0",
     "class-transformer": "^0.5.1",
     "mysql2": "^3.6.0",
@@ -73,6 +74,9 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@config/(.*)$": "<rootDir>/config/$1"
+    }
   }
 }

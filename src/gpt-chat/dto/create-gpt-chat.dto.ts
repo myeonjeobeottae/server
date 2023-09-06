@@ -9,3 +9,11 @@ export class CreateQuestionDto {
   @IsNumber()
   Timeouts?: number;
 }
+
+export class CreatAnswerDto {
+  @IsString()
+  readonly question: string;
+
+  @IsString()
+  readonly answer: string;
+}
