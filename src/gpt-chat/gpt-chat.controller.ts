@@ -64,8 +64,8 @@ export class GptChatController {
     });
 
     const createFeedback = completion.choices[0].message.content;
-    res.json(createFeedback);
-    // return createFeedback;
+    // res.json(createFeedback);
+    return createFeedback;
   }
 
   @Get()
