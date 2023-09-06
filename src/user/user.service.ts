@@ -19,7 +19,7 @@ export class UserService {
   }
 
   findAll() {
-    return `This action returns all usedr`;
+    return `This action returns all usedar`;
   }
 
   findOne(id: number) {
