@@ -20,5 +20,6 @@
     "paths": {
       "@config/*": ["src/config/*"]
     }
+    // "types": ["node", "@nestjs/swagger"]
   }
 }
