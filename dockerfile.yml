@@ -4,9 +4,9 @@ WORKDIR /app
 
 COPY package* yarn.lock 
 
-COPY . .
-
 RUN yarn install --immutable --immutable-cache --check-cache
+
+COPY . .
 
 RUN yarn build
 
