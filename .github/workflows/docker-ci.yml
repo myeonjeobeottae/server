@@ -25,7 +25,7 @@ jobs:
         run: yarn run build
 
       - name: Build Docker image
-        run: docker build -t dockerfile .
+        run: docker build -f path/to/Dockerfile -t mjat-server:latest
 
       - name: Log in to Docker Hub
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}

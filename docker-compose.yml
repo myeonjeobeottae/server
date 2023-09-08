@@ -20,7 +20,7 @@ services:
     container_name: nest
     build:
       context: .
-      dockerfile: dockerfile.yml
+      dockerfile: Dockerfile
     volumes:
       - '.:/app'
     ports:
