@@ -42,8 +42,8 @@ export class GptChatController {
 
     const createQuestion = completion.choices[0].message.content;
 
-    // res.json(createQuestion);
-    return createQuestion; //테스트를 할때만 return 사용
+    res.json(createQuestion);
+    // return createQuestion; //테스트를 할때만 return 사용
   }
 
   @Post('/createFeedback')
@@ -64,8 +64,8 @@ export class GptChatController {
     });
 
     const createFeedback = completion.choices[0].message.content;
-    // res.json(createFeedback);
-    return createFeedback;
+    res.json(createFeedback);
+    // return createFeedback;
   }
 
   @Get()
