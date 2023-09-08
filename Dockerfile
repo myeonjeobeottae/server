@@ -6,7 +6,6 @@ COPY package*.json yarn.lock ./
 
 RUN yarn install --immutable --immutable-cache --check-cache
 
-
 COPY . .
 
 RUN yarn build
