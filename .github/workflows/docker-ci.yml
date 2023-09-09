@@ -16,10 +16,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
+          token: ${{ secrets.GH_DOTCOM_TOKEN }}
           node-version: '18' # 사용할 Node.js 버전을 선택합니다
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --immutable --immutable-cache --check-cache
 
       - name: Build Node.js app
         run: yarn run build
