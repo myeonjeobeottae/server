@@ -8,12 +8,15 @@ import {
   Delete,
   Inject,
   Res,
+  UseFilters,
+  BadRequestException,
 } from '@nestjs/common';
 import { GptChatService } from './gpt-chat.service';
 import { CreatAnswerDto, CreateQuestionDto } from './dto/create-gpt-chat.dto';
 import { UpdateGptChatDto } from './dto/update-gpt-chat.dto';
 import { Response } from 'express';
 import OpenAI from 'openai';
+import { AllExceptionsFilter } from 'src/http-exception/http-exception.filter';
 
 @Controller('gpt-chat')
 export class GptChatController {
