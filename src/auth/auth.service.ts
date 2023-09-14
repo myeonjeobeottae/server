@@ -18,11 +18,19 @@ export class AuthService {
   }
 
   async OAuthLogin(userInfo: KakaoUserDto) {
-    const user = this.userRepository.create(userInfo);
-    await this.userRepository.save(user);
+    const { userKaKaoId } = userInfo;
+    const userCheck = await this.findUser(userKaKaoId);
+    if (!userCheck) {
+      const user = this.userRepository.create(userInfo);
+      await this.userRepository.save(user);
+      return this.generateJWT({
+        sub: user.userKaKaoId,
+        nickname: user.nickname,
+      });
+    }
     return this.generateJWT({
-      sub: user.userKaKaoId,
-      nickname: user.nickname,
+      sub: userCheck.userKaKaoId,
+      nickname: userCheck.nickname,
     });
   }
 
