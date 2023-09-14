@@ -2,7 +2,6 @@ import { Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { UserModule } from './user/user.module';
 import appConfig from './config/app.config';
 import dbConfig from './config/db.config';
 import { DbModule } from './db/db.module';
@@ -10,18 +9,22 @@ import { GptChatModule } from './gpt-chat/gpt-chat.module';
 import openAiConfig from './config/openAi.config';
 import { APP_FILTER, APP_PIPE, HttpAdapterHost } from '@nestjs/core';
 import { AllExceptionsFilter } from './http-exception/http-exception.filter';
+import { AuthModule } from './auth/auth.module';
+import kakaoConfig from '@config/kakao.config';
+import { validate } from './env.validation';
+import jwtConfig from '@config/jwt.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
-      load: [appConfig, dbConfig, openAiConfig],
+      load: [appConfig, dbConfig, openAiConfig, kakaoConfig, jwtConfig],
+      validate,
     }),
-
-    UserModule,
     DbModule,
     GptChatModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
