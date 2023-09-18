@@ -12,6 +12,7 @@ import { AllExceptionsFilter } from './http-exception/http-exception.filter';
 import { AuthModule } from './auth/auth.module';
 import kakaoConfig from '@config/kakao.config';
 import { validate } from './env.validation';
+import { ShareModule } from './share/share.module';
 import jwtConfig from '@config/jwt.config';
 
 @Module({
@@ -25,6 +26,7 @@ import jwtConfig from '@config/jwt.config';
     DbModule,
     GptChatModule,
     AuthModule,
+    ShareModule,
   ],
   controllers: [AppController],
   providers: [

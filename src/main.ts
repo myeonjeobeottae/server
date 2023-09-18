@@ -9,7 +9,7 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import jwtConfig from '@config/jwt.config';
 import { SessionSerializer } from './auth/serializer';
-
+import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: console,
@@ -21,6 +21,10 @@ async function bootstrap() {
     .setTitle('MJAT_PROJECT')
     .setDescription('MJAT API description')
     .setVersion('1.0')
+    .addBearerAuth(
+      { type: 'http', scheme: 'Bearer', bearerFormat: 'Bearer', in: 'header' },
+      'access-token',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
@@ -48,7 +52,7 @@ async function bootstrap() {
   passport.deserializeUser(
     sessionSerializer.deserializeUser.bind(sessionSerializer),
   );
-
+  app.use(cookieParser());
   app.use(passport.initialize());
   app.use(passport.session());
   const port = config.port;

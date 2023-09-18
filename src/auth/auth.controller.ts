@@ -7,7 +7,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { KakaoAuthGuard } from './guard/kakao-auth.guard';
+import { KakaoAuthGuard } from './kakao/kakao-auth.guard';
 import { Response } from 'express';
 
 @Controller('kakao')

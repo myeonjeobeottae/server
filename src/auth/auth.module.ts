@@ -1,32 +1,17 @@
-import { ConfigModule, ConfigType } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { KakaoStrategy } from './strategy/auth.kakaoStrategy';
-import { PassportModule } from '@nestjs/passport';
+import { KakaoStrategy } from './kakao/auth.kakaoStrategy';
 import { SessionSerializer } from './serializer';
-import { KakaoAuthGuard } from './guard/kakao-auth.guard';
 import { UserProvider } from './user.provider';
 import { DbModule } from 'src/db/db.module';
-import { JwtModule } from '@nestjs/jwt';
-import jwtConfig from '@config/jwt.config';
-import { JwtStrategy } from './strategy/jwtStrategy';
+import { JwtStrategy } from './jwt/jwtStrategy';
+import { JwtAuthGuard } from './jwt/jwt-auth.guard';
+import { KakaoAuthGuard } from './kakao/kakao-auth.guard';
+import { ShareModule } from 'src/share/share.module';
 
 @Module({
-  imports: [
-    // PassportModule.register({
-    //   session: true,
-    // }),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigType<typeof jwtConfig>) => ({
-        secret: configService.secretOrKey,
-        signOptions: { expiresIn: '60s' },
-      }),
-      inject: [jwtConfig.KEY],
-    }),
-    DbModule,
-  ],
+  imports: [ShareModule, DbModule],
   controllers: [AuthController],
   providers: [
     AuthService,
@@ -34,6 +19,8 @@ import { JwtStrategy } from './strategy/jwtStrategy';
     ...UserProvider,
     SessionSerializer,
     JwtStrategy,
+    JwtAuthGuard,
+    KakaoAuthGuard,
   ],
 })
 export class AuthModule {}

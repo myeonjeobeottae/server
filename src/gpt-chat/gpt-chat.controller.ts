@@ -8,15 +8,16 @@ import {
   Delete,
   Inject,
   Res,
-  UseFilters,
-  BadRequestException,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { GptChatService } from './gpt-chat.service';
 import { CreatAnswerDto, CreateQuestionDto } from './dto/create-gpt-chat.dto';
 import { UpdateGptChatDto } from './dto/update-gpt-chat.dto';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import OpenAI from 'openai';
-import { AllExceptionsFilter } from 'src/http-exception/http-exception.filter';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
+import { ApiBearerAuth, ApiBody, ApiResponse } from '@nestjs/swagger';
 
 @Controller('gpt-chat')
 export class GptChatController {
@@ -26,13 +27,19 @@ export class GptChatController {
     private readonly gptChatService: GptChatService,
   ) {}
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: '질문 만들기 API',
+  })
   @Post('/createQustion')
+  @ApiBody({ type: CreateQuestionDto })
   async createQuestion(
     @Body() createQuestionDto: CreateQuestionDto,
     @Res() res: Response,
   ): Promise<any> {
+    // const { kak, nickname } = req.user;
     const { position, skill } = createQuestionDto;
-
     const completion = await this.openAi.chat.completions.create({
       messages: [
         {

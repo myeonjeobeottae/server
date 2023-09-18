@@ -22,6 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       if (req && req.cookies) {
         token = req.cookies['access_token'];
       }
+
       return token || ExtractJwt.fromAuthHeaderAsBearerToken()(req);
     };
     super({
