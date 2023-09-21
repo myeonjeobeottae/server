@@ -1,9 +1,13 @@
-import { IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsNumber, IsString } from 'class-validator';
 export class KakaoUserDto {
   @IsString()
   readonly email?: string;
 
   @IsString()
+  // @Transform(({ value }) => {
+  //   return Number(value);
+  // })
   readonly userKaKaoId: string;
 
   @IsString()

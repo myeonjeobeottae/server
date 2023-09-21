@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { KakaoStrategy } from './kakao/auth.kakaoStrategy';
 import { SessionSerializer } from './serializer';
-import { UserProvider } from './user.provider';
+import { AuthProvider } from './auth.provider';
 import { DbModule } from 'src/db/db.module';
 import { JwtStrategy } from './jwt/jwtStrategy';
 import { JwtAuthGuard } from './jwt/jwt-auth.guard';
@@ -16,7 +16,7 @@ import { ShareModule } from 'src/share/share.module';
   providers: [
     AuthService,
     KakaoStrategy,
-    ...UserProvider,
+    ...AuthProvider,
     SessionSerializer,
     JwtStrategy,
     JwtAuthGuard,

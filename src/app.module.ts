@@ -13,6 +13,7 @@ import { AuthModule } from './auth/auth.module';
 import kakaoConfig from '@config/kakao.config';
 import { validate } from './env.validation';
 import { ShareModule } from './share/share.module';
+import { InterviewsModule } from './interviews/interviews.module';
 import jwtConfig from '@config/jwt.config';
 
 @Module({
@@ -27,6 +28,7 @@ import jwtConfig from '@config/jwt.config';
     GptChatModule,
     AuthModule,
     ShareModule,
+    InterviewsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { GptChatController } from './gpt-chat.controller';
 import { GptChatService } from './gpt-chat.service';
 import { CreatAnswerDto, CreateQuestionDto } from './dto/create-gpt-chat.dto';
-import { response } from 'express';
+import { request, response } from 'express';
 import { OpenAiProvider } from './gpt-chat.provider';
 import { ConfigModule } from '@nestjs/config';
 import openAiConfig from '../config/openAi.config';
@@ -55,7 +55,11 @@ describe('GptChatController', () => {
           ],
         });
 
-      const res = await controller.createQuestion(createQuestion, response);
+      const res = await controller.createQuestion(
+        createQuestion,
+        request,
+        response,
+      );
 
       expect(res).toBeDefined();
       expect(res).toEqual('Sample question');

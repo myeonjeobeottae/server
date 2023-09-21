@@ -4,20 +4,19 @@ import { ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Repository } from 'typeorm';
-import { User } from '../entities/user.entity';
-export type JwtPayload = {
-  sub: string;
-  nickname: string;
-};
+import { Auth } from '../entities/auth.entity';
+import { JwtPayloadType } from '../interface/auth.interface';
+import { Request } from 'express';
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(
     @Inject(jwtConfig.KEY)
     private jwtConfigService: ConfigType<typeof jwtConfig>,
-    @Inject('USER_REPOSITORY')
-    private userRepository: Repository<User>,
+    @Inject('AUTH_REPOSITORY')
+    private authRepository: Repository<Auth>,
   ) {
-    const extractJwtFromCookie = (req) => {
+    const extractJwtFromCookie = (req: Request) => {
       let token = null;
       if (req && req.cookies) {
         token = req.cookies['access_token'];
@@ -32,12 +31,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  async validate(payload: JwtPayload) {
-    const user = await this.userRepository.findOne({
-      where: { userKaKaoId: payload.sub },
+  async validate(payload: JwtPayloadType) {
+    const user = await this.authRepository.findOne({
+      where: { userKaKaoId: payload.kakaoId },
     });
     return {
-      userKaKaoId: payload.sub,
+      userKaKaoId: payload.kakaoId,
       nickname: payload.nickname,
     };
   }

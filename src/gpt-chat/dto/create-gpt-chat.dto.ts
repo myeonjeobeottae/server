@@ -5,12 +5,24 @@ export class CreateQuestionDto {
   @IsString()
   @ApiProperty({ type: String, description: '포지션' })
   readonly position: string;
+
   @IsString()
   @ApiProperty({ type: String, description: '기술' })
   readonly skill: string;
+}
 
-  @IsNumber()
-  Timeouts?: number;
+export class CreateQuestionsDto {
+  @IsString()
+  @ApiProperty({ type: String, description: '첫번째 문제' })
+  readonly firstQuestion: string;
+
+  @IsString()
+  @ApiProperty({ type: String, description: '포지션' })
+  readonly position: string;
+
+  @IsString()
+  @ApiProperty({ type: String, description: '기술' })
+  readonly skill: string;
 }
 
 export class CreatAnswerDto {

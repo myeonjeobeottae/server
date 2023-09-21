@@ -1,41 +1,44 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { KakaoUserDto } from './dto/create-auth.dto';
 // import { UpdateAuthDto } from './dto/update-auth.dto';
-import { User } from 'src/auth/entities/user.entity';
+import { Auth } from 'src/auth/entities/auth.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { JwtPayloadType } from './interface/auth.interface';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject('USER_REPOSITORY')
-    private userRepository: Repository<User>,
+    @Inject('AUTH_REPOSITORY')
+    private authRepository: Repository<Auth>,
     private jwtService: JwtService,
   ) {}
 
-  generateJWT(payload) {
+  generateJWT(payload: JwtPayloadType) {
     return this.jwtService.sign(payload);
   }
 
   async OAuthLogin(userInfo: KakaoUserDto) {
     const { userKaKaoId } = userInfo;
+
     const userCheck = await this.findUser(userKaKaoId);
+
     if (!userCheck) {
-      const user = this.userRepository.create(userInfo);
-      await this.userRepository.save(user);
+      const user = this.authRepository.create(userInfo);
+      await this.authRepository.save(user);
       return this.generateJWT({
-        sub: user.userKaKaoId,
+        kakaoId: user.userKaKaoId,
         nickname: user.nickname,
       });
     }
     return this.generateJWT({
-      sub: userCheck.userKaKaoId,
+      kakaoId: userCheck.userKaKaoId,
       nickname: userCheck.nickname,
     });
   }
 
   async findUser(kakaoId: string) {
-    const user = await this.userRepository.findOne({
+    const user = await this.authRepository.findOne({
       where: { userKaKaoId: kakaoId },
     });
     return user;
