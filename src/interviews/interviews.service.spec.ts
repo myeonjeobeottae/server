@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { InterviewsService } from './interviews.service';
 import { Repository } from 'typeorm';
 import { Interviews } from './entities/interview.entity';
+import { ShareModule } from 'src/share/share.module';
 
 describe('InterviewsService', () => {
   let service: InterviewsService;
@@ -12,6 +13,7 @@ describe('InterviewsService', () => {
       create: jest.fn(),
     };
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ShareModule],
       providers: [
         InterviewsService,
         {

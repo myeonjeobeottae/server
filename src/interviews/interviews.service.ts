@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateInterviewDto } from './dto/create-interview.dto';
 import { UpdateInterviewDto } from './dto/update-interview.dto';
-import { interviewInfo } from './interface/interviews.interface';
+import { interviewInfo } from './model/interviews.model';
 import { Repository } from 'typeorm';
 import { Interviews } from './entities/interview.entity';
 
@@ -21,7 +21,7 @@ export class InterviewsService {
     return interview;
   }
 
-  async findAll(kakaoId: string) {
+  async findAll(kakaoId: string): Promise<CreateInterviewDto[]> {
     const findAllInterview = await this.interviewRepository.find({
       where: {
         userKakaoId: kakaoId,

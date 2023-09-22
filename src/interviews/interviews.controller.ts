@@ -19,8 +19,8 @@ import {
 import { UpdateInterviewDto } from './dto/update-interview.dto';
 import { Request, Response } from 'express';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
-import { User } from 'src/auth/interface/auth.interface';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
+import { User } from 'src/auth/model/auth.model';
 
 @Controller('interviews')
 export class InterviewsController {

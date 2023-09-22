@@ -4,7 +4,7 @@ import { KakaoUserDto } from './dto/create-auth.dto';
 import { Auth } from 'src/auth/entities/auth.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayloadType } from './interface/auth.interface';
+import { JwtPayloadType } from './model/auth.model';
 
 @Injectable()
 export class AuthService {

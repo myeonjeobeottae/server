@@ -18,7 +18,7 @@ import { Response, Request } from 'express';
 import OpenAI from 'openai';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 import { ApiBearerAuth, ApiBody, ApiResponse } from '@nestjs/swagger';
-import { User } from 'src/auth/interface/auth.interface';
+import { User } from 'src/auth/model/auth.model';
 
 @Controller('gpt-chat')
 export class GptChatController {
