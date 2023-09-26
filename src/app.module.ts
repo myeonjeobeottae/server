@@ -14,6 +14,7 @@ import kakaoConfig from '@config/kakao.config';
 import { validate } from './env.validation';
 import { ShareModule } from './share/share.module';
 import { InterviewsModule } from './interviews/interviews.module';
+import { QuestionModule } from './question/question.module';
 import jwtConfig from '@config/jwt.config';
 
 @Module({
@@ -29,6 +30,7 @@ import jwtConfig from '@config/jwt.config';
     AuthModule,
     ShareModule,
     InterviewsModule,
+    QuestionModule,
   ],
   controllers: [AppController],
   providers: [

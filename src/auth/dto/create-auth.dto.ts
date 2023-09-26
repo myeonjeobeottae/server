@@ -1,19 +1,20 @@
-import { Transform } from 'class-transformer';
-import { IsNumber, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 export class KakaoUserDto {
   @IsString()
+  @ApiProperty({ type: String, description: '이메일' })
   readonly email?: string;
 
   @IsString()
-  // @Transform(({ value }) => {
-  //   return Number(value);
-  // })
+  @ApiProperty({ type: String, description: '사용자 카카오 ID' })
   readonly userKaKaoId: string;
 
   @IsString()
+  @ApiProperty({ type: String, description: '사용자 프로필 이미지' })
   readonly image: string;
 
   @IsString()
+  @ApiProperty({ type: String, description: '사용자 닉네임' })
   readonly nickname: string;
 
   @IsString()

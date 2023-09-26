@@ -26,16 +26,16 @@ import { User } from 'src/auth/model/auth.model';
 export class InterviewsController {
   constructor(private readonly interviewsService: InterviewsService) {}
 
-  @Post('/:id')
-  saveQuestion(
-    @Body() createQuestionDto: CreateQuestionDto,
-    @Param() id: number,
-    @Query() QNo: number,
-  ) {
-    console.log(id, createQuestionDto, QNo);
+  // @Post('/:id')
+  // saveQuestion(
+  //   @Body() createQuestionDto: CreateQuestionDto,
+  //   @Param() id: number,
+  //   @Query() QNo: number,
+  // ) {
+  //   console.log(id, createQuestionDto, QNo);
 
-    // return this.interviewsService.create(createInterviewDto);
-  }
+  //   // return this.interviewsService.create(createInterviewDto);
+  // }
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
@@ -49,6 +49,9 @@ export class InterviewsController {
     const findAllInterview = await this.interviewsService.findAll(kakaoId);
     res.json(findAllInterview);
   }
+
+  //todo
+  //??인터뷰에 포함되어있는 문제들 전체 보여주기
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {

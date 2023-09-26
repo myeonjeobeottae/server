@@ -13,7 +13,6 @@ describe('InterviewsService', () => {
       create: jest.fn(),
     };
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ShareModule],
       providers: [
         InterviewsService,
         {
@@ -26,23 +25,20 @@ describe('InterviewsService', () => {
     service = module.get<InterviewsService>(InterviewsService);
   });
 
-  describe('createInterview', () => {
+  describe('interview service', () => {
     it('createInterview', async () => {
       const testEntity = { id: 1, userKakaoId: '1232131' };
       jest.spyOn(service, 'createInterview').mockResolvedValueOnce(testEntity);
       const result = await service.createInterview('1232131');
       expect(result).toEqual(testEntity);
     });
-  });
 
-  describe('findByUserInterviews', () => {
     it('userInterviewFind', async () => {
       const testEntity = { id: 1, userKakaoId: '1232131' };
       mockRepository.save.mockResolvedValueOnce(testEntity);
-      const saved = await mockRepository.save(testEntity);
+      await mockRepository.save(testEntity);
       jest.spyOn(service, 'findAll').mockResolvedValueOnce([testEntity]);
       const result = await service.findAll('1232131');
-      console.log(result);
 
       expect(result).toEqual([testEntity]);
     });

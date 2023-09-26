@@ -31,7 +31,6 @@ describe('InterviewsController', () => {
           provide: 'INTERVIEW_REPOSITORY',
           useValue: mockRepository,
         },
-        // JwtAuthGuard,
       ],
     }).compile();
 
