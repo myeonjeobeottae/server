@@ -12,10 +12,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { InterviewsService } from './interviews.service';
-import {
-  CreateInterviewDto,
-  CreateQuestionDto,
-} from './dto/create-interview.dto';
+import { CreateInterviewDto } from './dto/create-interview.dto';
 import { UpdateInterviewDto } from './dto/update-interview.dto';
 import { Request, Response } from 'express';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
