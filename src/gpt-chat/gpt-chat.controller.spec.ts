@@ -55,11 +55,7 @@ describe('GptChatController', () => {
           ],
         });
 
-      const res = await controller.createQuestion(
-        createQuestion,
-        request,
-        response,
-      );
+      const res = await controller.createQuestion(createQuestion, request);
 
       expect(res).toBeDefined();
       expect(res).toEqual('Sample question');

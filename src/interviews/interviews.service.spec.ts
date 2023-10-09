@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { InterviewsService } from './interviews.service';
 import { Repository } from 'typeorm';
 import { Interviews } from './entities/interview.entity';
-import { ShareModule } from 'src/share/share.module';
 
 describe('InterviewsService', () => {
   let service: InterviewsService;
@@ -11,6 +10,7 @@ describe('InterviewsService', () => {
     mockRepository = {
       save: jest.fn(),
       create: jest.fn(),
+      find: jest.fn(),
     };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -28,8 +28,9 @@ describe('InterviewsService', () => {
   describe('interview service', () => {
     it('createInterview', async () => {
       const testEntity = { id: 1, userKakaoId: '1232131' };
-      jest.spyOn(service, 'createInterview').mockResolvedValueOnce(testEntity);
+      jest.spyOn(mockRepository, 'save').mockResolvedValue(testEntity);
       const result = await service.createInterview('1232131');
+
       expect(result).toEqual(testEntity);
     });
 
@@ -37,7 +38,7 @@ describe('InterviewsService', () => {
       const testEntity = { id: 1, userKakaoId: '1232131' };
       mockRepository.save.mockResolvedValueOnce(testEntity);
       await mockRepository.save(testEntity);
-      jest.spyOn(service, 'findAll').mockResolvedValueOnce([testEntity]);
+      jest.spyOn(mockRepository, 'find').mockResolvedValueOnce([testEntity]);
       const result = await service.findAll('1232131');
 
       expect(result).toEqual([testEntity]);

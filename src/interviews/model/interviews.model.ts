@@ -1,3 +1,5 @@
 export interface interviewInfo {
-  userId: number;
+  userId: string;
+  position: string;
+  skill: string;
 }

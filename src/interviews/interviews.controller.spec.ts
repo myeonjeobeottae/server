@@ -1,10 +1,8 @@
-import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { Test, TestingModule } from '@nestjs/testing';
 import { InterviewsController } from './interviews.controller';
 import { InterviewsService } from './interviews.service';
 import { Repository } from 'typeorm';
 import { Interviews } from './entities/interview.entity';
-import { ShareModule } from '../share/share.module';
 import { JwtModule } from '@nestjs/jwt';
 
 describe('InterviewsController', () => {
@@ -42,9 +40,16 @@ describe('InterviewsController', () => {
   //   expect(controller).toBeDefined();
   // });
 
-  describe('findUserInterview', () => {
+  describe('interview controller', () => {
     it('userInterviewFindAll', async () => {
-      const result = [{ id: 1, userKakaoId: '123123123123' }];
+      const result = [
+        {
+          id: 1,
+          userKakaoId: '123123123123',
+          position: 'backend',
+          skill: 'node.js',
+        },
+      ];
       jest.spyOn(service, 'findAll').mockResolvedValue(result);
 
       const mockReq = {
@@ -52,13 +57,18 @@ describe('InterviewsController', () => {
           kakaoId: '1231231',
         },
       };
-      const mockRes = {
-        json: jest.fn(),
-      };
+      const mockRes = [
+        {
+          id: 1,
+          userKakaoId: '123123123123',
+          position: 'backend',
+          skill: 'node.js',
+        },
+      ];
 
-      await controller.findAll(mockRes as any, mockReq as any);
+      await controller.findAll(mockReq as any);
 
-      expect(mockRes.json).toHaveBeenCalledWith(result);
+      expect(mockRes).toHaveBeenCalledWith(result);
     });
   });
 });

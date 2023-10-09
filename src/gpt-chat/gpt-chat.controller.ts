@@ -1,3 +1,4 @@
+import { interviewInfo } from './../interviews/model/interviews.model';
 import { InterviewsService } from './../interviews/interviews.service';
 import {
   Controller,
@@ -39,7 +40,6 @@ export class GptChatController {
   async createQuestion(
     @Body() createQuestionDto: CreateQuestionDto,
     @Req() req: Request,
-    @Res() res: Response,
   ): Promise<any> {
     const { kakaoId } = req.user as User;
     if (!kakaoId) {
@@ -59,8 +59,14 @@ export class GptChatController {
     const complet = {
       content: createQuestion.choices[0].message.content,
     };
-    await this.interviewsService.createInterview(kakaoId);
-    res.json(complet);
+    const interviewInfo: interviewInfo = {
+      userId: kakaoId,
+      position,
+      skill,
+    };
+
+    await this.interviewsService.createInterview(interviewInfo);
+    return complet;
   }
 
   @ApiBearerAuth()
@@ -72,7 +78,6 @@ export class GptChatController {
   @ApiBody({ type: CreateQuestionsDto })
   async createQuestions(
     @Body() createQuestionsDto: CreateQuestionsDto,
-    @Res() res: Response,
   ): Promise<any> {
     const { firstQuestion, position, skill } = createQuestionsDto;
     const createQuestion = await this.openAi.chat.completions.create({
@@ -88,8 +93,7 @@ export class GptChatController {
     const complet = {
       content: createQuestion.choices[0].message.content,
     };
-
-    res.json(complet);
+    return complet;
   }
 
   @ApiBearerAuth()

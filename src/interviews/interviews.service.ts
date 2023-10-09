@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateInterviewDto } from './dto/create-interview.dto';
-import { UpdateInterviewDto } from './dto/update-interview.dto';
 import { interviewInfo } from './model/interviews.model';
 import { Repository } from 'typeorm';
 import { Interviews } from './entities/interview.entity';
@@ -12,13 +11,18 @@ export class InterviewsService {
     private interviewRepository: Repository<Interviews>,
   ) {}
 
-  async createInterview(userId: string): Promise<CreateInterviewDto> {
+  async createInterview(
+    interviewInfo: interviewInfo,
+  ): Promise<CreateInterviewDto> {
+    const { userId, position, skill } = interviewInfo;
     const interview = this.interviewRepository.create({
       userKakaoId: userId,
+      position,
+      skill,
     });
-    await this.interviewRepository.save(interview);
+    const findInterview = await this.interviewRepository.save(interview);
 
-    return interview;
+    return findInterview;
   }
 
   async findAll(kakaoId: string): Promise<CreateInterviewDto[]> {
@@ -28,17 +32,5 @@ export class InterviewsService {
       },
     });
     return findAllInterview;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} interview`;
-  }
-
-  update(id: number, updateInterviewDto: UpdateInterviewDto) {
-    return `This action updates a #${id} interview`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} interview`;
   }
 }

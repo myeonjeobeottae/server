@@ -3,7 +3,7 @@ import { IsNumber, IsString } from 'class-validator';
 
 export class SaveQuestionDto {
   @IsNumber()
-  @ApiProperty({ type: String, description: '면접 번호' })
+  @ApiProperty({ type: Number, description: '면접 번호' })
   interviewId: number;
 
   @IsString()

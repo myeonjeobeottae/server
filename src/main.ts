@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 import appConfig from './config/app.config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './http-exception/http-exception.filter';
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import jwtConfig from '@config/jwt.config';
@@ -34,6 +34,13 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      enableDebugMessages: true,
+      exceptionFactory(errors) {
+        const message = Object.values(errors[0].constraints);
+        throw new BadRequestException(message[0]);
+        // 예외처리 : 이렇게 해두면 어떤 인풋의 타입에러가 발생했는지를
+        // 에러 메시지를 통해 보여줍니다
+      },
     }),
   );
   SwaggerModule.setup('api', app, document);

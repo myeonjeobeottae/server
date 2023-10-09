@@ -1,4 +1,4 @@
-import { Interviews } from 'src/interviews/entities/interview.entity';
+import { Interviews } from '../../interviews/entities/interview.entity';
 import {
   Column,
   Entity,

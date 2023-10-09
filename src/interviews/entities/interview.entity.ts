@@ -7,4 +7,10 @@ export class Interviews {
 
   @Column({ name: 'user_id' })
   userKakaoId: string;
+
+  @Column()
+  skill: string;
+
+  @Column()
+  position: string;
 }

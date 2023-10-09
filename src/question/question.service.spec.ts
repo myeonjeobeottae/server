@@ -48,10 +48,10 @@ describe('QuestionService', () => {
         feedback: 'test feedback',
         time: 'test time',
       };
-
-      jest.spyOn(mockRepository, 'save').mockResolvedValue(testEntity);
+      mockRepository.save.mockResolvedValue(testEntity);
       const result = await service.saveQuestion(testQuestionInfo);
-      expect(result).toEqual(testEntity);
+
+      expect(result).toBe(testEntity);
     });
   });
 });
