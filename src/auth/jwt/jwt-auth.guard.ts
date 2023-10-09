@@ -31,7 +31,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
   validateToken(token: string) {
     const secretKey = this.jwt.secretOrKey;
-
     try {
       const verify = this.jwtService.verify(token, { secret: secretKey });
       return verify;

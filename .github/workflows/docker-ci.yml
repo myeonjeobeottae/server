@@ -34,7 +34,7 @@ jobs:
         run: yarn run build
 
       - name: Build Docker image
-        run: docker buildx build .
+        run: docker buildx build . --no-cache
 
       - name: Log in to Docker Hub
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
@@ -62,5 +62,5 @@ jobs:
           script: |
             cd server
             docker-compose down 
-            docker-compose pull 
+            docker-compose pull yisuho/mjat-server:latest
             docker-compose up --force-recreate --build -d
