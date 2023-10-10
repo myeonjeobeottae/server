@@ -10,10 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - run: ls -al
+      - uses: actions/checkout@v3
         with:
           ref: main
+      - run: cat .github/workflows/checkout.yml
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
