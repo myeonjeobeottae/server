@@ -22,6 +22,7 @@ import jwtConfig from '@config/jwt.config';
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
+      envFilePath: '.env',
       load: [appConfig, dbConfig, openAiConfig, kakaoConfig, jwtConfig],
       validate,
     }),
