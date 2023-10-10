@@ -10,12 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: ls -al
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
         with:
           ref: main
-      - run: ls -al src/
-      - run: cat .github/workflows/docker-ci.yml
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -66,5 +64,5 @@ jobs:
           script: |
             cd server
             docker-compose down 
-            docker-compose pull yisuho/mjat-server:latest
+            docker-compose pull
             docker-compose up --force-recreate --build -d
