@@ -19,6 +19,7 @@ services:
   nest-server:
     image: yisuho/mjat-server:latest
     container_name: nest
+
     # volumes:
     #   - '.:/app'
 
