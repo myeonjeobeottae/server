@@ -8,8 +8,6 @@ RUN yarn install --immutable --immutable-cache --check-cache
 
 COPY . .
 
-COPY .env .env
-
 RUN yarn build
 
 EXPOSE 3000
