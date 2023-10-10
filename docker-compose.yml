@@ -17,10 +17,8 @@ services:
       - nest-server
 
   nest-server:
+    image: yisuho/mjat-server:latest
     container_name: nest
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes:
       - '.:/app'
     ports:
