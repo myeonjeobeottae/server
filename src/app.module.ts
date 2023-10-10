@@ -11,7 +11,7 @@ import { APP_FILTER, APP_PIPE, HttpAdapterHost } from '@nestjs/core';
 import { AllExceptionsFilter } from './http-exception/http-exception.filter';
 import { AuthModule } from './auth/auth.module';
 import kakaoConfig from '@config/kakao.config';
-import { validate } from './env.validation';
+// import { validate } from './env.validation';
 import { ShareModule } from './share/share.module';
 import { InterviewsModule } from './interviews/interviews.module';
 import { QuestionModule } from './question/question.module';
@@ -23,7 +23,7 @@ import jwtConfig from '@config/jwt.config';
       cache: true,
       isGlobal: true,
       load: [appConfig, dbConfig, openAiConfig, kakaoConfig, jwtConfig],
-      validate,
+      // validate,
     }),
     DbModule,
     GptChatModule,

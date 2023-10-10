@@ -1,68 +1,71 @@
-import {
-  IsEnum,
-  IsNumber,
-  IsString,
-  validateSync,
-} from '@nestjs/class-validator';
-import { plainToInstance } from 'class-transformer';
+// import {
+//   IsEnum,
+//   IsNumber,
+//   IsString,
+//   validateSync,
+// } from '@nestjs/class-validator';
+// import { plainToInstance } from 'class-transformer';
 
-enum Enviroment {
-  Development = 'development',
-  Production = 'production',
-  Test = 'test',
-}
+// enum Enviroment {
+//   Development = 'development',
+//   Production = 'production',
+//   Test = 'test',
+// }
 
-class EnviromentVariables {
-  @IsEnum(Enviroment)
-  NODE_ENV: Enviroment;
+// class EnviromentVariables {
+//   @IsEnum(Enviroment)
+//   NODE_ENV: Enviroment;
 
-  @IsNumber()
-  PORT: number;
+//   @IsNumber()
+//   PORT: number;
 
-  @IsString()
-  HOST: string;
+//   @IsString()
+//   HOST: string;
 
-  @IsString()
-  DATABASE_HOST: string;
+//   @IsString()
+//   DATABASE_HOST: string;
 
-  @IsString()
-  DATABASE_USER: string;
+//   @IsString()
+//   DATABASE_USER: string;
 
-  @IsString()
-  DATABASE_NAME: string;
+//   @IsNumber()
+//   DATABASE_PORT: number;
 
-  @IsString()
-  DATABASE_PASSWORD: string;
+//   @IsString()
+//   DATABASE_NAME: string;
 
-  @IsString()
-  DATABASE_TYPE: string;
+//   @IsString()
+//   DATABASE_PASSWORD: string;
 
-  @IsString()
-  OPENAI_API_KEY: string;
+//   @IsString()
+//   DATABASE_TYPE: string;
 
-  @IsString()
-  OPENAI_ORGANIZATION: string;
+//   @IsString()
+//   OPENAI_API_KEY: string;
 
-  @IsString()
-  KAKAO_CLIENT_ID: string;
+//   @IsString()
+//   OPENAI_ORGANIZATION: string;
 
-  @IsString()
-  KAKAO_REDIRECTURL: string;
+//   @IsString()
+//   KAKAO_CLIENT_ID: string;
 
-  @IsString()
-  JWT_SECRET_KEY: string;
-}
+//   @IsString()
+//   KAKAO_REDIRECTURL: string;
 
-export const validate = (config: Record<string, unknown>) => {
-  const validatedConfig = plainToInstance(EnviromentVariables, config, {
-    enableImplicitConversion: true,
-  });
+//   @IsString()
+//   JWT_SECRET_KEY: string;
+// }
 
-  const errors = validateSync(validatedConfig, {
-    skipMissingProperties: false,
-  });
-  if (errors.length > 0) {
-    throw new Error(errors.toString());
-  }
-  return validatedConfig;
-};
+// export const validate = (config: Record<string, unknown>) => {
+//   const validatedConfig = plainToInstance(EnviromentVariables, config, {
+//     enableImplicitConversion: true,
+//   });
+
+//   const errors = validateSync(validatedConfig, {
+//     skipMissingProperties: false,
+//   });
+//   if (errors.length > 0) {
+//     throw new Error(errors.toString());
+//   }
+//   return validatedConfig;
+// };
