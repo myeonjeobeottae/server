@@ -15,7 +15,7 @@ jobs:
         with:
           ref: main
       - run: ls -al
-      - run: cat .github/workflows/checkout.yml
+      - run: cat .github/workflows/docker-ci.yml
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
