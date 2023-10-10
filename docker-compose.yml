@@ -19,8 +19,8 @@ services:
   nest-server:
     image: yisuho/mjat-server:latest
     container_name: nest
-    volumes:
-      - '.:/app'
+    # volumes:
+    #   - '.:/app'
     ports:
       - '3000:3000'
     environment:
