@@ -9,5 +9,6 @@ import { DbModule } from 'src/db/db.module';
   imports: [DbModule, ShareModule],
   controllers: [QuestionController],
   providers: [QuestionService, ...QuestionProvider],
+  exports: [QuestionService],
 })
 export class QuestionModule {}

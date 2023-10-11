@@ -16,6 +16,9 @@ export class Question {
   @JoinColumn({ name: 'interview_id' })
   interviewId: number;
 
+  @Column({ name: 'user_id' })
+  userKakaoId: string;
+
   @Column()
   question: string;
 

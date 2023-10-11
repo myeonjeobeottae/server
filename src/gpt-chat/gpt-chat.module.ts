@@ -5,7 +5,6 @@ import { GptChatController } from './gpt-chat.controller';
 import { OpenAiProvider } from './gpt-chat.provider';
 import { ShareModule } from 'src/share/share.module';
 import { DbModule } from 'src/db/db.module';
-import { InterviewsService } from 'src/interviews/interviews.service';
 
 @Module({
   imports: [ShareModule, DbModule, InterviewsModule],

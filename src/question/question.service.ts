@@ -2,6 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Question } from './entities/question.entity';
 import { SaveQuestionDto } from './dto/create-question.dto';
+import {
+  FindQuestionsIncludedInTheInterviewInfo,
+  FindOneQuestionInfo,
+} from './model/question.model';
 
 @Injectable()
 export class QuestionService {
@@ -12,7 +16,35 @@ export class QuestionService {
 
   async saveQuestion(questionInfo: SaveQuestionDto): Promise<Question> {
     const createQuestion = this.questionRepository.create(questionInfo);
+
     const saveQuestion = await this.questionRepository.save(createQuestion);
     return saveQuestion;
+  }
+
+  async QuestionsIncludedInTheInterview(
+    findQuestionsIncludedInTheInterviewInfo: FindQuestionsIncludedInTheInterviewInfo,
+  ): Promise<Question[]> {
+    const { interviewId, userKakaoId } =
+      findQuestionsIncludedInTheInterviewInfo;
+
+    const QuestionsIncludedInTheInterview = await this.questionRepository.find({
+      where: { interviewId, userKakaoId },
+      select: ['id', 'question', 'answer', 'feedback', 'time'],
+    });
+
+    return QuestionsIncludedInTheInterview;
+  }
+
+  async findOneQuestion(
+    findOneQuestionInfo: FindOneQuestionInfo,
+  ): Promise<Question> {
+    const { questionId, userKakaoId } = findOneQuestionInfo;
+
+    const findOneQuestion = await this.questionRepository.findOne({
+      where: { id: questionId, userKakaoId },
+      select: ['id', 'question', 'answer', 'feedback', 'time'],
+    });
+
+    return findOneQuestion;
   }
 }
