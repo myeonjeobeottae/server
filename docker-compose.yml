@@ -22,8 +22,8 @@ services:
       - .env
     container_name: nest
 
-    # volumes:
-    #   - '.:/app'
+    volumes:
+      - '.env:/app/.env'
 
     ports:
       - '3000:3000'
