@@ -27,8 +27,11 @@ export class AuthController {
       maxAge: 3600000,
       sameSite: true,
       secure: false,
+      //secure: ture,//https 할때 사용
     });
-    return res.status(HttpStatus.OK);
+
+    // return res.status(HttpStatus.OK).send();
+    return res.redirect('http://localhost:3000');
     // return res.json(token);
   }
 
