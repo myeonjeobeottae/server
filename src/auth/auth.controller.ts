@@ -28,8 +28,8 @@ export class AuthController {
       sameSite: true,
       secure: false,
     });
-    // return res.status(HttpStatus.OK);
-    return res.json(token);
+    return res.status(HttpStatus.OK);
+    // return res.json(token);
   }
 
   @Get('/status')
