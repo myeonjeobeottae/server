@@ -29,7 +29,11 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   const { httpAdapter } = app.get(HttpAdapterHost);
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://localhost:3000', // 웹 브라우저에서의 애플리케이션 주소
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   app.useGlobalPipes(
     new ValidationPipe({

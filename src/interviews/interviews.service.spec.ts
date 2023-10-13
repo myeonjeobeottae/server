@@ -27,7 +27,12 @@ describe('InterviewsService', () => {
 
   describe('interview service', () => {
     it('createInterview', async () => {
-      const testEntity = { id: 1, userKakaoId: '1232131' };
+      const testEntity = {
+        id: 1,
+        userId: '1232131',
+        position: 'dd',
+        skill: 's',
+      };
       jest.spyOn(mockRepository, 'save').mockResolvedValue(testEntity);
       const result = await service.createInterview('1232131');
 
