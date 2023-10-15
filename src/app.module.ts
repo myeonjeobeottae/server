@@ -15,6 +15,7 @@ import { validate } from './env.validation';
 import { ShareModule } from './share/share.module';
 import { InterviewsModule } from './interviews/interviews.module';
 import { QuestionModule } from './question/question.module';
+import { MessagesModule } from './messages/messages.module';
 import jwtConfig from '@config/jwt.config';
 
 @Module({
@@ -32,6 +33,7 @@ import jwtConfig from '@config/jwt.config';
     ShareModule,
     InterviewsModule,
     QuestionModule,
+    MessagesModule,
   ],
   controllers: [AppController],
   providers: [
