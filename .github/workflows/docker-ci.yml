@@ -63,6 +63,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd server
+            docker rmi $(docker images -f "dangling=true" -q)
             docker-compose down 
             docker-compose pull
             docker-compose up --force-recreate --build -d
