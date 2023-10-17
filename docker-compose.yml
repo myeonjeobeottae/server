@@ -18,6 +18,7 @@ services:
 
   nest-server:
     image: yisuho/mjat-server:latest
+
     env_file:
       - .env
     container_name: nest
