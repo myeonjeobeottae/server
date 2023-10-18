@@ -32,21 +32,32 @@ describe('InterviewsService', () => {
         userId: '1232131',
         position: 'dd',
         skill: 's',
+        userKakaoId: 'kakao id',
       };
-      jest.spyOn(mockRepository, 'save').mockResolvedValue(testEntity);
-      const result = await service.createInterview('1232131');
+      mockRepository.save.mockResolvedValue(testEntity);
+      const interviewInfo = {
+        userId: '123123',
+        position: 'dd',
+        skill: 's',
+      };
+      const result = await service.createInterview(interviewInfo);
 
       expect(result).toEqual(testEntity);
     });
 
     it('userInterviewFind', async () => {
-      const testEntity = { id: 1, userKakaoId: '1232131' };
-      mockRepository.save.mockResolvedValueOnce(testEntity);
-      await mockRepository.save(testEntity);
-      jest.spyOn(mockRepository, 'find').mockResolvedValueOnce([testEntity]);
+      const testEntity = [
+        {
+          id: 1,
+          userKakaoId: '1232131',
+          position: 'dd',
+          skill: 's',
+        },
+      ];
+      mockRepository.find.mockResolvedValueOnce(testEntity);
       const result = await service.findAll('1232131');
 
-      expect(result).toEqual([testEntity]);
+      expect(result).toEqual(testEntity);
     });
   });
 });

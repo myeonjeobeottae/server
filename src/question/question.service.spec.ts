@@ -11,6 +11,7 @@ describe('QuestionService', () => {
     mockRepository = {
       save: jest.fn(),
       create: jest.fn(),
+      find: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -39,6 +40,7 @@ describe('QuestionService', () => {
         answer: 'test answer',
         feedback: 'test feedback',
         time: 'test time',
+        userKakaoId: 'kakao id',
       };
 
       const testQuestionInfo = {
@@ -52,6 +54,47 @@ describe('QuestionService', () => {
       const result = await service.saveQuestion(testQuestionInfo);
 
       expect(result).toBe(testEntity);
+    });
+
+    it('Questions included in the interview', async () => {
+      const testEntity = [
+        {
+          id: 1,
+          interviewId: 1,
+          question: 'test',
+          answer: 'test answer',
+          feedback: 'test feedback',
+          time: 'test time',
+          userKakaoId: 'kakao id',
+        },
+        {
+          id: 2,
+          interviewId: 1,
+          question: 'test',
+          answer: 'test answer',
+          feedback: 'test feedback',
+          time: 'test time',
+          userKakaoId: 'kakao id',
+        },
+      ];
+
+      const findQuestionsIncludedInTheInterviewInfo = {
+        interviewId: 1,
+        userKakaoId: 'kakao id',
+      };
+
+      const testResult = mockRepository.find.mockResolvedValue(testEntity);
+      const result = await service.QuestionsIncludedInTheInterview(
+        findQuestionsIncludedInTheInterviewInfo,
+      );
+
+      console.log(testResult);
+
+      expect(result).toBe(testEntity);
+      expect(testResult).toHaveBeenCalledWith({
+        where: { interviewId: 1, userKakaoId: 'kakao id' },
+        select: ['id', 'question', 'answer', 'feedback', 'time'],
+      });
     });
   });
 });

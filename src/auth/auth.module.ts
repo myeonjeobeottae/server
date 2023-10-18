@@ -9,9 +9,19 @@ import { JwtStrategy } from './jwt/jwtStrategy';
 import { JwtAuthGuard } from './jwt/jwt-auth.guard';
 import { KakaoAuthGuard } from './kakao/kakao-auth.guard';
 import { ShareModule } from 'src/share/share.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [ShareModule, DbModule],
+  imports: [
+    ShareModule,
+    DbModule,
+    HttpModule.registerAsync({
+      useFactory: () => ({
+        timeout: 5000,
+        maxRedirects: 5,
+      }),
+    }),
+  ],
   controllers: [AuthController],
   providers: [
     AuthService,
