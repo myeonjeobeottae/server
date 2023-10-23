@@ -52,13 +52,13 @@ async function bootstrap() {
     }),
   );
 
-  const sessionSerializer = app.get(SessionSerializer);
-  passport.serializeUser(
-    sessionSerializer.serializeUser.bind(sessionSerializer),
-  );
-  passport.deserializeUser(
-    sessionSerializer.deserializeUser.bind(sessionSerializer),
-  );
+  // const sessionSerializer = app.get(SessionSerializer);
+  // passport.serializeUser(
+  //   sessionSerializer.serializeUser.bind(sessionSerializer),
+  // );
+  // passport.deserializeUser(
+  //   sessionSerializer.deserializeUser.bind(sessionSerializer),
+  // );
   app.use(cookieParser());
   app.use(passport.initialize());
   app.use(passport.session());

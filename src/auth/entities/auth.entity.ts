@@ -6,7 +6,7 @@ export class Auth {
   id: number;
 
   @Column({ name: 'kakao_id' })
-  userKaKaoId: string;
+  userKakaoId: string;
 
   @Column()
   nickname: string;
