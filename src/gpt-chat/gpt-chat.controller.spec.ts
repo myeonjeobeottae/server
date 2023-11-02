@@ -92,6 +92,7 @@ describe('GptChatController', () => {
       const res = await controller.creatFeedback(CreatAnswer, response);
 
       expect(res).toBeDefined();
+
       expect(res).toEqual('Sample feedback');
     });
   });
