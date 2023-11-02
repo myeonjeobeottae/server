@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, Query } from '@nestjs/common';
+import { Controller, Get, Req, Res, Query, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 
@@ -6,13 +6,13 @@ import { Response } from 'express';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get('/login')
-  async kakaoLogin(@Res() res: Response) {
-    const kakaoUrl = await this.authService.kakaoLogin();
-    res.redirect(kakaoUrl);
-  }
+  // @Get('/login')
+  // async kakaoLogin(@Res() res: Response) {
+  //   const kakaoUrl = await this.authService.kakaoLogin();
+  //   res.redirect(kakaoUrl);
+  // }
 
-  @Get('/redirect')
+  @Post('/redirect')
   async kakaoOauthCallback(@Query('code') code: string) {
     const result = await this.authService.kakaoSignUp(code);
     return result;

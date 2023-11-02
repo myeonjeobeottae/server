@@ -27,11 +27,11 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  async kakaoLogin(): Promise<any> {
-    const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${this.kakaoOauthConfig.kakaoClientId}&redirect_uri=${this.kakaoOauthConfig.kakaoRedirectUrl}`;
+  // async kakaoLogin(): Promise<any> {
+  //   const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${this.kakaoOauthConfig.kakaoClientId}&redirect_uri=${this.kakaoOauthConfig.kakaoRedirectUrl}`;
 
-    return kakaoUrl;
-  }
+  //   return kakaoUrl;
+  // }
 
   //이게 redirect로 왔을때 실행되는 함수
   async kakaoSignUp(code: string): Promise<any> {
