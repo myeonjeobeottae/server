@@ -29,7 +29,12 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   const { httpAdapter } = app.get(HttpAdapterHost);
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://localhost:3001',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  });
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   app.useGlobalPipes(
     new ValidationPipe({

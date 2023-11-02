@@ -8,6 +8,7 @@ import {
   Res,
   UseGuards,
   Req,
+  Get,
 } from '@nestjs/common';
 import { GptChatService } from './gpt-chat.service';
 import {
@@ -130,4 +131,9 @@ export class GptChatController {
       }
     }
   }
+
+  // @Get()
+  // async getHtml(@Body('url') url: string): Promise<any> {
+  // const getHtml = await
+  // }
 }
