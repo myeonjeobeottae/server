@@ -27,11 +27,11 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  // async kakaoLogin(): Promise<any> {
-  //   const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${this.kakaoOauthConfig.kakaoClientId}&redirect_uri=${this.kakaoOauthConfig.kakaoRedirectUrl}`;
+  async kakaoLogin(): Promise<any> {
+    const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${this.kakaoOauthConfig.kakaoClientId}&redirect_uri=${this.kakaoOauthConfig.kakaoRedirectUrl}`;
 
-  //   return kakaoUrl;
-  // }
+    return kakaoUrl;
+  }
 
   //이게 redirect로 왔을때 실행되는 함수
   async kakaoSignUp(code: string): Promise<any> {
@@ -53,8 +53,7 @@ export class AuthService {
     );
     const tokenInfo = kakaoTokenInfo.data;
 
-    const { access_token } = tokenInfo;
-
+    const { access_token, refresh_token } = tokenInfo;
     const kakaoTokenUserInfo = await this.httpService.axiosRef.get(
       `https://kapi.kakao.com/v2/user/me`,
       {
@@ -80,15 +79,33 @@ export class AuthService {
       const user = this.authRepository.create(userInfo);
 
       await this.authRepository.save(user);
-      return this.generateJWT({
+
+      const userToken = this.generateJWT({
         kakaoId: user.userKakaoId,
         nickname: user.nickname,
       });
+
+      const userData = {
+        accessToken: userToken,
+        refreshToken: refresh_token,
+        userNickname: userInfo.nickname,
+        userImage: userInfo.image,
+      };
+      return userData;
     }
-    return this.generateJWT({
+
+    const userToken = this.generateJWT({
       kakaoId: userCheck.userKakaoId,
       nickname: userCheck.nickname,
     });
+
+    const userData = {
+      accessToken: userToken,
+      refreshToken: refresh_token,
+      userNickname: userInfo.nickname,
+      userImage: userInfo.image,
+    };
+    return userData;
   }
 
   async findUser(kakaoId: string) {

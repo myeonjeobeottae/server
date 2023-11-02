@@ -27,7 +27,4 @@ export class Question {
 
   @Column()
   feedback: string;
-
-  @Column()
-  time: string;
 }

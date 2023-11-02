@@ -33,12 +33,14 @@ describe('InterviewsService', () => {
         position: 'dd',
         skill: 's',
         userKakaoId: 'kakao id',
+        time: 1,
       };
       mockRepository.save.mockResolvedValue(testEntity);
       const interviewInfo = {
         userId: '123123',
         position: 'dd',
         skill: 's',
+        time: 2,
       };
       const result = await service.createInterview(interviewInfo);
 
@@ -52,6 +54,7 @@ describe('InterviewsService', () => {
           userKakaoId: '1232131',
           position: 'dd',
           skill: 's',
+          time: 1,
         },
       ];
       mockRepository.find.mockResolvedValueOnce(testEntity);

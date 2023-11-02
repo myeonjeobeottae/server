@@ -33,6 +33,7 @@ describe('GptChatController', () => {
       const createQuestion: CreateQuestionDto = {
         position: 'frontend',
         skill: 'JavaScript',
+        time: 1,
       };
 
       // OpenAI API 호출을 모의(Mock)화하여 원하는 응답을 반환하도록 설정

@@ -17,8 +17,4 @@ export class SaveQuestionDto {
   @IsString()
   @ApiProperty({ type: String, description: '피드백' })
   feedback: string;
-
-  @IsString()
-  @ApiProperty({ type: String, description: '문제당 시간' })
-  time: string;
 }

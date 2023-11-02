@@ -14,11 +14,12 @@ export class InterviewsService {
   async createInterview(
     interviewInfo: interviewInfo,
   ): Promise<CreateInterviewDto> {
-    const { userId, position, skill } = interviewInfo;
+    const { userId, position, skill, time } = interviewInfo;
     const interview = this.interviewRepository.create({
       userKakaoId: userId,
       position,
       skill,
+      time,
     });
     const findInterview = await this.interviewRepository.save(interview);
 

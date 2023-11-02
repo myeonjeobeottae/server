@@ -1,5 +1,6 @@
 import { IsString } from '@nestjs/class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber } from 'class-validator';
 
 export class CreateQuestionDto {
   @IsString()
@@ -9,6 +10,10 @@ export class CreateQuestionDto {
   @IsString()
   @ApiProperty({ type: String, description: '기술' })
   readonly skill: string;
+
+  @IsNumber()
+  @ApiProperty({ type: String, description: '제한시간' })
+  readonly time: number;
 }
 
 export class CreateQuestionsDto {

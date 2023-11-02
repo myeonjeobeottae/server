@@ -29,7 +29,7 @@ export class QuestionService {
 
     const QuestionsIncludedInTheInterview = await this.questionRepository.find({
       where: { interviewId, userKakaoId },
-      select: ['id', 'question', 'answer', 'feedback', 'time'],
+      select: ['id', 'question', 'answer', 'feedback'],
     });
 
     return QuestionsIncludedInTheInterview;
@@ -42,7 +42,7 @@ export class QuestionService {
 
     const findOneQuestion = await this.questionRepository.findOne({
       where: { id: questionId, userKakaoId },
-      select: ['id', 'question', 'answer', 'feedback', 'time'],
+      select: ['id', 'question', 'answer', 'feedback'],
     });
 
     return findOneQuestion;

@@ -6,16 +6,16 @@ import { Response } from 'express';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // @Get('/login')
-  // async kakaoLogin(@Res() res: Response) {
-  //   const kakaoUrl = await this.authService.kakaoLogin();
-  //   res.redirect(kakaoUrl);
-  // }
+  @Get('/login')
+  async kakaoLogin(@Res() res: Response) {
+    const kakaoUrl = await this.authService.kakaoLogin();
+    res.redirect(kakaoUrl);
+  }
 
   @Get('/redirect')
   async kakaoOauthCallback(@Query('code') code: string) {
-    const result = await this.authService.kakaoSignUp(code);
-    return result;
+    const userInfo = await this.authService.kakaoSignUp(code);
+    return userInfo;
   }
 
   @Get('/status')

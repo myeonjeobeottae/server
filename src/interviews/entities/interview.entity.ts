@@ -13,4 +13,7 @@ export class Interviews {
 
   @Column()
   position: string;
+
+  @Column()
+  time: number;
 }

@@ -33,13 +33,12 @@ export class QuestionController {
     const { kakaoId } = req.user as User;
     console.log(kakaoId);
 
-    const { interviewId, question, answer, feedback, time } = saveQuestionDto;
+    const { interviewId, question, answer, feedback } = saveQuestionDto;
     const saveQuestionInfo: SaveQuestionInfo = {
       interviewId,
       question,
       answer,
       feedback,
-      time,
       userKakaoId: kakaoId,
     };
 

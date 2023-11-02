@@ -45,7 +45,7 @@ export class GptChatController {
     if (!kakaoId) {
       throw new Error();
     }
-    const { position, skill } = createQuestionDto;
+    const { position, skill, time } = createQuestionDto;
     const createQuestion = await this.openAi.chat.completions.create({
       messages: [
         {
@@ -63,6 +63,7 @@ export class GptChatController {
       userId: kakaoId,
       position,
       skill,
+      time,
     };
 
     await this.interviewsService.createInterview(interviewInfo);

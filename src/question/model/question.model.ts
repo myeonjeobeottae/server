@@ -4,7 +4,6 @@ export interface SaveQuestionInfo {
   question: string;
   answer: string;
   feedback: string;
-  time: string;
 }
 
 export interface FindQuestionsIncludedInTheInterviewInfo {
