@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Req,
@@ -69,7 +71,7 @@ export class QuestionController {
       findOneQuestionInfo,
     );
     if (!findOneQuestion) {
-      throw new Error('해당 문제가 없습니다.');
+      throw new HttpException('해당 문제가 없습니다.', HttpStatus.BAD_REQUEST);
     }
     return findOneQuestion;
   }

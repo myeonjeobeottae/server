@@ -4,6 +4,7 @@ import {
   IsString,
   validateSync,
 } from '@nestjs/class-validator';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 
 enum Enviroment {
@@ -65,7 +66,7 @@ export const validate = (config: Record<string, unknown>) => {
     skipMissingProperties: false,
   });
   if (errors.length > 0) {
-    throw new Error(errors.toString());
+    throw new HttpException(errors.toString(), HttpStatus.BAD_REQUEST);
   }
   return validatedConfig;
 };
