@@ -1,6 +1,7 @@
 import { Controller, Get, Req, Res, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
+import { UserInfo } from './model/auth.model';
 
 @Controller('kakao')
 export class AuthController {
@@ -13,9 +14,20 @@ export class AuthController {
   }
 
   @Get('/redirect')
-  async kakaoOauthCallback(@Query('code') code: string) {
-    const userInfo = await this.authService.kakaoSignUp(code);
-    return userInfo;
+  async kakaoOauthCallback(@Query('code') code: string, @Res() res: Response) {
+    const userData = await this.authService.kakaoSignUp(code);
+    const { accessToken, refreshToken, userNickname, userImage } = userData;
+    res.cookie('access_token', accessToken, {
+      maxAge: 3600000,
+      sameSite: 'none',
+      secure: true,
+    });
+    const userInfo: UserInfo = {
+      refreshToken,
+      userNickname,
+      userImage,
+    };
+    res.send(userInfo);
   }
 
   @Get('/status')

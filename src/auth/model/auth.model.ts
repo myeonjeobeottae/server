@@ -8,9 +8,19 @@ export interface User extends JwtPayloadType {
   exp: number;
 }
 
-export interface UserData {
-  accessToken: string;
+export interface UserInfo {
   refreshToken: string;
   userNickname: string;
   userImage: string;
+}
+
+export interface UserData extends UserInfo {
+  accessToken: string;
+}
+
+export interface UserKakaoInfo {
+  userKakaoId: string;
+  nickname: string;
+  image: string;
+  email: string;
 }

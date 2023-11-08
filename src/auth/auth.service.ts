@@ -1,16 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { KakaoUserDto } from './dto/create-auth.dto';
-// import { UpdateAuthDto } from './dto/update-auth.dto';
 import { Auth } from 'src/auth/entities/auth.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayloadType } from './model/auth.model';
+import { JwtPayloadType, UserData, UserKakaoInfo } from './model/auth.model';
 import { HttpService } from '@nestjs/axios';
-import { AxiosResponse } from 'axios';
-import { Observable, firstValueFrom } from 'rxjs';
 import kakaoConfig from '@config/kakao.config';
 import { ConfigType } from '@nestjs/config';
-import { resolve } from 'path';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +29,7 @@ export class AuthService {
   }
 
   //이게 redirect로 왔을때 실행되는 함수
-  async kakaoSignUp(code: string): Promise<any> {
+  async kakaoSignUp(code: string): Promise<UserData> {
     const kakaoTokenInfo = await this.httpService.axiosRef.post(
       `https://kauth.kakao.com/oauth/token`,
       {
@@ -66,7 +61,7 @@ export class AuthService {
 
     const userKakaoId = kakaoTokenUserInfo.data.id;
 
-    const userInfo = {
+    const userKakaoInfo: UserKakaoInfo = {
       userKakaoId,
       nickname: kakaoTokenUserInfo.data.kakao_account.profile.nickname,
       image: kakaoTokenUserInfo.data.kakao_account.profile.profile_image_url,
@@ -76,7 +71,7 @@ export class AuthService {
     const userCheck = await this.findUser(userKakaoId);
 
     if (!userCheck) {
-      const user = this.authRepository.create(userInfo);
+      const user = this.authRepository.create(userKakaoInfo);
 
       await this.authRepository.save(user);
 
@@ -85,11 +80,11 @@ export class AuthService {
         nickname: user.nickname,
       });
 
-      const userData = {
+      const userData: UserData = {
         accessToken: userToken,
         refreshToken: refresh_token,
-        userNickname: userInfo.nickname,
-        userImage: userInfo.image,
+        userNickname: userKakaoInfo.nickname,
+        userImage: userKakaoInfo.image,
       };
       return userData;
     }
@@ -99,11 +94,11 @@ export class AuthService {
       nickname: userCheck.nickname,
     });
 
-    const userData = {
+    const userData: UserData = {
       accessToken: userToken,
       refreshToken: refresh_token,
-      userNickname: userInfo.nickname,
-      userImage: userInfo.image,
+      userNickname: userKakaoInfo.nickname,
+      userImage: userKakaoInfo.image,
     };
     return userData;
   }
