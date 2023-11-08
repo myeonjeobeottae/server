@@ -9,6 +9,8 @@ import {
   UseGuards,
   Req,
   Get,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { GptChatService } from './gpt-chat.service';
 import {
@@ -44,7 +46,7 @@ export class GptChatController {
   ): Promise<any> {
     const { kakaoId } = req.user as User;
     if (!kakaoId) {
-      throw new Error();
+      throw new HttpException('Kakao ID is missing', HttpStatus.BAD_REQUEST);
     }
     const { position, skill, time } = createQuestionDto;
     const createQuestion = await this.openAi.chat.completions.create({
@@ -132,8 +134,9 @@ export class GptChatController {
     }
   }
 
-  // @Get()
-  // async getHtml(@Body('url') url: string): Promise<any> {
-  // const getHtml = await
-  // }
+  @Get()
+  async getHtml(@Body('url') url: string): Promise<any> {
+    const getHtml = await this.gptChatService.wontedGetHtml(url);
+    return getHtml;
+  }
 }
