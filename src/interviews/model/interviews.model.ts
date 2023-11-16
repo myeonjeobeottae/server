@@ -4,3 +4,7 @@ export interface interviewInfo {
   skill: string;
   time: number;
 }
+
+export interface UrlInfo {
+  wantedUrl: string;
+}

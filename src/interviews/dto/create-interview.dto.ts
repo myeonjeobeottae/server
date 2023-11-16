@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateInterviewDto {
   @IsString()
@@ -13,6 +13,10 @@ export class CreateInterviewDto {
   @IsString()
   @ApiProperty({ type: String, description: '기술' })
   skill: string;
+
+  @IsNumber()
+  @ApiProperty({ type: String, description: '제한 시간' })
+  time: number;
 }
 
 // export class CreateQuestionDto {

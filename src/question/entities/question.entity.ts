@@ -12,8 +12,7 @@ export class Question {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Interviews)
-  @JoinColumn({ name: 'interview_id' })
+  @Column({ name: 'interview_id' })
   interviewId: number;
 
   @Column({ name: 'user_id' })
@@ -27,4 +26,10 @@ export class Question {
 
   @Column()
   feedback: string;
+
+  @Column({ name: 'posting_URL' })
+  postingUrl: string;
+
+  @Column()
+  type: string;
 }

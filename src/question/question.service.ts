@@ -27,12 +27,12 @@ export class QuestionService {
     const { interviewId, userKakaoId } =
       findQuestionsIncludedInTheInterviewInfo;
 
-    const QuestionsIncludedInTheInterview = await this.questionRepository.find({
-      where: { interviewId, userKakaoId },
+    const questionsIncludedInTheInterview = await this.questionRepository.find({
       select: ['id', 'question', 'answer', 'feedback'],
+      where: { interviewId: interviewId, userKakaoId: userKakaoId },
     });
 
-    return QuestionsIncludedInTheInterview;
+    return questionsIncludedInTheInterview;
   }
 
   async findOneQuestion(
