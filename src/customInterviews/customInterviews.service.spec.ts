@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { InterviewsService } from './interviews.service';
+import { CustomInterviewsService } from './customInterviews.service';
 import { Repository } from 'typeorm';
-import { Interviews } from './entities/interview.entity';
+import { CustomInterviews } from './entities/customInterviews.entity';
 
 describe('InterviewsService', () => {
-  let service: InterviewsService;
-  let mockRepository: jest.Mocked<Partial<Repository<Interviews>>>;
+  let service: CustomInterviewsService;
+  let mockRepository: jest.Mocked<Partial<Repository<CustomInterviews>>>;
   beforeEach(async () => {
     mockRepository = {
       save: jest.fn(),
@@ -14,7 +14,7 @@ describe('InterviewsService', () => {
     };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        InterviewsService,
+        CustomInterviewsService,
         {
           provide: 'INTERVIEW_REPOSITORY',
           useValue: mockRepository,
@@ -22,14 +22,13 @@ describe('InterviewsService', () => {
       ],
     }).compile();
 
-    service = module.get<InterviewsService>(InterviewsService);
+    service = module.get<CustomInterviewsService>(CustomInterviewsService);
   });
 
   describe('interview service', () => {
     it('createInterview', async () => {
       const testEntity = {
         id: 1,
-        userId: '1232131',
         position: 'dd',
         skill: 's',
         userKakaoId: 'kakao id',
@@ -37,12 +36,12 @@ describe('InterviewsService', () => {
       };
       mockRepository.save.mockResolvedValue(testEntity);
       const interviewInfo = {
-        userId: '123123',
+        userKakaoId: '123123',
         position: 'dd',
         skill: 's',
         time: 2,
       };
-      const result = await service.createInterview(interviewInfo);
+      const result = await service.saveInterview(interviewInfo);
 
       expect(result).toEqual(testEntity);
     });

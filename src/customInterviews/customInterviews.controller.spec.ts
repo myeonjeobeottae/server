@@ -1,14 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { InterviewsController } from './interviews.controller';
-import { InterviewsService } from './interviews.service';
+import { CustomInterviewsController } from './customInterviews.controller';
+import { CustomInterviewsService } from './customInterviews.service';
 import { Repository } from 'typeorm';
-import { Interviews } from './entities/interview.entity';
+import { CustomInterviews } from './entities/customInterviews.entity';
 import { JwtModule } from '@nestjs/jwt';
 
 describe('InterviewsController', () => {
-  let controller: InterviewsController;
-  let service: InterviewsService;
-  let mockRepository: jest.Mocked<Partial<Repository<Interviews>>>;
+  let controller: CustomInterviewsController;
+  let service: CustomInterviewsService;
+  let mockRepository: jest.Mocked<Partial<Repository<CustomInterviews>>>;
 
   beforeEach(async () => {
     jest.mock('../auth/jwt/jwt-auth.guard', () => ({
@@ -22,9 +22,9 @@ describe('InterviewsController', () => {
           signOptions: { expiresIn: '1h' },
         }),
       ],
-      controllers: [InterviewsController],
+      controllers: [CustomInterviewsController],
       providers: [
-        InterviewsService,
+        CustomInterviewsService,
         {
           provide: 'INTERVIEW_REPOSITORY',
           useValue: mockRepository,
@@ -32,8 +32,10 @@ describe('InterviewsController', () => {
       ],
     }).compile();
 
-    controller = module.get<InterviewsController>(InterviewsController);
-    service = module.get<InterviewsService>(InterviewsService);
+    controller = module.get<CustomInterviewsController>(
+      CustomInterviewsController,
+    );
+    service = module.get<CustomInterviewsService>(CustomInterviewsService);
   });
 
   // it('should be defined', () => {
@@ -48,6 +50,7 @@ describe('InterviewsController', () => {
           userKakaoId: '123123123123',
           position: 'backend',
           skill: 'node.js',
+          time: 2,
         },
       ];
       jest.spyOn(service, 'findAll').mockResolvedValue(result);

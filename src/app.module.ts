@@ -13,9 +13,11 @@ import { AuthModule } from './auth/auth.module';
 import kakaoConfig from '@config/kakao.config';
 import { validate } from './env.validation';
 import { ShareModule } from './share/share.module';
-import { InterviewsModule } from './interviews/interviews.module';
+import { CustomInterviewsModule } from './customInterviews/customInterviews.module';
 import { QuestionModule } from './question/question.module';
 import jwtConfig from '@config/jwt.config';
+import { CareeresQuestionModule } from './careers-question/careers-question.module';
+import { CareeresInterviewsModule } from './careers-interviews/careeres-interviews.module';
 
 @Module({
   imports: [
@@ -30,8 +32,10 @@ import jwtConfig from '@config/jwt.config';
     GptChatModule,
     AuthModule,
     ShareModule,
-    InterviewsModule,
+    CustomInterviewsModule,
     QuestionModule,
+    CareeresQuestionModule,
+    CareeresInterviewsModule,
   ],
   controllers: [AppController],
   providers: [

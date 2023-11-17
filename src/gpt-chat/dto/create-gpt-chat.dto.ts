@@ -10,24 +10,12 @@ export class CreateQuestionDto {
   @IsString()
   @ApiProperty({ type: String, description: '기술' })
   readonly skill: string;
-
-  @IsNumber()
-  @ApiProperty({ type: String, description: '제한시간' })
-  readonly time: number;
 }
 
-export class CreateQuestionsDto {
+export class CreateQuestionsDto extends CreateQuestionDto {
   @IsString()
   @ApiProperty({ type: String, description: '첫번째 문제' })
   readonly firstQuestion: string;
-
-  @IsString()
-  @ApiProperty({ type: String, description: '포지션' })
-  readonly position: string;
-
-  @IsString()
-  @ApiProperty({ type: String, description: '기술' })
-  readonly skill: string;
 }
 
 export class CreatAnswerDto {

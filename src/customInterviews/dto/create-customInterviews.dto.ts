@@ -1,11 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
-export class CreateInterviewDto {
-  @IsString()
-  @ApiProperty({ type: String, description: '사용자 ID' })
-  userKakaoId: string;
-
+export class CustomInterviewDto {
   @IsString()
   @ApiProperty({ type: String, description: '직무' })
   position: string;
@@ -18,10 +14,3 @@ export class CreateInterviewDto {
   @ApiProperty({ type: String, description: '제한 시간' })
   time: number;
 }
-
-// export class CreateQuestionDto {
-//   userkakoId: string;
-//   question: string;
-//   answer: string;
-//   feedback: string;
-// }

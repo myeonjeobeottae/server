@@ -31,7 +31,7 @@ export class QuestionController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
-    description: '사용자 인터뷰 저장',
+    description: '사용자 커스텀 문제 피드백',
   })
   @Post('/feedback')
   async creatQuestionFeedback(
