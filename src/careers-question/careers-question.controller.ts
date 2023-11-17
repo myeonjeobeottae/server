@@ -9,7 +9,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { CareersQuestionService } from './posting-question.service';
+import { CareersQuestionService } from './careers-question.service';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 import { SaveQuestionDto } from 'src/question/dto/create-question.dto';
@@ -38,7 +38,6 @@ export class CareersQuestionController {
     @Req() req: Request,
   ): Promise<SaveQuestionDto> {
     const { kakaoId } = req.user as User;
-    console.log(kakaoId);
 
     const { interviewId, question, answer, feedback } = saveQuestionDto;
     const saveQuestionInfo: SaveQuestionInfo = {
@@ -59,7 +58,7 @@ export class CareersQuestionController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
-    description: '포스팅 문제 하나 보기',
+    description: 'url분석 문제 하나 보기',
   })
   @Get(':id')
   async findOneQuestion(

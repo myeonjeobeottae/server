@@ -12,12 +12,12 @@ import { SaveQuestionDto } from 'src/question/dto/create-question.dto';
 export class CareersQuestionService {
   constructor(
     @Inject('CAREERS_QUESTION_REPOSITORY')
-    private postingQuestionRepository: Repository<CareersQuestion>,
+    private careersQuestionRepository: Repository<CareersQuestion>,
   ) {}
   async saveQuestion(questionInfo: SaveQuestionDto): Promise<Question> {
-    const createQuestion = this.postingQuestionRepository.create(questionInfo);
+    const createQuestion = this.careersQuestionRepository.create(questionInfo);
 
-    const saveQuestion = await this.postingQuestionRepository.save(
+    const saveQuestion = await this.careersQuestionRepository.save(
       createQuestion,
     );
     return saveQuestion;
@@ -30,7 +30,7 @@ export class CareersQuestionService {
       findQuestionsIncludedInTheInterviewInfo;
 
     const questionsIncludedInTheInterview =
-      await this.postingQuestionRepository.find({
+      await this.careersQuestionRepository.find({
         select: ['id', 'question', 'answer', 'feedback'],
         where: { interviewId: interviewId, userKakaoId: userKakaoId },
       });
@@ -43,7 +43,7 @@ export class CareersQuestionService {
   ): Promise<Question> {
     const { questionId, userKakaoId } = findOneQuestionInfo;
 
-    const findOneQuestion = await this.postingQuestionRepository.findOne({
+    const findOneQuestion = await this.careersQuestionRepository.findOne({
       where: { id: questionId, userKakaoId },
       select: ['id', 'question', 'answer', 'feedback'],
     });

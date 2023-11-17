@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { CareersQuestionService } from './posting-question.service';
+import { CareersQuestionService } from './careers-question.service';
 import { CareersQuestionController } from './careers-question.controller';
 import { DbModule } from 'src/db/db.module';
-import { PostingQuestionProvider } from './posting-question.provider';
+import { PostingQuestionProvider } from './careers-question.provider';
 
 @Module({
   imports: [DbModule],
@@ -10,4 +10,4 @@ import { PostingQuestionProvider } from './posting-question.provider';
   providers: [CareersQuestionService, ...PostingQuestionProvider],
   exports: [CareersQuestionService],
 })
-export class CareeresQuestionModule {}
+export class CareersQuestionModule {}

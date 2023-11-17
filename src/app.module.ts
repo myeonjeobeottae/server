@@ -16,9 +16,8 @@ import { ShareModule } from './share/share.module';
 import { CustomInterviewsModule } from './customInterviews/customInterviews.module';
 import { QuestionModule } from './question/question.module';
 import jwtConfig from '@config/jwt.config';
-import { CareeresQuestionModule } from './careers-question/careers-question.module';
-import { CareeresInterviewsModule } from './careers-interviews/careeres-interviews.module';
-
+import { CareersQuestionModule } from './careers-question/careers-question.module';
+import { CareersInterviewsModule } from './careers-interviews/careers-interviews.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -34,22 +33,22 @@ import { CareeresInterviewsModule } from './careers-interviews/careeres-intervie
     ShareModule,
     CustomInterviewsModule,
     QuestionModule,
-    CareeresQuestionModule,
-    CareeresInterviewsModule,
+    CareersQuestionModule,
+    CareersInterviewsModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
     {
       provide: APP_FILTER,
       useFactory: (httpAdapterHost: HttpAdapterHost) => {
         return new AllExceptionsFilter(httpAdapterHost.httpAdapter);
       },
       inject: [HttpAdapterHost],
-    },
-    {
-      provide: APP_PIPE,
-      useClass: ValidationPipe,
     },
   ],
 })

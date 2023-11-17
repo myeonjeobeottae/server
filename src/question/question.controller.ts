@@ -64,7 +64,6 @@ export class QuestionController {
     @Req() req: Request,
   ): Promise<SaveQuestionDto> {
     const { kakaoId } = req.user as User;
-    console.log(kakaoId);
 
     const { interviewId, question, answer, feedback } = saveQuestionDto;
     const saveQuestionInfo: SaveQuestionInfo = {

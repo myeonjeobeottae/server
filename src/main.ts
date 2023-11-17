@@ -40,6 +40,7 @@ async function bootstrap() {
       enableDebugMessages: true,
       exceptionFactory(errors) {
         const message = Object.values(errors[0].constraints);
+
         throw new BadRequestException(message[0]);
         // 예외처리 : 이렇게 해두면 어떤 인풋의 타입에러가 발생했는지를
         // 에러 메시지를 통해 보여줍니다

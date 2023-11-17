@@ -2,14 +2,15 @@ export interface UrlInfo {
   careeresUrl: string;
 }
 
-export interface CareeresInterviewInfo {
+export interface CareersInterviewInfo {
   companyName: string;
   careersContents: string;
 }
 
-export interface SaveCareeresInterviewInfo extends CareeresInterviewInfo {
-  careeresURL: string;
+export interface SaveCareersInterviewInfo extends CareersInterviewInfo {
+  careersURL: string;
   time: number;
+  userKakaoId: string;
 }
 
 // export class CareersInterviewDto {

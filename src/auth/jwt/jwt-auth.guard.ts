@@ -35,8 +35,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       const verify = this.jwtService.verify(token, { secret: secretKey });
       return verify;
     } catch (e) {
-      console.error(e);
-
       switch (e.name) {
         case 'JsonWebTokenError': // 일반적인 JWT 오류의 이름
           throw new HttpException('유효하지 않은 토큰입니다.', 401);

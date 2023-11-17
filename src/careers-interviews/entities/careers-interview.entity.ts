@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class CareeresInterviews {
+export class CareersInterviews {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -15,7 +15,7 @@ export class CareeresInterviews {
   careersContents: string;
 
   @Column({ name: 'careers_URL' })
-  careeresURL: string;
+  careersURL: string;
 
   @Column()
   time: number;
