@@ -17,7 +17,13 @@ export const databaseProviders = [
         synchronize: true, // This can also be taken from config
       });
 
-      await dataSource.initialize();
+      try {
+        await dataSource.initialize();
+        console.log('Database connection successful');
+      } catch (error) {
+        console.error('Database connection error:', error);
+      }
+
       return dataSource;
     },
     inject: [dbConfig.KEY],

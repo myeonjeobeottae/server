@@ -1,17 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Auth } from 'src/auth/entities/auth.entity';
-import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayloadType, UserData, UserKakaoInfo } from './model/auth.model';
 import { HttpService } from '@nestjs/axios';
 import kakaoConfig from '@config/kakao.config';
 import { ConfigType } from '@nestjs/config';
+import { AuthRepository } from './auth.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject('AUTH_REPOSITORY')
-    private authRepository: Repository<Auth>,
+    private authRepository: AuthRepository,
     private jwtService: JwtService,
     private readonly httpService: HttpService,
     @Inject(kakaoConfig.KEY)
@@ -30,6 +28,54 @@ export class AuthService {
 
   //이게 redirect로 왔을때 실행되는 함수
   async kakaoSignUp(code: string): Promise<UserData> {
+    const kakaoTokenInfo = await this.getKakaoTokenInfo(code);
+
+    const { access_token, refresh_token } = kakaoTokenInfo;
+    const userInfo = await this.getKakaoUserInfo(access_token);
+
+    const userCheck = await this.findUser(userInfo.userKakaoId);
+
+    if (!userCheck) {
+      const createUser = await this.createUser(userInfo);
+      const userKakaoInfo: UserKakaoInfo = {
+        ...createUser,
+        refreshToken: refresh_token,
+      };
+      const userToken = this.generateUserToken(userKakaoInfo);
+      return userToken;
+    }
+
+    const userToken = this.generateUserToken(userCheck);
+    return userToken;
+  }
+
+  private generateUserToken(userKakaoInfo: UserKakaoInfo): UserData {
+    const userToken = this.generateJWT({
+      kakaoId: userKakaoInfo.userKakaoId,
+      nickname: userKakaoInfo.nickname,
+    });
+
+    const userData: UserData = {
+      accessToken: userToken,
+      refreshToken: userKakaoInfo.refreshToken,
+      nickname: userKakaoInfo.nickname,
+      image: userKakaoInfo.image,
+    };
+    return userData;
+  }
+
+  async findUser(kakaoId: string): Promise<UserKakaoInfo> {
+    const user = await this.authRepository.findUser(kakaoId);
+    return user;
+  }
+
+  async createUser(userKakaoInfo: UserKakaoInfo): Promise<UserKakaoInfo> {
+    const user = await this.authRepository.authCreate(userKakaoInfo);
+
+    return user;
+  }
+
+  private async getKakaoTokenInfo(code: string): Promise<any> {
     const kakaoTokenInfo = await this.httpService.axiosRef.post(
       `https://kauth.kakao.com/oauth/token`,
       {
@@ -47,66 +93,27 @@ export class AuthService {
       },
     );
     const tokenInfo = kakaoTokenInfo.data;
+    return tokenInfo;
+  }
 
-    const { access_token, refresh_token } = tokenInfo;
+  private async getKakaoUserInfo(accessToken: string): Promise<UserKakaoInfo> {
     const kakaoTokenUserInfo = await this.httpService.axiosRef.get(
       `https://kapi.kakao.com/v2/user/me`,
       {
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${accessToken}`,
           'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
         },
       },
     );
 
-    const userKakaoId = kakaoTokenUserInfo.data.id;
-
     const userKakaoInfo: UserKakaoInfo = {
-      userKakaoId,
+      userKakaoId: kakaoTokenUserInfo.data.id,
       nickname: kakaoTokenUserInfo.data.kakao_account.profile.nickname,
       image: kakaoTokenUserInfo.data.kakao_account.profile.profile_image_url,
       email: kakaoTokenUserInfo.data.email,
     };
 
-    const userCheck = await this.findUser(userKakaoId);
-
-    if (!userCheck) {
-      const user = this.authRepository.create(userKakaoInfo);
-
-      await this.authRepository.save(user);
-
-      const userToken = this.generateJWT({
-        kakaoId: user.userKakaoId,
-        nickname: user.nickname,
-      });
-
-      const userData: UserData = {
-        accessToken: userToken,
-        refreshToken: refresh_token,
-        userNickname: userKakaoInfo.nickname,
-        userImage: userKakaoInfo.image,
-      };
-      return userData;
-    }
-
-    const userToken = this.generateJWT({
-      kakaoId: userCheck.userKakaoId,
-      nickname: userCheck.nickname,
-    });
-
-    const userData: UserData = {
-      accessToken: userToken,
-      refreshToken: refresh_token,
-      userNickname: userKakaoInfo.nickname,
-      userImage: userKakaoInfo.image,
-    };
-    return userData;
-  }
-
-  async findUser(kakaoId: string) {
-    const user = await this.authRepository.findOne({
-      where: { userKakaoId: kakaoId },
-    });
-    return user;
+    return userKakaoInfo;
   }
 }

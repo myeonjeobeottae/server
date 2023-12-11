@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CustomInterviewsService } from './customInterviews.service';
+import { CustomInterviewsService } from './custom-interviews.service';
 import { Repository } from 'typeorm';
 import { CustomInterviews } from './entities/customInterviews.entity';
 

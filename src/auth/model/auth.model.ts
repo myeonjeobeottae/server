@@ -9,18 +9,16 @@ export interface User extends JwtPayloadType {
 }
 
 export interface UserInfo {
-  refreshToken: string;
-  userNickname: string;
-  userImage: string;
+  refreshToken?: string;
+  nickname: string;
+  image: string;
 }
 
 export interface UserData extends UserInfo {
   accessToken: string;
 }
 
-export interface UserKakaoInfo {
+export interface UserKakaoInfo extends UserInfo {
   userKakaoId: string;
-  nickname: string;
-  image: string;
   email: string;
 }

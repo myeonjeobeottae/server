@@ -11,7 +11,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { CustomInterviewsService } from './customInterviews.service';
+import { CustomInterviewsService } from './custom-interviews.service';
 import { CustomInterviewDto } from './dto/create-customInterviews.dto';
 import { Request } from 'express';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';

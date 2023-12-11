@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CustomInterviewsController } from './customInterviews.controller';
-import { CustomInterviewsService } from './customInterviews.service';
+import { CustomInterviewsController } from './custom-interviews.controller';
+import { CustomInterviewsService } from './custom-interviews.service';
 import { Repository } from 'typeorm';
 import { CustomInterviews } from './entities/customInterviews.entity';
 import { JwtModule } from '@nestjs/jwt';

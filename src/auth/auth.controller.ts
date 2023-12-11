@@ -16,7 +16,7 @@ export class AuthController {
   @Get('/redirect')
   async kakaoOauthCallback(@Query('code') code: string, @Res() res: Response) {
     const userData = await this.authService.kakaoSignUp(code);
-    const { accessToken, refreshToken, userNickname, userImage } = userData;
+    const { accessToken, refreshToken, nickname, image } = userData;
     res.cookie('access_token', accessToken, {
       maxAge: 3600000,
       sameSite: 'none',
@@ -24,8 +24,8 @@ export class AuthController {
     });
     const userInfo: UserInfo = {
       refreshToken,
-      userNickname,
-      userImage,
+      nickname,
+      image,
     };
     res.send(userInfo);
   }
