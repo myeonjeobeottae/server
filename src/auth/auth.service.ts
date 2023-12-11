@@ -18,7 +18,7 @@ export class AuthService {
     private kakaoOauthConfig: ConfigType<typeof kakaoConfig>,
   ) {}
 
-  generateJWT(payload: JwtPayloadType) {
+  private generateJWT(payload: JwtPayloadType) {
     return this.jwtService.sign(payload);
   }
 

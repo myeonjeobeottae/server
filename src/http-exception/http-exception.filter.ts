@@ -1,5 +1,6 @@
 import {
   ArgumentsHost,
+  BadRequestException,
   Catch,
   ExceptionFilter,
   HttpException,
@@ -7,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { AbstractHttpAdapter } from '@nestjs/core';
 
-@Catch()
+@Catch(BadRequestException)
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapter: AbstractHttpAdapter) {}
 
@@ -18,7 +19,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    let message = exception.getResponse();
+    let message: any = exception.getResponse();
 
     if (httpStatus === HttpStatus.BAD_REQUEST && typeof message === 'string') {
       message = `Bad request: ${message}`; // or any other custom logic
@@ -28,7 +29,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       statusCode: httpStatus,
       timestamp: new Date().toISOString(),
       path: this.httpAdapter.getRequestUrl(ctx.getRequest()),
-      message,
+      message: message.message,
     };
     console.log(responseBody);
 
