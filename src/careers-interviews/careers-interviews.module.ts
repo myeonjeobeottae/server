@@ -6,6 +6,7 @@ import { CareersInterviewsProvider } from './ceareers-interviews.provider';
 import { GptChatModule } from 'src/gpt-chat/gpt-chat.module';
 import { HttpModule } from '@nestjs/axios';
 import { CareersQuestionModule } from 'src/careers-question/careers-question.module';
+import { CareersInterviewRepository } from './careers-interview.repository';
 
 @Module({
   imports: [
@@ -20,6 +21,10 @@ import { CareersQuestionModule } from 'src/careers-question/careers-question.mod
     }),
   ],
   controllers: [CareersInterviewsController],
-  providers: [CareersInterviewsService, ...CareersInterviewsProvider],
+  providers: [
+    CareersInterviewsService,
+    CareersInterviewRepository,
+    ...CareersInterviewsProvider,
+  ],
 })
 export class CareersInterviewsModule {}

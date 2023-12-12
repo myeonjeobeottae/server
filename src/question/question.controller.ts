@@ -65,12 +65,8 @@ export class QuestionController {
   ): Promise<SaveQuestionDto> {
     const { kakaoId } = req.user as User;
 
-    const { interviewId, question, answer, feedback } = saveQuestionDto;
     const saveQuestionInfo: SaveQuestionInfo = {
-      interviewId,
-      question,
-      answer,
-      feedback,
+      ...saveQuestionDto,
       userKakaoId: kakaoId,
     };
 
@@ -100,9 +96,7 @@ export class QuestionController {
     const findOneQuestion = await this.questionService.findOneQuestion(
       findOneQuestionInfo,
     );
-    if (!findOneQuestion) {
-      throw new HttpException('해당 문제가 없습니다.', HttpStatus.BAD_REQUEST);
-    }
+
     return findOneQuestion;
   }
 }

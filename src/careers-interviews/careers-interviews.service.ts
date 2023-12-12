@@ -1,23 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
 import { CareersInterviews } from './entities/careers-interview.entity';
 import { HttpService } from '@nestjs/axios';
 import {
   CareersInterviewInfo,
   SaveCareersInterviewInfo,
-  UrlInfo,
 } from './model/careers-interviews.model';
 import Cheerio from 'cheerio';
 import { CareersInterviewDto } from './dto/create-careers-interview.dto';
-import { SaveCareersQuestionDto } from 'src/careers-question/dto/create-careersQuestion.dto';
+import { CareersInterviewRepository } from './careers-interview.repository';
 @Injectable()
 export class CareersInterviewsService {
   constructor(
-    @Inject('CAREERS_INTERVIEW_REPOSITORY')
-    private careersInterviewRepository: Repository<CareersInterviews>,
+    private careersInterviewRepository: CareersInterviewRepository,
     private readonly httpService: HttpService,
   ) {}
-  urlPathSegments(careersUrl: string) {
+  private urlPathSegments(careersUrl: string) {
     const CareersUrl = new URL(careersUrl);
     const pathSegments = CareersUrl.pathname.split('/');
     const id = pathSegments.pop() || pathSegments.pop();
@@ -60,17 +57,9 @@ export class CareersInterviewsService {
   async saveInterview(
     saveCareersInterviewInfo: SaveCareersInterviewInfo,
   ): Promise<CareersInterviewDto> {
-    const { companyName, careersContents, careersURL, time, userKakaoId } =
-      saveCareersInterviewInfo;
-
-    const interview = this.careersInterviewRepository.create({
-      companyName,
-      careersContents,
-      careersURL,
-      time,
-      userKakaoId,
-    });
-    const saveInterview = await this.careersInterviewRepository.save(interview);
+    const saveInterview = await this.careersInterviewRepository.saveInterview(
+      saveCareersInterviewInfo,
+    );
     return saveInterview;
   }
 
@@ -82,24 +71,24 @@ export class CareersInterviewsService {
     const careersInterviewInfo = await this.careersUrljobDescription(
       careersURL,
     );
-    const { companyName, careersContents } = careersInterviewInfo;
     const saveCareersInterviewInfo: SaveCareersInterviewInfo = {
-      companyName,
-      careersContents,
+      ...careersInterviewInfo,
       careersURL,
       time,
       userKakaoId: kakaoId,
     };
     await this.saveInterview(saveCareersInterviewInfo);
 
-    const careersContentsRemoveSpaces = careersContents.replace(/\s+/g, '');
+    const careersContentsRemoveSpaces =
+      careersInterviewInfo.careersContents.replace(/\s+/g, '');
+
     return careersContentsRemoveSpaces;
   }
 
   async findAll(kakaoId: string): Promise<CareersInterviews[]> {
-    const findAllInterviews = await this.careersInterviewRepository.find({
-      where: { userKakaoId: kakaoId },
-    });
+    const findAllInterviews = await this.careersInterviewRepository.findAll(
+      kakaoId,
+    );
     return findAllInterviews;
   }
 }

@@ -1,24 +1,18 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { CareersQuestion } from './entities/careers-question.entity';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Question } from 'src/question/entities/question.entity';
 import {
   FindOneQuestionInfo,
   FindQuestionsIncludedInTheInterviewInfo,
 } from 'src/question/model/question.model';
 import { SaveQuestionDto } from 'src/question/dto/create-question.dto';
+import { CareersQuestionRepository } from './careers-question.repository';
 
 @Injectable()
 export class CareersQuestionService {
-  constructor(
-    @Inject('CAREERS_QUESTION_REPOSITORY')
-    private careersQuestionRepository: Repository<CareersQuestion>,
-  ) {}
+  constructor(private careersQuestionRepository: CareersQuestionRepository) {}
   async saveQuestion(questionInfo: SaveQuestionDto): Promise<Question> {
-    const createQuestion = this.careersQuestionRepository.create(questionInfo);
-
-    const saveQuestion = await this.careersQuestionRepository.save(
-      createQuestion,
+    const saveQuestion = await this.careersQuestionRepository.saveQuestion(
+      questionInfo,
     );
     return saveQuestion;
   }
@@ -26,14 +20,10 @@ export class CareersQuestionService {
   async QuestionsIncludedInTheInterview(
     findQuestionsIncludedInTheInterviewInfo: FindQuestionsIncludedInTheInterviewInfo,
   ): Promise<Question[]> {
-    const { interviewId, userKakaoId } =
-      findQuestionsIncludedInTheInterviewInfo;
-
     const questionsIncludedInTheInterview =
-      await this.careersQuestionRepository.find({
-        select: ['id', 'question', 'answer', 'feedback'],
-        where: { interviewId: interviewId, userKakaoId: userKakaoId },
-      });
+      await this.careersQuestionRepository.QuestionsIncludedInTheInterview(
+        findQuestionsIncludedInTheInterviewInfo,
+      );
 
     return questionsIncludedInTheInterview;
   }
@@ -41,13 +31,12 @@ export class CareersQuestionService {
   async findOneQuestion(
     findOneQuestionInfo: FindOneQuestionInfo,
   ): Promise<Question> {
-    const { questionId, userKakaoId } = findOneQuestionInfo;
+    const findOneQuestion =
+      await this.careersQuestionRepository.findOneQuestion(findOneQuestionInfo);
 
-    const findOneQuestion = await this.careersQuestionRepository.findOne({
-      where: { id: questionId, userKakaoId },
-      select: ['id', 'question', 'answer', 'feedback'],
-    });
-
+    if (!findOneQuestion) {
+      throw new HttpException('해당 문제가 없습니다.', HttpStatus.BAD_REQUEST);
+    }
     return findOneQuestion;
   }
 }

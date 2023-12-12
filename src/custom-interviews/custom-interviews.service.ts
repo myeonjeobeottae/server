@@ -5,34 +5,25 @@ import { Repository } from 'typeorm';
 import { CustomInterviews } from './entities/customInterviews.entity';
 import { CreateQuestionDto } from 'src/gpt-chat/dto/create-gpt-chat.dto';
 import Cheerio from 'cheerio';
+import { CustomInterviewRepository } from './custom-interview.repository';
 
 @Injectable()
 export class CustomInterviewsService {
-  constructor(
-    @Inject('INTERVIEW_REPOSITORY')
-    private interviewRepository: Repository<CustomInterviews>,
-  ) {}
+  constructor(private customInterviewRepository: CustomInterviewRepository) {}
 
   async saveInterview(
     customInterviewInfo: CustomInterviewInfo,
   ): Promise<CustomInterviewDto> {
-    const { userKakaoId, position, skill, time } = customInterviewInfo;
-    const interview = this.interviewRepository.create({
-      userKakaoId,
-      position,
-      skill,
-      time,
-    });
-    const saveInterview = await this.interviewRepository.save(interview);
+    const saveInterview = await this.customInterviewRepository.saveInterview(
+      customInterviewInfo,
+    );
     return saveInterview;
   }
 
   async findAll(kakaoId: string): Promise<CustomInterviewDto[]> {
-    const findAllInterview = await this.interviewRepository.find({
-      where: {
-        userKakaoId: kakaoId,
-      },
-    });
+    const findAllInterview = await this.customInterviewRepository.findAll(
+      kakaoId,
+    );
     return findAllInterview;
   }
 }

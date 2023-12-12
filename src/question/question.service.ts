@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Question } from './entities/question.entity';
 import { SaveQuestionDto } from './dto/create-question.dto';
@@ -6,45 +6,37 @@ import {
   FindQuestionsIncludedInTheInterviewInfo,
   FindOneQuestionInfo,
 } from './model/question.model';
+import { QuestionRepository } from './question.repository';
 
 @Injectable()
 export class QuestionService {
-  constructor(
-    @Inject('QUESTION_REPOSITORY')
-    private questionRepository: Repository<Question>,
-  ) {}
+  constructor(private questionRepository: QuestionRepository) {}
 
   async saveQuestion(questionInfo: SaveQuestionDto): Promise<Question> {
-    const createQuestion = this.questionRepository.create(questionInfo);
+    const createQuestion = this.questionRepository.saveQuestion(questionInfo);
 
-    const saveQuestion = await this.questionRepository.save(createQuestion);
-    return saveQuestion;
+    return createQuestion;
   }
 
   async QuestionsIncludedInTheInterview(
     findQuestionsIncludedInTheInterviewInfo: FindQuestionsIncludedInTheInterviewInfo,
   ): Promise<Question[]> {
-    const { interviewId, userKakaoId } =
-      findQuestionsIncludedInTheInterviewInfo;
-
-    const questionsIncludedInTheInterview = await this.questionRepository.find({
-      select: ['id', 'question', 'answer', 'feedback'],
-      where: { interviewId: interviewId, userKakaoId: userKakaoId },
-    });
-
+    const questionsIncludedInTheInterview =
+      await this.questionRepository.QuestionsIncludedInTheInterview(
+        findQuestionsIncludedInTheInterviewInfo,
+      );
     return questionsIncludedInTheInterview;
   }
 
   async findOneQuestion(
     findOneQuestionInfo: FindOneQuestionInfo,
   ): Promise<Question> {
-    const { questionId, userKakaoId } = findOneQuestionInfo;
-
-    const findOneQuestion = await this.questionRepository.findOne({
-      where: { id: questionId, userKakaoId },
-      select: ['id', 'question', 'answer', 'feedback'],
-    });
-
+    const findOneQuestion = await this.questionRepository.findOneQuestion(
+      findOneQuestionInfo,
+    );
+    if (!findOneQuestion) {
+      throw new HttpException('해당 문제가 없습니다.', HttpStatus.BAD_REQUEST);
+    }
     return findOneQuestion;
   }
 }
