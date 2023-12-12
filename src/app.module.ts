@@ -7,17 +7,23 @@ import dbConfig from './config/db.config';
 import { DbModule } from './db/db.module';
 import { GptChatModule } from './gpt-chat/gpt-chat.module';
 import openAiConfig from './config/openAi.config';
-import { APP_FILTER, APP_PIPE, HttpAdapterHost } from '@nestjs/core';
+import {
+  APP_FILTER,
+  APP_INTERCEPTOR,
+  APP_PIPE,
+  HttpAdapterHost,
+} from '@nestjs/core';
 import { AllExceptionsFilter } from './http-exception/http-exception.filter';
 import { AuthModule } from './auth/auth.module';
 import kakaoConfig from '@config/kakao.config';
 import { validate } from './env.validation';
 import { ShareModule } from './share/share.module';
-import { CustomInterviewsModule } from './customInterviews/customInterviews.module';
+import { CustomInterviewsModule } from './custom-interviews/custom-interviews.module';
 import { QuestionModule } from './question/question.module';
 import jwtConfig from '@config/jwt.config';
 import { CareersQuestionModule } from './careers-question/careers-question.module';
 import { CareersInterviewsModule } from './careers-interviews/careers-interviews.module';
+import { LoggingInterceptor } from './interceptor/logger/logger.interceptor';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -49,6 +55,10 @@ import { CareersInterviewsModule } from './careers-interviews/careers-interviews
         return new AllExceptionsFilter(httpAdapterHost.httpAdapter);
       },
       inject: [HttpAdapterHost],
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
     },
   ],
 })

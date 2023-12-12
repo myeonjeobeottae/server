@@ -42,10 +42,14 @@ export class AuthService {
         refreshToken: refresh_token,
       };
       const userToken = this.generateUserToken(userKakaoInfo);
+
       return userToken;
     }
-
-    const userToken = this.generateUserToken(userCheck);
+    const userKakaoInfo: UserKakaoInfo = {
+      ...userCheck,
+      refreshToken: refresh_token,
+    };
+    const userToken = this.generateUserToken(userKakaoInfo);
     return userToken;
   }
 

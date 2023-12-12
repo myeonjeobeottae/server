@@ -8,6 +8,7 @@ import { JwtStrategy } from './jwt/jwtStrategy';
 import { JwtAuthGuard } from './jwt/jwt-auth.guard';
 import { ShareModule } from 'src/share/share.module';
 import { HttpModule } from '@nestjs/axios';
+import { AuthRepository } from './auth.repository';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { HttpModule } from '@nestjs/axios';
   controllers: [AuthController],
   providers: [
     AuthService,
+    AuthRepository,
     ...AuthProvider,
     SessionSerializer,
     JwtStrategy,
