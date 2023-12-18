@@ -41,23 +41,20 @@ export class CustomInterviewsController {
     @Req() req: Request,
   ): Promise<any> {
     const { kakaoId } = req.user as User;
-    const { position, skill, time } = customInterviewDto;
 
     if (!kakaoId) {
       throw new HttpException('Kakao ID is missing', HttpStatus.BAD_REQUEST);
     }
     const customInterviewInfo: CustomInterviewInfo = {
       userKakaoId: kakaoId,
-      position,
-      skill,
-      time,
+      ...customInterviewDto,
     };
     const saveInterview = await this.customInterviewsService.saveInterview(
       customInterviewInfo,
     );
 
     const createQuestion = await this.gptChatService.createQuestionOne(
-      customInterviewDto,
+      customInterviewInfo,
     );
     return createQuestion;
   }

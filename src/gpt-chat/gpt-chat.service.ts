@@ -1,18 +1,21 @@
-import { HttpService } from '@nestjs/axios';
+import { AuthRepository } from './../auth/auth.repository';
 import { Inject, Injectable } from '@nestjs/common';
-import cheerio from 'cheerio';
 import OpenAI from 'openai';
 import {
   CreatAnswerDto,
   CreateQuestionDto,
   CreateQuestionsDto,
 } from './dto/create-gpt-chat.dto';
+import { CustomInterviewRepository } from 'src/custom-interviews/custom-interview.repository';
+import { CustomInterviewInfo } from 'src/custom-interviews/model/customInterviews.model';
 
 @Injectable()
 export class GptChatService {
   constructor(
     @Inject('OpenAi')
     private readonly openAi: OpenAI,
+    private readonly authRepository: AuthRepository,
+    private readonly customInterviewRepository: CustomInterviewRepository,
   ) {}
 
   async openAIChat(content: string): Promise<any> {
@@ -46,8 +49,10 @@ export class GptChatService {
     return completion;
   }
 
-  async createQuestionOne(createQuestionDto: CreateQuestionDto): Promise<any> {
-    const { position, skill } = createQuestionDto;
+  async createQuestionOne(
+    customInterviewInfo: CustomInterviewInfo,
+  ): Promise<any> {
+    const { position, skill, userKakaoId } = customInterviewInfo;
     const content = `${position} ${skill} 면접 질문 1개 만들어줘 `;
     const complet = await this.openAIChat(content);
     return complet;

@@ -1,7 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CustomInterviews } from './entities/customInterviews.entity';
 import { Repository } from 'typeorm';
-import { CustomInterviewInfo } from './model/customInterviews.model';
+import {
+  CustomInterviewInfo,
+  SaveCustomInterviewInfo,
+} from './model/customInterviews.model';
 import { CustomInterviewDto } from './dto/create-customInterviews.dto';
 
 @Injectable()
@@ -12,15 +15,11 @@ export class CustomInterviewRepository {
   ) {}
 
   async saveInterview(
-    customInterviewInfo: CustomInterviewInfo,
+    saveCustomInterviewInfo: SaveCustomInterviewInfo,
   ): Promise<CustomInterviewDto> {
-    const { userKakaoId, position, skill, time } = customInterviewInfo;
-    const interview = this.customInterviewRepository.create({
-      userKakaoId,
-      position,
-      skill,
-      time,
-    });
+    const interview = this.customInterviewRepository.create(
+      saveCustomInterviewInfo,
+    );
     const saveInterview = await this.customInterviewRepository.save(interview);
     return saveInterview;
   }

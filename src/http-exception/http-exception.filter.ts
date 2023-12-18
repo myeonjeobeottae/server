@@ -1,6 +1,5 @@
 import {
   ArgumentsHost,
-  BadRequestException,
   Catch,
   ExceptionFilter,
   HttpException,
@@ -8,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { AbstractHttpAdapter } from '@nestjs/core';
 
-@Catch(BadRequestException)
+@Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapter: AbstractHttpAdapter) {}
 

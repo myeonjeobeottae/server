@@ -30,5 +30,6 @@ import { AuthRepository } from './auth.repository';
     JwtStrategy,
     JwtAuthGuard,
   ],
+  exports: [AuthRepository],
 })
 export class AuthModule {}

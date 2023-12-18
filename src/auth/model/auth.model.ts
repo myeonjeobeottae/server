@@ -1,3 +1,5 @@
+import { CustomInterviews } from 'src/custom-interviews/entities/customInterviews.entity';
+
 export interface JwtPayloadType {
   kakaoId: string;
   nickname: string;
@@ -19,6 +21,8 @@ export interface UserData extends UserInfo {
 }
 
 export interface UserKakaoInfo extends UserInfo {
+  id: number;
   userKakaoId: string;
   email: string;
+  customInterviews: CustomInterviews[];
 }

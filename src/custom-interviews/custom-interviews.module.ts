@@ -6,15 +6,16 @@ import { DbModule } from 'src/db/db.module';
 import { QuestionModule } from 'src/question/question.module';
 import { GptChatModule } from 'src/gpt-chat/gpt-chat.module';
 import { CustomInterviewRepository } from './custom-interview.repository';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [DbModule, QuestionModule, GptChatModule],
+  imports: [DbModule, QuestionModule, GptChatModule, AuthModule],
   controllers: [CustomInterviewsController],
   providers: [
     CustomInterviewsService,
     CustomInterviewRepository,
     ...InterviewProvider,
   ],
-  exports: [CustomInterviewsService],
+  exports: [CustomInterviewsService, CustomInterviewRepository],
 })
 export class CustomInterviewsModule {}

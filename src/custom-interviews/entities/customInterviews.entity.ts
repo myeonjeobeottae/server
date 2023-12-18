@@ -1,12 +1,20 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Auth } from 'src/auth/entities/auth.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class CustomInterviews {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'user_id' })
-  userKakaoId: string;
+  @ManyToOne(() => Auth, (auth) => auth.customInterviews)
+  @JoinColumn()
+  user: Auth;
 
   @Column()
   skill: string;

@@ -1,21 +1,32 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { AuthRepository } from './../auth/auth.repository';
+import { Injectable } from '@nestjs/common';
 import { CustomInterviewDto } from './dto/create-customInterviews.dto';
-import { CustomInterviewInfo } from './model/customInterviews.model';
-import { Repository } from 'typeorm';
-import { CustomInterviews } from './entities/customInterviews.entity';
-import { CreateQuestionDto } from 'src/gpt-chat/dto/create-gpt-chat.dto';
-import Cheerio from 'cheerio';
+import {
+  CustomInterviewInfo,
+  SaveCustomInterviewInfo,
+} from './model/customInterviews.model';
 import { CustomInterviewRepository } from './custom-interview.repository';
 
 @Injectable()
 export class CustomInterviewsService {
-  constructor(private customInterviewRepository: CustomInterviewRepository) {}
+  constructor(
+    private customInterviewRepository: CustomInterviewRepository,
+    private authRepository: AuthRepository,
+  ) {}
 
   async saveInterview(
     customInterviewInfo: CustomInterviewInfo,
   ): Promise<CustomInterviewDto> {
+    const findUser = await this.authRepository.findUser(
+      customInterviewInfo.userKakaoId,
+    );
+    const saveCustomInterviewInfo: SaveCustomInterviewInfo = {
+      user: findUser,
+      ...customInterviewInfo,
+    };
+
     const saveInterview = await this.customInterviewRepository.saveInterview(
-      customInterviewInfo,
+      saveCustomInterviewInfo,
     );
     return saveInterview;
   }

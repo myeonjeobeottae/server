@@ -20,7 +20,13 @@ export class AuthRepository {
   async findUser(kakaoId: string): Promise<UserKakaoInfo> {
     const user = await this.authRepository.findOne({
       where: { userKakaoId: kakaoId },
+      relations: ['customInterviews'],
     });
+
+    if (!user) {
+      throw new Error('가입된 유저가 없습니다.');
+    }
+
     return user;
   }
 }

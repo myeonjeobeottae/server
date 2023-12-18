@@ -100,7 +100,8 @@ export class AuthService {
     return tokenInfo;
   }
 
-  private async getKakaoUserInfo(accessToken: string): Promise<UserKakaoInfo> {
+  // Promise<UserKakaoInfo>
+  private async getKakaoUserInfo(accessToken: string): Promise<any> {
     const kakaoTokenUserInfo = await this.httpService.axiosRef.get(
       `https://kapi.kakao.com/v2/user/me`,
       {
@@ -111,13 +112,13 @@ export class AuthService {
       },
     );
 
-    const userKakaoInfo: UserKakaoInfo = {
-      userKakaoId: kakaoTokenUserInfo.data.id,
-      nickname: kakaoTokenUserInfo.data.kakao_account.profile.nickname,
-      image: kakaoTokenUserInfo.data.kakao_account.profile.profile_image_url,
-      email: kakaoTokenUserInfo.data.email,
-    };
+    // const userKakaoInfo: UserKakaoInfo = {
+    //   userKakaoId: kakaoTokenUserInfo.data.id,
+    //   nickname: kakaoTokenUserInfo.data.kakao_account.profile.nickname,
+    //   image: kakaoTokenUserInfo.data.kakao_account.profile.profile_image_url,
+    //   email: kakaoTokenUserInfo.data.email,
+    // };
 
-    return userKakaoInfo;
+    return kakaoTokenUserInfo;
   }
 }

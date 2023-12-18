@@ -7,14 +7,15 @@ export const databaseProviders = [
     provide: 'DATA_SOURCE',
     useFactory: async (config: ConfigType<typeof dbConfig>) => {
       const dataSource = new DataSource({
-        type: 'mysql', // This can also be taken from config
+        type: 'mysql',
         host: config.host,
         port: config.port,
         username: config.user,
         password: config.password,
         database: config.name,
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: true, // This can also be taken from config
+        synchronize: true,
+        logging: true,
       });
 
       try {
