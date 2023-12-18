@@ -1,14 +1,15 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { ConfigType } from '@nestjs/config';
-import { AppModule } from '../srcX/app.module';
-import appConfig from './config/app.config';
+import { AppModule } from './app.module';
+import appConfig from '../src/config/app.config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AllExceptionsFilter } from '../src/common/http-exception/http-exception.filter';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import jwtConfig from 'src/config/jwt.config';
+import { SessionSerializer } from './auth/serializer';
 import * as cookieParser from 'cookie-parser';
-import { AllExceptionsFilter } from './common/http-exception/http-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: console,
@@ -55,6 +56,13 @@ async function bootstrap() {
     }),
   );
 
+  // const sessionSerializer = app.get(SessionSerializer);
+  // passport.serializeUser(
+  //   sessionSerializer.serializeUser.bind(sessionSerializer),
+  // );
+  // passport.deserializeUser(
+  //   sessionSerializer.deserializeUser.bind(sessionSerializer),
+  // );
   app.use(cookieParser());
   app.use(passport.initialize());
   app.use(passport.session());
