@@ -13,11 +13,10 @@ export const databaseProviders = [
         username: config.user,
         password: config.password,
         database: config.name,
-        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+        entities: [__dirname + '/../../domain/entities/*.entity{.ts,.js}'],
         synchronize: true,
         logging: true,
       });
-
       try {
         await dataSource.initialize();
         console.log('Database connection successful');

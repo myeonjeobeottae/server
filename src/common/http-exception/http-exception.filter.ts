@@ -18,17 +18,17 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    let message: any = exception.getResponse();
+    // let message: any = exception.getResponse();
 
-    if (httpStatus === HttpStatus.BAD_REQUEST && typeof message === 'string') {
-      message = `Bad request: ${message}`; // or any other custom logic
-    }
+    // if (httpStatus === HttpStatus.BAD_REQUEST && typeof message === 'string') {
+    //   message = `Bad request: ${message}`; // or any other custom logic
+    // }
 
     const responseBody = {
       statusCode: httpStatus,
       timestamp: new Date().toISOString(),
       path: this.httpAdapter.getRequestUrl(ctx.getRequest()),
-      message: message.message,
+      // message: message.message,
     };
     console.log(responseBody);
 

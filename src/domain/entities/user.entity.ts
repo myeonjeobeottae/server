@@ -1,5 +1,4 @@
-import { CustomInterviews } from 'srcX/custom-interviews/entities/customInterviews.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -18,10 +17,10 @@ export class User {
   @Column({ nullable: true })
   email: string;
 
-  @OneToMany(
-    () => CustomInterviews,
-    (customInterview) => customInterview.user,
-    { lazy: true },
-  )
-  customInterviews: CustomInterviews[];
+  // @OneToMany(
+  //   () => CustomInterviews,
+  //   (customInterview) => customInterview.user,
+  //   { lazy: true },
+  // )
+  // customInterviews: CustomInterviews[];
 }

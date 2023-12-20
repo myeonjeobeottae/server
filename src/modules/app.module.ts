@@ -14,6 +14,8 @@ import { DatabaseModule } from './database.module';
 import appConfig from 'src/config/app.config';
 import dbConfig from 'src/config/db.config';
 import openAiConfig from 'src/config/openAi.config';
+import { AuthModule } from './auth.module';
+import { UserModule } from './user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,6 +26,9 @@ import openAiConfig from 'src/config/openAi.config';
       //   validate,
     }),
     DatabaseModule,
+    AuthModule,
+    DatabaseModule,
+    UserModule,
   ],
   controllers: [],
   providers: [

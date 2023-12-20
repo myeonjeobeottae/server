@@ -1,6 +1,5 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { ConfigType } from '@nestjs/config';
-import { AppModule } from '../srcX/app.module';
 import appConfig from './config/app.config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
@@ -9,6 +8,7 @@ import * as passport from 'passport';
 import jwtConfig from 'src/config/jwt.config';
 import * as cookieParser from 'cookie-parser';
 import { AllExceptionsFilter } from './common/http-exception/http-exception.filter';
+import { AppModule } from './modules/app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: console,

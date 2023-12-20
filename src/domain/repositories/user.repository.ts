@@ -1,6 +1,6 @@
-import { UserInfo } from '../value-objects/userVO';
+import { UserInfo, UserKakaoInfo } from '../interface/user.interface';
 
 export interface UserRepository {
-  userRegister(userInfo: UserInfo): Promise<UserInfo>;
-  findUser(kakaoId: string): Promise<UserInfo>;
+  userRegister(userInfo: UserKakaoInfo): Promise<UserKakaoInfo>;
+  findUser(kakaoId: string): Promise<UserKakaoInfo>;
 }
