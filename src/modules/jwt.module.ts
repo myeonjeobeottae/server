@@ -2,6 +2,7 @@ import jwtConfig from 'src/config/jwt.config';
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import { JwtModule as jwt } from '@nestjs/jwt';
+import { JwtAuthGuard } from 'src/common/jwt/jwt-auth.guard';
 
 @Global()
 @Module({
@@ -15,6 +16,7 @@ import { JwtModule as jwt } from '@nestjs/jwt';
       inject: [jwtConfig.KEY],
     }),
   ],
-  exports: [jwt],
+  providers: [JwtAuthGuard],
+  exports: [jwt, JwtAuthGuard],
 })
 export class JwtModule {}

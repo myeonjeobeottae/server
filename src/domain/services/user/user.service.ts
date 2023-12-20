@@ -1,15 +1,18 @@
 import { UserRepository } from 'src/domain/repositories/user.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { HttpService } from '@nestjs/axios';
 import { JwtPayloadType } from 'src/domain/interface/auth.interface';
-import { UserData, UserKakaoInfo } from 'src/domain/interface/user.interface';
+import {
+  UserData,
+  UserInfo,
+  UserKakaoInfo,
+  UserTokenData,
+} from 'src/domain/interface/user.interface';
 
 @Injectable()
 export class UserService {
   constructor(
     private jwtService: JwtService,
-    private readonly httpService: HttpService,
     @Inject('UserRepository')
     private userRepository: UserRepository,
   ) {}
@@ -18,22 +21,22 @@ export class UserService {
     return this.jwtService.sign(payload);
   }
 
-  public generateUserToken(userKakaoInfo: UserKakaoInfo): UserData {
+  public generateUserToken(userKakaoInfo: UserKakaoInfo): UserTokenData {
     const userToken = this.generateJWT({
       kakaoId: userKakaoInfo.userKakaoId,
       nickname: userKakaoInfo.nickname,
     });
 
-    const userData: UserData = {
+    const userTokenData: UserTokenData = {
       accessToken: userToken,
       refreshToken: userKakaoInfo.refreshToken,
       nickname: userKakaoInfo.nickname,
       image: userKakaoInfo.image,
     };
-    return userData;
+    return userTokenData;
   }
 
-  async findUser(kakaoId: string): Promise<UserKakaoInfo> {
+  async findUser(kakaoId: string): Promise<UserInfo> {
     const user = await this.userRepository.findUser(kakaoId);
 
     return user;

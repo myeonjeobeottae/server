@@ -1,4 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  CustomInterviews,
+  InterviewBase,
+  UrlInterviews,
+} from './interview.entity';
 
 @Entity()
 export class User {
@@ -17,10 +22,15 @@ export class User {
   @Column({ nullable: true })
   email: string;
 
-  // @OneToMany(
-  //   () => CustomInterviews,
-  //   (customInterview) => customInterview.user,
-  //   { lazy: true },
-  // )
-  // customInterviews: CustomInterviews[];
+  @OneToMany(() => UrlInterviews, (urlInterviews) => urlInterviews.user, {
+    eager: false,
+  })
+  urlInterviews: UrlInterviews[];
+
+  @OneToMany(
+    () => CustomInterviews,
+    (customInterviews) => customInterviews.user,
+    { eager: false },
+  )
+  customInterviews: CustomInterviews[];
 }

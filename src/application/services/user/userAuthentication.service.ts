@@ -1,7 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IKakaoOauthService } from 'src/infrastructure/external-services/kakaoOauth/kakaoOauth.interface';
 import { UserService } from 'src/domain/services/user/user.service';
-import { UserData, UserKakaoInfo } from 'src/domain/interface/user.interface';
+import {
+  UserData,
+  UserInfo,
+  UserKakaoInfo,
+  UserTokenData,
+} from 'src/domain/interface/user.interface';
 import { IUserAuthenticationService } from './UserAuthentication.interface';
 
 @Injectable()
@@ -17,7 +22,7 @@ export class UserAuthenticationService implements IUserAuthenticationService {
     return kakaoUrl;
   }
 
-  async kakaoSignUp(code: string): Promise<UserData> {
+  async kakaoSignUp(code: string): Promise<UserTokenData> {
     const kakaoTokenInfo = await this.kakaoOauthService.getKakaoTokenInfo(code);
 
     const { access_token, refresh_token } = kakaoTokenInfo;
@@ -38,7 +43,7 @@ export class UserAuthenticationService implements IUserAuthenticationService {
 
       return userToken;
     }
-    const userKakaoInfo: UserKakaoInfo = {
+    const userKakaoInfo: UserInfo = {
       ...userCheck,
       refreshToken: refresh_token,
     };

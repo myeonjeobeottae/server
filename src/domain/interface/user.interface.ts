@@ -1,16 +1,18 @@
-export interface UserInfo {
+export interface UserData {
   refreshToken?: string;
   nickname: string;
   image: string;
 }
 
-export interface UserData extends UserInfo {
+export interface UserTokenData extends UserData {
   accessToken: string;
 }
 
-export interface UserKakaoInfo extends UserInfo {
-  //   id: number;
+export interface UserKakaoInfo extends UserData {
   userKakaoId: string;
   email: string;
-  //   customInterviews: CustomInterviews[];
+}
+
+export interface UserInfo extends UserKakaoInfo {
+  id: number;
 }

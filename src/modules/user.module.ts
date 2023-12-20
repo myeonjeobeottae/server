@@ -6,9 +6,7 @@ import { DatabaseModule } from './database.module';
 import { UserService } from 'src/domain/services/user/user.service';
 import { UserAuthenticationController } from 'src/adapters/controllers/userAuthentication.controller';
 import { AuthModule } from './auth.module';
-import { JwtAuthGuard } from 'src/common/jwt/jwt-auth.guard';
 import { JwtModule } from './jwt.module';
-import { JwtStrategy } from 'src/common/jwt/jwtStrategy';
 
 @Module({
   imports: [AuthModule, DatabaseModule, JwtModule],
@@ -16,8 +14,7 @@ import { JwtStrategy } from 'src/common/jwt/jwtStrategy';
   providers: [
     UserAuthenticationService,
     ...UserProvider,
-    JwtStrategy,
-    JwtAuthGuard,
+
     UserService,
     {
       provide: 'UserRepository',
@@ -28,6 +25,6 @@ import { JwtStrategy } from 'src/common/jwt/jwtStrategy';
       useClass: UserAuthenticationService,
     },
   ],
-  exports: ['IUserAuthenticationService'],
+  exports: ['IUserAuthenticationService', UserService],
 })
 export class UserModule {}

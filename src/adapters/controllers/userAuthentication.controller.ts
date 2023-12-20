@@ -1,7 +1,7 @@
 import { Controller, Get, Req, Res, Query, Inject } from '@nestjs/common';
 import { Response } from 'express';
 import { IUserAuthenticationService } from 'src/application/services/user/UserAuthentication.interface';
-import { UserInfo } from 'src/domain/interface/user.interface';
+import { UserData, UserInfo } from 'src/domain/interface/user.interface';
 
 @Controller('kakao')
 export class UserAuthenticationController {
@@ -18,20 +18,22 @@ export class UserAuthenticationController {
 
   @Get('/redirect')
   async kakaoOauthCallback(@Query('code') code: string, @Res() res: Response) {
-    const userData = await this.userAuthenticationService.kakaoSignUp(code);
+    const userTokenData = await this.userAuthenticationService.kakaoSignUp(
+      code,
+    );
 
-    const { accessToken, refreshToken, nickname, image } = userData;
+    const { accessToken, refreshToken, nickname, image } = userTokenData;
     res.cookie('access_token', accessToken, {
       maxAge: 3600000,
       sameSite: 'none',
       secure: true,
     });
-    const userInfo: UserInfo = {
+    const userData: UserData = {
       refreshToken,
       nickname,
       image,
     };
-    res.send(userInfo);
+    res.send(userData);
   }
 
   @Get('/status')

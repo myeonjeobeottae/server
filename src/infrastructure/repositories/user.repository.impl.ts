@@ -18,12 +18,13 @@ export class UserRepositoryImpl implements UserRepository {
     return createUser;
   }
 
-  async findUser(kakaoId: string): Promise<UserKakaoInfo> {
+  async findUser(kakaoId: string): Promise<UserInfo> {
     console.log('kakaoId');
 
     const user = await this.userRepository.findOne({
+      select: ['id', 'userKakaoId', 'nickname', 'email', 'image'],
       where: { userKakaoId: kakaoId },
-      // relations: ['customInterviews'],
+      // relations: ['interviews'],
     });
 
     // if (!user) {
