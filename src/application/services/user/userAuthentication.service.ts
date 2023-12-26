@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IKakaoOauthService } from 'src/infrastructure/external-services/kakaoOauth/kakaoOauth.interface';
+import { IKakaoOauthService } from 'src/domain/contracts/kakaoOauth.interface';
 import { UserService } from 'src/domain/services/user/user.service';
 import {
   UserData,

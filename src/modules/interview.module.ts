@@ -1,4 +1,4 @@
-import { CustomInterviewRepositoryImpl } from './../infrastructure/repositories/customInterview.repository.impl';
+import { CustomInterviewRepositoryImpl } from '../infrastructure/repositories/interview/custom-interview.repository.impl';
 import { Module } from '@nestjs/common';
 import { UserProvider } from 'src/infrastructure/database/user.repository.provider';
 import { UserRepositoryImpl } from 'src/infrastructure/repositories/user.repository.impl';
@@ -13,9 +13,17 @@ import { InterviewsController } from 'src/adapters/controllers/interview.control
 import { InterviewsService } from 'src/application/services/interview/interview.service';
 import { CustomInterviewsService } from 'src/domain/services/interview/custom-interview.service';
 import { UserModule } from './user.module';
+import { OpenAIModule } from './openAI.module';
+import { QuestionModule } from './question.module';
 
 @Module({
-  imports: [DatabaseModule, JwtModule, UserModule],
+  imports: [
+    DatabaseModule,
+    JwtModule,
+    UserModule,
+    OpenAIModule,
+    QuestionModule,
+  ],
   controllers: [InterviewsController],
   providers: [
     ...CustomInterviewProvider,

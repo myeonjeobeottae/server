@@ -17,6 +17,7 @@ import openAiConfig from 'src/config/openAi.config';
 import { AuthModule } from './auth.module';
 import { UserModule } from './user.module';
 import { InterviewModule } from './interview.module';
+import { OpenAIModule } from './openAI.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -31,6 +32,7 @@ import { InterviewModule } from './interview.module';
     DatabaseModule,
     UserModule,
     InterviewModule,
+    OpenAIModule,
   ],
   controllers: [],
   providers: [

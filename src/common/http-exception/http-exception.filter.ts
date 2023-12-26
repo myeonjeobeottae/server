@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { AbstractHttpAdapter } from '@nestjs/core';
 
-@Catch()
+@Catch(HttpException)
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapter: AbstractHttpAdapter) {}
 
@@ -28,7 +28,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       statusCode: httpStatus,
       timestamp: new Date().toISOString(),
       path: this.httpAdapter.getRequestUrl(ctx.getRequest()),
-      message: message.message,
+      message,
     };
     console.log(responseBody);
 

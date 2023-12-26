@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { CreateCustomInterviewInfo } from 'src/domain/interface/interview.interface';
-import { CustomInterviewDto } from 'src/application/dtos/interviews/create-custom-interviews.dto';
-import { CustomInterviewRepository } from 'src/domain/repositories/customInterview.repository';
+import {
+  CreateCustomInterviewInfo,
+  InterviewInfo,
+} from 'src/domain/interface/interview.interface';
+import { CustomInterviewRepository } from 'src/domain/repositories/custom-interview.repository';
 
 @Injectable()
 export class CustomInterviewsService {
@@ -13,7 +15,7 @@ export class CustomInterviewsService {
 
   async createCustomInterview(
     createCustomInterviewInfo: CreateCustomInterviewInfo,
-  ): Promise<CustomInterviewDto> {
+  ): Promise<InterviewInfo> {
     const saveInterview =
       await this.customInterviewRepository.createCustomInterview(
         createCustomInterviewInfo,

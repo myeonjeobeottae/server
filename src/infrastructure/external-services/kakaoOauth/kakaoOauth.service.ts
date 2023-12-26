@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import kakaoConfig from 'src/config/kakao.config';
 import { ConfigType } from '@nestjs/config';
-import { IKakaoOauthService } from './kakaoOauth.interface';
+import { IKakaoOauthService } from '../../../domain/contracts/kakaoOauth.interface';
 import { UserKakaoInfo } from 'src/domain/interface/user.interface';
 
 @Injectable()

@@ -5,7 +5,7 @@ import {
   CreateCustomInterviewInfo,
   CustomInterviewInfo,
 } from 'src/domain/interface/interview.interface';
-import { CustomInterviewRepository } from 'src/domain/repositories/customInterview.repository';
+import { CustomInterviewRepository } from 'src/domain/repositories/custom-interview.repository';
 import { Repository } from 'typeorm';
 
 @Injectable()

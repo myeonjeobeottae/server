@@ -3,9 +3,15 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import {
+  CustomInterviewQuestion,
+  Question,
+  UrlInterviewQuestion,
+} from './question.entity';
 
 export abstract class InterviewBase {
   @PrimaryGeneratedColumn()
@@ -29,6 +35,15 @@ export class UrlInterviews extends InterviewBase {
   @ManyToOne(() => User, (user) => user.urlInterviews)
   @JoinColumn()
   user: User;
+
+  @OneToMany(
+    () => UrlInterviewQuestion,
+    (urlInterviewQuestion) => urlInterviewQuestion.interview,
+    {
+      eager: false,
+    },
+  )
+  question: UrlInterviewQuestion[];
 }
 
 @Entity()
@@ -42,4 +57,13 @@ export class CustomInterviews extends InterviewBase {
   @ManyToOne(() => User, (user) => user.customInterviews)
   @JoinColumn()
   user: User;
+
+  @OneToMany(
+    () => CustomInterviewQuestion,
+    (customInterviewQuestion) => customInterviewQuestion.interview,
+    {
+      eager: false,
+    },
+  )
+  question: CustomInterviewQuestion[];
 }
