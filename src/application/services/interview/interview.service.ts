@@ -1,4 +1,5 @@
 import {
+  CompletSaveQuestion,
   CreateCustomInterviewQuestionInfo,
   SaveQuestionInfo,
 } from './../../../domain/interface/question.interface';
@@ -23,10 +24,10 @@ export class InterviewsService implements IInterviewService {
     @Inject('IOpenAIService')
     private readonly openAIService: OpenAIService,
   ) {}
-  //CustomInterviewDto[]
+
   async createCustomInterview(
     customInterviewInfo: CustomInterviewInfo,
-  ): Promise<any> {
+  ): Promise<CompletSaveQuestion[]> {
     const findUser = await this.userService.findUser(
       customInterviewInfo.userKakaoId,
     );

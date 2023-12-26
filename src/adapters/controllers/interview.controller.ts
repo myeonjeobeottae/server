@@ -48,10 +48,6 @@ export class InterviewsController {
       customInterviewInfo,
     );
 
-    // const createQuestion = await this.gptChatService.createQuestionOne(
-    //   customInterviewInfo,
-    // );
-    // return createQuestion;
     return createInterview;
   }
 
