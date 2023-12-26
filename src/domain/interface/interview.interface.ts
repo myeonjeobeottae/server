@@ -2,7 +2,7 @@ import { UserInfo } from './user.interface';
 
 export interface InterviewInfo {
   position: string;
-  skill: string;
+  stack: string;
   time: string;
 }
 

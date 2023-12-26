@@ -20,12 +20,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
   canActivate(context: ExecutionContext): any {
     const request = context.switchToHttp().getRequest();
-    const { authorization } = request.headers;
-    if (authorization === undefined || !authorization) {
+    const { access_token } = request.res.req.cookies;
+    if (access_token === undefined || !access_token) {
       request.user = null;
       throw new HttpException('토큰이 제공되지 않았습니다.', 401);
     }
-    const token = authorization.replace('Bearer', '').trim();
+    const token = access_token;
     request.user = this.validateToken(token);
     return true;
   }

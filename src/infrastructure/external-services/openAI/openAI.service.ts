@@ -49,15 +49,15 @@ export class OpenAIService implements IOpenAIService {
   async createCustomInterviewQuestion(
     createCustomInterviewQuestionInfo: CreateCustomInterviewQuestionInfo,
   ): Promise<CompletContent> {
-    const { position, skill } = createCustomInterviewQuestionInfo;
-    const content = `${position} ${skill} 면접 질문 10개 만들어줘 `;
+    const { position, stack } = createCustomInterviewQuestionInfo;
+    const content = `${position} ${stack} 면접 질문 1개 만들어줘 `;
     const complet = await this.openAICreateQuestion(content);
     return complet;
   }
 
   //   async createQuestions(createQuestionsDto: CreateQuestionsDto): Promise<any> {
-  //     const { firstQuestion, position, skill } = createQuestionsDto;
-  //     const content = `${position} ${skill}면접 질문 다시 9개 만들어주는데 ${firstQuestion}. 를 제외한 질문 만들어줘  `;
+  //     const { firstQuestion, position, stack } = createQuestionsDto;
+  //     const content = `${position} ${stack}면접 질문 다시 9개 만들어주는데 ${firstQuestion}. 를 제외한 질문 만들어줘  `;
   //     const complet = await this.openAICreateQuestion(content);
   //     return complet;
   //   }

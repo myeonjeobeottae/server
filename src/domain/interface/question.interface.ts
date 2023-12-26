@@ -5,7 +5,7 @@ import {
 
 export interface CreateCustomInterviewQuestionInfo {
   position: string;
-  skill: string;
+  stack: string;
 }
 
 export interface QuestionFeedbackInfo {

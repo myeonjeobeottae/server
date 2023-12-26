@@ -28,8 +28,14 @@ export class UserAuthenticationController {
       sameSite: 'none',
       secure: true,
     });
+
+    res.cookie('refresh_token', refreshToken, {
+      maxAge: 3600000,
+      sameSite: 'none',
+      secure: true,
+    });
+
     const userData: UserData = {
-      refreshToken,
       nickname,
       image,
     };

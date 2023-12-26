@@ -44,7 +44,7 @@ export class InterviewsService implements IInterviewService {
     const createCustomInterviewQuestionInfo: CreateCustomInterviewQuestionInfo =
       {
         position: customInterviewInfo.position,
-        skill: customInterviewInfo.skill,
+        stack: customInterviewInfo.stack,
       };
 
     const createQuestion =

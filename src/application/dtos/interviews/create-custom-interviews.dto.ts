@@ -8,7 +8,7 @@ export class CustomInterviewDto {
 
   @IsString()
   @ApiProperty({ type: String, description: '기술' })
-  skill: string;
+  stack: string;
 
   @IsString()
   @ApiProperty({ type: String, description: '제한 시간' })

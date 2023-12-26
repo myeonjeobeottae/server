@@ -49,7 +49,7 @@ export class UrlInterviews extends InterviewBase {
 @Entity()
 export class CustomInterviews extends InterviewBase {
   @Column()
-  skill: string;
+  stack: string;
 
   @Column()
   position: string;
