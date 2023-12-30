@@ -3,7 +3,13 @@ import { HttpService } from '@nestjs/axios';
 import kakaoConfig from 'src/config/kakao.config';
 import { ConfigType } from '@nestjs/config';
 import { IKakaoOauthService } from '../../../domain/contracts/kakaoOauth.interface';
-import { UserKakaoInfo } from 'src/domain/interface/user.interface';
+import {
+  CreateUserInfo,
+  Email,
+  Image,
+  Nickname,
+  UserKakaoId,
+} from 'src/domain/value-objects/user.vo';
 
 @Injectable()
 export class KakaoOauthService implements IKakaoOauthService {
@@ -41,7 +47,7 @@ export class KakaoOauthService implements IKakaoOauthService {
     return tokenInfo;
   }
 
-  public async getKakaoUserInfo(accessToken: string): Promise<UserKakaoInfo> {
+  public async getKakaoUserInfo(accessToken: string): Promise<CreateUserInfo> {
     const kakaoTokenUserInfo = await this.httpService.axiosRef.get(
       `https://kapi.kakao.com/v2/user/me`,
       {
@@ -52,12 +58,14 @@ export class KakaoOauthService implements IKakaoOauthService {
       },
     );
 
-    const userKakaoInfo: UserKakaoInfo = {
-      userKakaoId: kakaoTokenUserInfo.data.id,
-      nickname: kakaoTokenUserInfo.data.kakao_account.profile.nickname,
-      image: kakaoTokenUserInfo.data.kakao_account.profile.profile_image_url,
-      email: kakaoTokenUserInfo.data.email,
-    };
+    const userKakaoInfo = new CreateUserInfo(
+      new Nickname(kakaoTokenUserInfo.data.kakao_account.profile.nickname),
+      new Image(
+        kakaoTokenUserInfo.data.kakao_account.profile.profile_image_url,
+      ),
+      new UserKakaoId(kakaoTokenUserInfo.data.id),
+      new Email(kakaoTokenUserInfo.data.email),
+    );
 
     return userKakaoInfo;
   }

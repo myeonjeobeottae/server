@@ -1,10 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { CustomInterviews } from 'src/domain/entities/interview.entity';
+import { User } from 'src/domain/entities/user.entity';
 
+import { CustomInterviewRepository } from 'src/domain/repositories/custom-interview.repository';
 import {
   CreateCustomInterviewInfo,
+  CustomInterviewInstance,
   InterviewInfo,
-} from 'src/domain/interface/interview.interface';
-import { CustomInterviewRepository } from 'src/domain/repositories/custom-interview.repository';
+} from 'src/domain/value-objects/interview.vo';
 
 @Injectable()
 export class CustomInterviewsService {
@@ -15,12 +18,12 @@ export class CustomInterviewsService {
 
   async createCustomInterview(
     createCustomInterviewInfo: CreateCustomInterviewInfo,
-  ): Promise<InterviewInfo> {
+  ): Promise<CustomInterviewInstance> {
     const saveInterview =
       await this.customInterviewRepository.createCustomInterview(
         createCustomInterviewInfo,
       );
-    return saveInterview;
+    return new CustomInterviewInstance(saveInterview);
   }
 
   //   async findAll(kakaoId: string): Promise<CustomInterviewDto[]> {

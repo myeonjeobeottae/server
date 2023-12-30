@@ -1,11 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CustomInterviewDto } from 'src/application/dtos/interviews/create-custom-interviews.dto';
+import { CustomInterviewDto } from 'src/application/dtos/interviews/custom-interviews.dto';
 import { CustomInterviews } from 'src/domain/entities/interview.entity';
+import { User } from 'src/domain/entities/user.entity';
+
+import { CustomInterviewRepository } from 'src/domain/repositories/custom-interview.repository';
 import {
   CreateCustomInterviewInfo,
   CustomInterviewInfo,
-} from 'src/domain/interface/interview.interface';
-import { CustomInterviewRepository } from 'src/domain/repositories/custom-interview.repository';
+  CustomInterviewInstance,
+  InterviewInfo,
+  Position,
+  Stack,
+  Time,
+} from 'src/domain/value-objects/interview.vo';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -19,11 +26,15 @@ export class CustomInterviewRepositoryImpl
 
   async createCustomInterview(
     createCustomInterviewInfo: CreateCustomInterviewInfo,
-  ): Promise<CreateCustomInterviewInfo> {
-    const interview = this.customInterviewRepository.create(
-      createCustomInterviewInfo,
-    );
+  ): Promise<CustomInterviews> {
+    const interview = this.customInterviewRepository.create({
+      stack: createCustomInterviewInfo.getStack().getValue(),
+      position: createCustomInterviewInfo.getPosition().getValue(),
+      time: createCustomInterviewInfo.getTime().getValue(),
+      user: createCustomInterviewInfo.getUser().getValue(),
+    });
     const saveInterview = await this.customInterviewRepository.save(interview);
+
     return saveInterview;
   }
 

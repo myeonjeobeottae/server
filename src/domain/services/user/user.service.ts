@@ -2,12 +2,19 @@ import { UserRepository } from 'src/domain/repositories/user.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayloadType } from 'src/domain/interface/auth.interface';
+
 import {
-  UserData,
-  UserInfo,
+  AccessToken,
+  CreateUserInfo,
+  Email,
+  Image,
+  Nickname,
+  UserInstance,
+  UserKakaoId,
   UserKakaoInfo,
   UserTokenData,
-} from 'src/domain/interface/user.interface';
+} from 'src/domain/value-objects/user.vo';
+import { User } from 'src/domain/entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -23,28 +30,37 @@ export class UserService {
 
   public generateUserToken(userKakaoInfo: UserKakaoInfo): UserTokenData {
     const userToken = this.generateJWT({
-      kakaoId: userKakaoInfo.userKakaoId,
-      nickname: userKakaoInfo.nickname,
+      kakaoId: userKakaoInfo.getUserKakaoId().getValue(),
+      nickname: userKakaoInfo.getNickname().getValue(),
     });
 
-    const userTokenData: UserTokenData = {
-      accessToken: userToken,
-      refreshToken: userKakaoInfo.refreshToken,
-      nickname: userKakaoInfo.nickname,
-      image: userKakaoInfo.image,
-    };
+    const accessToken = new AccessToken(userToken);
+
+    const userTokenData = new UserTokenData(
+      userKakaoInfo.getNickname(),
+      userKakaoInfo.getImage(),
+      accessToken,
+      userKakaoInfo.getRefreshToken(),
+    );
+
     return userTokenData;
   }
 
-  async findUser(kakaoId: string): Promise<UserInfo> {
+  async findUser(kakaoId: UserKakaoId): Promise<UserInstance> {
     const user = await this.userRepository.findUser(kakaoId);
 
-    return user;
+    return new UserInstance(user);
   }
 
-  async userRegister(userKakaoInfo: UserKakaoInfo): Promise<UserKakaoInfo> {
+  async userRegister(userKakaoInfo: CreateUserInfo): Promise<CreateUserInfo> {
     const user = await this.userRepository.userRegister(userKakaoInfo);
 
-    return user;
+    const userRegister = new CreateUserInfo(
+      new Nickname(user.nickname),
+      new Image(user.image),
+      new UserKakaoId(user.userKakaoId),
+      new Email(user.email),
+    );
+    return userRegister;
   }
 }

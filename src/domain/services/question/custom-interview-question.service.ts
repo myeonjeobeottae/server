@@ -1,9 +1,12 @@
 import { CustomInterviewQuestionRepository } from 'src/domain/repositories/custom-interview-question.repository';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import {
+  Question,
   CompletSaveQuestion,
+  InterviewId,
   SaveQuestionInfo,
-} from 'src/domain/interface/question.interface';
+} from 'src/domain/value-objects/question.vo';
+import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
 
 @Injectable()
 export class CustomInterviewQuestionService {
@@ -14,21 +17,32 @@ export class CustomInterviewQuestionService {
 
   async createQuestion(
     saveQuestionInfo: SaveQuestionInfo,
-  ): Promise<CompletSaveQuestion[]> {
-    // const createQuestion = this.questionRepository.saveQuestion(questionInfo);
-    const questionArray = this.questionReplace(saveQuestionInfo.content);
+  ): Promise<CompletCustomQuestionDto[]> {
+    const questionArray = this.questionReplace(
+      saveQuestionInfo.getquestion().getValue(),
+    );
+
+    const customInterviewInstance =
+      saveQuestionInfo.getCustomInterviewInstance();
 
     const saveQuestion = questionArray.map(async (question) => {
-      const saveInfo: SaveQuestionInfo = {
-        content: question,
-        interview: saveQuestionInfo.interview,
-      };
-      return await this.customInterviewQuestionRepository.saveQuestion(
-        saveInfo,
+      const saveInfo = new SaveQuestionInfo(
+        new Question(question),
+        customInterviewInstance,
       );
-    });
-    const completSaveQuestion = await Promise.all(saveQuestion);
 
+      const completSave =
+        await this.customInterviewQuestionRepository.saveQuestion(saveInfo);
+
+      const CompletCustomQuestion: CompletCustomQuestionDto = {
+        id: completSave.id,
+        question: completSave.question,
+        interviewId: completSave.interview.id,
+      };
+      return CompletCustomQuestion;
+    });
+
+    const completSaveQuestion = await Promise.all(saveQuestion);
     //반환 타입 지정 ,value object 유효성 검사?
     const sortCompletSaveQuestion = completSaveQuestion.sort(
       (a, b) => a.id - b.id,
@@ -37,8 +51,8 @@ export class CustomInterviewQuestionService {
     return sortCompletSaveQuestion;
   }
 
-  private questionReplace(completContent: string): Array<string> {
-    const linesWithoutNumbers = completContent.replace(/^\d+\.\s+/gm, '');
+  private questionReplace(question: string): Array<string> {
+    const linesWithoutNumbers = question.replace(/^\d+\.\s+/gm, '');
     const questionsArray = linesWithoutNumbers.split('\n');
 
     return questionsArray;

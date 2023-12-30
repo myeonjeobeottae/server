@@ -1,4 +1,4 @@
-import { UserData, UserTokenData } from 'src/domain/interface/user.interface';
+import { UserTokenData } from 'src/domain/value-objects/user.vo';
 
 export interface IUserAuthenticationService {
   kakaoLogin(): Promise<any>;

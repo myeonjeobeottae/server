@@ -1,6 +1,11 @@
-import { UserInfo, UserKakaoInfo } from '../interface/user.interface';
+import { User } from '../entities/user.entity';
+import {
+  CreateUserInfo,
+  UserInstance,
+  UserKakaoId,
+} from '../value-objects/user.vo';
 
 export interface UserRepository {
-  userRegister(userInfo: UserKakaoInfo): Promise<UserKakaoInfo>;
-  findUser(kakaoId: string): Promise<UserInfo>;
+  userRegister(userInfo: CreateUserInfo): Promise<User>;
+  findUser(kakaoId: UserKakaoId): Promise<User>;
 }

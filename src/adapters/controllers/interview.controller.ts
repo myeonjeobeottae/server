@@ -14,9 +14,16 @@ import {
 import { Request } from 'express';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/jwt/jwt-auth.guard';
-import { CustomInterviewDto } from 'src/application/dtos/interviews/create-custom-interviews.dto';
+import { CustomInterviewDto } from 'src/application/dtos/interviews/custom-interviews.dto';
 import { User } from 'src/domain/interface/auth.interface';
-import { CustomInterviewInfo } from 'src/domain/interface/interview.interface';
+import { UserKakaoId } from 'src/domain/value-objects/user.vo';
+import {
+  CustomInterviewInfo,
+  Position,
+  Stack,
+  Time,
+} from 'src/domain/value-objects/interview.vo';
+import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
 
 @Controller('interviews')
 export class InterviewsController {
@@ -34,16 +41,20 @@ export class InterviewsController {
   async createCustomInterview(
     @Body() customInterviewDto: CustomInterviewDto,
     @Req() req: Request,
-  ): Promise<any> {
+  ): Promise<CompletCustomQuestionDto[]> {
     const { kakaoId } = req.user as User;
 
     if (!kakaoId) {
       throw new Error('Kakao ID is missing');
     }
-    const customInterviewInfo: CustomInterviewInfo = {
-      userKakaoId: kakaoId,
-      ...customInterviewDto,
-    };
+
+    const customInterviewInfo = new CustomInterviewInfo(
+      new Position(customInterviewDto.position),
+      new Stack(customInterviewDto.stack),
+      new Time(customInterviewDto.time),
+      new UserKakaoId(kakaoId),
+    );
+
     const createInterview = await this.interviewService.createCustomInterview(
       customInterviewInfo,
     );

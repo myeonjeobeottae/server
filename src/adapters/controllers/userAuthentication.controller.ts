@@ -1,7 +1,9 @@
 import { Controller, Get, Req, Res, Query, Inject } from '@nestjs/common';
 import { Response } from 'express';
+import { UserDataDto } from 'src/application/dtos/user/user.dto';
 import { IUserAuthenticationService } from 'src/application/services/user/UserAuthentication.interface';
-import { UserData, UserInfo } from 'src/domain/interface/user.interface';
+// import { UserData, UserInfo } from 'src/domain/interface/user.interface';
+import { Image, Nickname, UserData } from 'src/domain/value-objects/user.vo';
 
 @Controller('kakao')
 export class UserAuthenticationController {
@@ -17,12 +19,15 @@ export class UserAuthenticationController {
   }
 
   @Get('/redirect')
-  async kakaoOauthCallback(@Query('code') code: string, @Res() res: Response) {
+  async kakaoOauthCallback(
+    @Query('code') code: string,
+    @Res() res: Response,
+  ): Promise<void> {
     const userTokenData = await this.userAuthenticationService.kakaoSignUp(
       code,
     );
-
-    const { accessToken, refreshToken, nickname, image } = userTokenData;
+    const accessToken = userTokenData.getAccessToken().getValue();
+    const refreshToken = userTokenData.getRefreshToken().getValue();
     res.cookie('access_token', accessToken, {
       maxAge: 3600000,
       sameSite: 'none',
@@ -35,10 +40,11 @@ export class UserAuthenticationController {
       secure: true,
     });
 
-    const userData: UserData = {
-      nickname,
-      image,
+    const userData: UserDataDto = {
+      nickname: userTokenData.getNickname().getValue(),
+      image: userTokenData.getImage().getValue(),
     };
+
     res.send(userData);
   }
 

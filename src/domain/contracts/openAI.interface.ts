@@ -1,13 +1,14 @@
 import {
+  Question,
   CreateCustomInterviewQuestionInfo,
-  QuestionFeedbackInfo,
-} from '../interface/question.interface';
+} from '../value-objects/question.vo';
+
 export interface IOpenAIService {
   createCustomInterviewQuestion(
     createCustomInterviewQuestionInfo: CreateCustomInterviewQuestionInfo,
-  ): Promise<any>;
-  createQuestionFeedback(
-    questionFeedbackInfo: QuestionFeedbackInfo,
-  ): Promise<any>;
-  createUrlInterviewQuestion(jobDescription: string): Promise<any>;
+  ): Promise<Question>;
+  // createQuestionFeedback(
+  //   questionFeedbackInfo: QuestionFeedbackInfo,
+  // ): Promise<any>;
+  // createUrlInterviewQuestion(jobDescription: string): Promise<any>;
 }

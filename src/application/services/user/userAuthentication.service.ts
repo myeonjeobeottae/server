@@ -1,13 +1,16 @@
+import {
+  Email,
+  Image,
+  Nickname,
+  RefreshToken,
+  UserKakaoId,
+  UserKakaoInfo,
+} from './../../../domain/value-objects/user.vo';
 import { Inject, Injectable } from '@nestjs/common';
 import { IKakaoOauthService } from 'src/domain/contracts/kakaoOauth.interface';
 import { UserService } from 'src/domain/services/user/user.service';
-import {
-  UserData,
-  UserInfo,
-  UserKakaoInfo,
-  UserTokenData,
-} from 'src/domain/interface/user.interface';
 import { IUserAuthenticationService } from './UserAuthentication.interface';
+import { AccessToken, UserTokenData } from 'src/domain/value-objects/user.vo';
 
 @Injectable()
 export class UserAuthenticationService implements IUserAuthenticationService {
@@ -25,29 +28,38 @@ export class UserAuthenticationService implements IUserAuthenticationService {
   async kakaoSignUp(code: string): Promise<UserTokenData> {
     const kakaoTokenInfo = await this.kakaoOauthService.getKakaoTokenInfo(code);
 
-    const { access_token, refresh_token } = kakaoTokenInfo;
+    const accessToken = new AccessToken(kakaoTokenInfo.access_token).getValue();
+    const refreshToken = new RefreshToken(kakaoTokenInfo.refresh_token);
 
-    const userInfo = await this.kakaoOauthService.getKakaoUserInfo(
-      access_token,
-    );
+    const userInfo = await this.kakaoOauthService.getKakaoUserInfo(accessToken);
 
-    const userCheck = await this.userService.findUser(userInfo.userKakaoId);
+    const userKakaoId = new UserKakaoId(userInfo.getUserKakaoId().getValue());
+    const userCheck = await this.userService.findUser(userKakaoId);
 
-    if (!userCheck) {
+    if (!userCheck.getValue()) {
       const userRegister = await this.userService.userRegister(userInfo);
-      const userKakaoInfo: UserKakaoInfo = {
-        ...userRegister,
-        refreshToken: refresh_token,
-      };
-      const userToken = this.userService.generateUserToken(userKakaoInfo);
+
+      const userKakao = new UserKakaoInfo(
+        userRegister.getNickname(),
+        userRegister.getImage(),
+        userRegister.getUserKakaoId(),
+        userRegister.getEmail(),
+        refreshToken,
+      );
+
+      const userToken = this.userService.generateUserToken(userKakao);
 
       return userToken;
     }
-    const userKakaoInfo: UserInfo = {
-      ...userCheck,
-      refreshToken: refresh_token,
-    };
-    const userToken = this.userService.generateUserToken(userKakaoInfo);
+    const userKakao = new UserKakaoInfo(
+      new Nickname(userCheck.getValue().nickname),
+      new Image(userCheck.getValue().image),
+      new UserKakaoId(userCheck.getValue().userKakaoId),
+      new Email(userCheck.getValue().email),
+      refreshToken,
+    );
+
+    const userToken = this.userService.generateUserToken(userKakao);
 
     return userToken;
   }
