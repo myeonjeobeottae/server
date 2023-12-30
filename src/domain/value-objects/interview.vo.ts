@@ -6,7 +6,7 @@ import { CustomInterviews } from '../entities/interview.entity';
 export class Position {
   constructor(private readonly value: string) {
     if (value === '' || !value) {
-      throw new HttpException('포지션을 선택하세요.', HttpStatus.BAD_REQUEST);
+      throw new Error('포지션을 선택하세요.');
     }
   }
 
@@ -18,7 +18,7 @@ export class Position {
 export class Stack {
   constructor(private readonly value: string) {
     if (value === '' || !value) {
-      throw new HttpException('기술을 선택하세요.', HttpStatus.BAD_REQUEST);
+      throw new Error('기술을 선택하세요.');
     }
   }
 
@@ -30,7 +30,7 @@ export class Stack {
 export class Time {
   constructor(private readonly value: string) {
     if (value === '' || !value) {
-      throw new HttpException('제한시간을 선택하세요.', HttpStatus.BAD_REQUEST);
+      throw new Error('제한시간을 선택하세요.');
     }
   }
 

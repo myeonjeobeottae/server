@@ -1,3 +1,4 @@
+import { EntityManager } from 'typeorm';
 import { CustomInterviews } from '../entities/interview.entity';
 import { User } from '../entities/user.entity';
 import {
@@ -10,5 +11,6 @@ import {
 export interface CustomInterviewRepository {
   createCustomInterview(
     createCustomInterviewInfo: CreateCustomInterviewInfo,
+    entityManager?: EntityManager,
   ): Promise<CustomInterviews>;
 }

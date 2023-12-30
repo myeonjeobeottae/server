@@ -1,5 +1,10 @@
 import { response } from 'express';
-import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  HttpException,
+  NestInterceptor,
+} from '@nestjs/common';
 import { Observable, catchError, tap } from 'rxjs';
 import * as winston from 'winston';
 
@@ -8,7 +13,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
 
-    const now = Date.now();
+    const now = Date.now() + 9 * 60 * 60 * 1000;
 
     const winstonLogger = winston.createLogger({
       level: 'info',
@@ -28,7 +33,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap(() => {
-        const ms = Date.now() - now;
+        const ms = Date.now() + 9 * 60 * 60 * 1000 - now;
         const { statusCode } = res;
 
         winstonLogger.info(
@@ -36,10 +41,18 @@ export class LoggingInterceptor implements NestInterceptor {
         );
       }),
       catchError((error: any) => {
-        const ms = Date.now() - now;
+        let errMessage: string;
+
+        if (!error.response) {
+          errMessage = error.message;
+        } else if (error.response) {
+          errMessage = error.response;
+        }
+
+        const ms = Date.now() + 9 * 60 * 60 * 1000 - now;
 
         winstonLogger.error(
-          `🔴 [REST] Request Error to ${method} [${url}] after ${ms}ms:[${error.message}]:[${error.response.message}]`,
+          `🔴 [REST] Request Error to ${method} [${url}] after ${ms}ms:[Error]:[${errMessage}]`,
         );
         throw error;
       }),

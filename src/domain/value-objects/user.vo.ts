@@ -16,7 +16,7 @@ export class UserInstance {
 export class Nickname {
   constructor(private readonly value: string) {
     if (value === '' || !value) {
-      throw new HttpException('닉네임이 없습니다.', HttpStatus.BAD_REQUEST);
+      throw new Error('닉네임이 없습니다.');
     }
   }
 
@@ -28,7 +28,7 @@ export class Nickname {
 export class Image {
   constructor(private readonly value: string) {
     if (value === '' || !isValidImageUrl(value)) {
-      throw new HttpException('이미지가 없습니다.', HttpStatus.BAD_REQUEST);
+      throw new Error('이미지가 없습니다.');
     }
   }
 
@@ -40,10 +40,7 @@ export class Image {
 export class AccessToken {
   constructor(private readonly value: string) {
     if (value === '' || !value) {
-      throw new HttpException(
-        'AccessToken이 없습니다.',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new Error('AccessToken이 없습니다.');
     }
   }
 
@@ -55,10 +52,7 @@ export class AccessToken {
 export class RefreshToken {
   constructor(private readonly value: string) {
     if (value === '' || !value) {
-      throw new HttpException(
-        'RefreshToken이 없습니다.',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new Error('RefreshToken이 없습니다.');
     }
   }
 
@@ -70,7 +64,7 @@ export class RefreshToken {
 export class UserKakaoId {
   constructor(private readonly value: string) {
     if (!value) {
-      throw new HttpException('Kakao ID가 없습니다.', HttpStatus.BAD_REQUEST);
+      throw new Error('Kakao ID가 없습니다.');
     }
   }
 

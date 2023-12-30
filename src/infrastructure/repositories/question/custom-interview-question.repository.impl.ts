@@ -4,7 +4,7 @@ import { CustomInterviewQuestion } from 'src/domain/entities/question.entity';
 
 import { CustomInterviewQuestionRepository } from 'src/domain/repositories/custom-interview-question.repository';
 import { SaveQuestionInfo } from 'src/domain/value-objects/question.vo';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 
 @Injectable()
 export class CustomInterviewQuestionRepositoryImpl
@@ -17,15 +17,18 @@ export class CustomInterviewQuestionRepositoryImpl
 
   async saveQuestion(
     saveQuestionInfo: SaveQuestionInfo,
+    entityManager?: EntityManager,
   ): Promise<CustomInterviewQuestion> {
-    const createQuestion = this.customInterviewQuestionRepository.create({
+    const repository =
+      entityManager?.getRepository(CustomInterviewQuestion) ??
+      this.customInterviewQuestionRepository;
+
+    const createQuestion = repository.create({
       question: saveQuestionInfo.getquestion().getValue(),
       interview: saveQuestionInfo.getCustomInterviewInstance().getValue(),
     });
 
-    const saveQuestion = await this.customInterviewQuestionRepository.save(
-      createQuestion,
-    );
+    const saveQuestion = await repository.save(createQuestion);
 
     return saveQuestion;
     //만들어지 문제 보여주기 - 인터뷰 정보 추려서 보여줘야함 생성된 문제 전체 보여주는 함수 있어야함

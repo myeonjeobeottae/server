@@ -8,6 +8,7 @@ import {
   CustomInterviewInstance,
   InterviewInfo,
 } from 'src/domain/value-objects/interview.vo';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class CustomInterviewsService {
@@ -18,10 +19,12 @@ export class CustomInterviewsService {
 
   async createCustomInterview(
     createCustomInterviewInfo: CreateCustomInterviewInfo,
+    entityManager?: EntityManager,
   ): Promise<CustomInterviewInstance> {
     const saveInterview =
       await this.customInterviewRepository.createCustomInterview(
         createCustomInterviewInfo,
+        entityManager,
       );
     return new CustomInterviewInstance(saveInterview);
   }

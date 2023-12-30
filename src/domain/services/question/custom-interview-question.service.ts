@@ -5,8 +5,10 @@ import {
   CompletSaveQuestion,
   InterviewId,
   SaveQuestionInfo,
+  QuestionReplace,
 } from 'src/domain/value-objects/question.vo';
 import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class CustomInterviewQuestionService {
@@ -17,6 +19,7 @@ export class CustomInterviewQuestionService {
 
   async createQuestion(
     saveQuestionInfo: SaveQuestionInfo,
+    entityManager?: EntityManager,
   ): Promise<CompletCustomQuestionDto[]> {
     const questionArray = this.questionReplace(
       saveQuestionInfo.getquestion().getValue(),
@@ -25,25 +28,29 @@ export class CustomInterviewQuestionService {
     const customInterviewInstance =
       saveQuestionInfo.getCustomInterviewInstance();
 
-    const saveQuestion = questionArray.map(async (question) => {
+    const saveQuestion = questionArray.getValue().map(async (question) => {
       const saveInfo = new SaveQuestionInfo(
         new Question(question),
         customInterviewInstance,
       );
 
       const completSave =
-        await this.customInterviewQuestionRepository.saveQuestion(saveInfo);
+        await this.customInterviewQuestionRepository.saveQuestion(
+          saveInfo,
+          entityManager,
+        );
 
       const CompletCustomQuestion: CompletCustomQuestionDto = {
         id: completSave.id,
         question: completSave.question,
         interviewId: completSave.interview.id,
       };
+
       return CompletCustomQuestion;
     });
 
     const completSaveQuestion = await Promise.all(saveQuestion);
-    //반환 타입 지정 ,value object 유효성 검사?
+
     const sortCompletSaveQuestion = completSaveQuestion.sort(
       (a, b) => a.id - b.id,
     );
@@ -51,11 +58,11 @@ export class CustomInterviewQuestionService {
     return sortCompletSaveQuestion;
   }
 
-  private questionReplace(question: string): Array<string> {
+  private questionReplace(question: string): QuestionReplace {
     const linesWithoutNumbers = question.replace(/^\d+\.\s+/gm, '');
     const questionsArray = linesWithoutNumbers.split('\n');
 
-    return questionsArray;
+    return new QuestionReplace(questionsArray);
   }
 
   //   async QuestionsIncludedInTheInterview(

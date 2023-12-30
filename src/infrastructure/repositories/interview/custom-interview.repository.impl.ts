@@ -13,7 +13,7 @@ import {
   Stack,
   Time,
 } from 'src/domain/value-objects/interview.vo';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 
 @Injectable()
 export class CustomInterviewRepositoryImpl
@@ -26,14 +26,19 @@ export class CustomInterviewRepositoryImpl
 
   async createCustomInterview(
     createCustomInterviewInfo: CreateCustomInterviewInfo,
+    entityManager?: EntityManager,
   ): Promise<CustomInterviews> {
-    const interview = this.customInterviewRepository.create({
+    const repository =
+      entityManager?.getRepository(CustomInterviews) ??
+      this.customInterviewRepository;
+
+    const interview = repository.create({
       stack: createCustomInterviewInfo.getStack().getValue(),
       position: createCustomInterviewInfo.getPosition().getValue(),
       time: createCustomInterviewInfo.getTime().getValue(),
       user: createCustomInterviewInfo.getUser().getValue(),
     });
-    const saveInterview = await this.customInterviewRepository.save(interview);
+    const saveInterview = await repository.save(interview);
 
     return saveInterview;
   }

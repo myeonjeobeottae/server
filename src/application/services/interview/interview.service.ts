@@ -1,3 +1,4 @@
+import { DataSource } from 'typeorm';
 import { OpenAIService } from 'src/infrastructure/external-services/openAI/openAI.service';
 import { UserService } from 'src/domain/services/user/user.service';
 import { Inject, Injectable } from '@nestjs/common';
@@ -26,47 +27,53 @@ export class InterviewsService implements IInterviewService {
     private readonly customInterviewQuestionService: CustomInterviewQuestionService,
     @Inject('IOpenAIService')
     private readonly openAIService: OpenAIService,
+    @Inject('DATA_SOURCE')
+    private dataSource: DataSource,
   ) {}
 
   async createCustomInterview(
     customInterviewInfo: CustomInterviewInfo,
   ): Promise<CompletCustomQuestionDto[]> {
-    const findUser = await this.userService.findUser(
-      customInterviewInfo.getUserKakaoId(),
-    );
-
-    const createCustomInterviewInfo = new CreateCustomInterviewInfo(
-      customInterviewInfo.getPosition(),
-      customInterviewInfo.getStack(),
-      customInterviewInfo.getTime(),
-      findUser,
-    );
-    const saveInterview =
-      await this.customInterviewsService.createCustomInterview(
-        createCustomInterviewInfo,
+    return await this.dataSource.transaction(async (entityManager) => {
+      const findUser = await this.userService.findUser(
+        customInterviewInfo.getUserKakaoId(),
       );
 
-    const createCustomInterviewQuestionInfo =
-      new CreateCustomInterviewQuestionInfo(
+      const createCustomInterviewInfo = new CreateCustomInterviewInfo(
         customInterviewInfo.getPosition(),
         customInterviewInfo.getStack(),
+        customInterviewInfo.getTime(),
+        findUser,
+      );
+      const saveInterview =
+        await this.customInterviewsService.createCustomInterview(
+          createCustomInterviewInfo,
+          entityManager,
+        );
+
+      const createCustomInterviewQuestionInfo =
+        new CreateCustomInterviewQuestionInfo(
+          customInterviewInfo.getPosition(),
+          customInterviewInfo.getStack(),
+        );
+
+      const createQuestion =
+        await this.openAIService.createCustomInterviewQuestion(
+          createCustomInterviewQuestionInfo,
+        );
+      const saveQuestionInfo = new SaveQuestionInfo(
+        createQuestion,
+        saveInterview,
       );
 
-    const createQuestion =
-      await this.openAIService.createCustomInterviewQuestion(
-        createCustomInterviewQuestionInfo,
-      );
-    const saveQuestionInfo = new SaveQuestionInfo(
-      createQuestion,
-      saveInterview,
-    );
+      const saveQuestions =
+        await this.customInterviewQuestionService.createQuestion(
+          saveQuestionInfo,
+          entityManager,
+        );
 
-    const saveQuestions =
-      await this.customInterviewQuestionService.createQuestion(
-        saveQuestionInfo,
-      );
-
-    return saveQuestions;
+      return saveQuestions;
+    });
   }
 
   //   async findAll(kakaoId: string): Promise<CustomInterviewDto[]> {
