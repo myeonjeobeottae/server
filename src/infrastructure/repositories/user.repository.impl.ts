@@ -32,7 +32,7 @@ export class UserRepositoryImpl implements UserRepository {
 
   async findUser(kakaoId: UserKakaoId): Promise<User> {
     const user = await this.userRepository.findOne({
-      select: ['id', 'userKakaoId', 'nickname', 'email', 'image'],
+      select: ['userKakaoId', 'nickname', 'email', 'image'],
       where: { userKakaoId: kakaoId.getValue() },
     });
     return user;

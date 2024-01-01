@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import {
   CustomInterviews,
   InterviewBase,
@@ -7,10 +13,7 @@ import {
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ name: 'kakao_id' })
+  @PrimaryColumn({ name: 'kakao_id' })
   userKakaoId: string;
 
   @Column()

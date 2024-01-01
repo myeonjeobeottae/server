@@ -12,12 +12,14 @@ import {
   InterviewInfo,
   Position,
 } from 'src/domain/value-objects/interview.vo';
+
+import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
+import { UserKakaoId } from 'src/domain/value-objects/user.vo';
+import { CustomInterviewDto } from 'src/application/dtos/interviews/custom-interviews.dto';
 import {
-  CompletSaveQuestion,
   CreateCustomInterviewQuestionInfo,
   SaveQuestionInfo,
 } from 'src/domain/value-objects/question.vo';
-import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
 
 @Injectable()
 export class InterviewsService implements IInterviewService {
@@ -76,7 +78,23 @@ export class InterviewsService implements IInterviewService {
     });
   }
 
-  //   async findAll(kakaoId: string): Promise<CustomInterviewDto[]> {
+  async findUserCustomInterviews(
+    userKakaoId: string,
+  ): Promise<CustomInterviewDto[]> {
+    const findUserCustomInterviews =
+      await this.customInterviewsService.findUserCustomInterviews(
+        new UserKakaoId(userKakaoId),
+      );
+
+    const userCustomInterviews = findUserCustomInterviews.map(
+      (customInterview) => {
+        return customInterview.getValue();
+      },
+    );
+    return userCustomInterviews;
+  }
+
+  //   async findAll(kakaoId: string): Promise<CreateCustomInterviewDto[]> {
   //     const findAllInterview = await this.customInterviewRepository.findAll(
   //       kakaoId,
   //     );

@@ -7,10 +7,14 @@ import {
   CustomInterviewInstance,
   InterviewInfo,
 } from '../value-objects/interview.vo';
+import { UserKakaoId } from '../value-objects/user.vo';
 
 export interface CustomInterviewRepository {
   createCustomInterview(
     createCustomInterviewInfo: CreateCustomInterviewInfo,
     entityManager?: EntityManager,
   ): Promise<CustomInterviews>;
+  findUserCustomInterviews(
+    userKakaoId: UserKakaoId,
+  ): Promise<CustomInterviews[]>;
 }

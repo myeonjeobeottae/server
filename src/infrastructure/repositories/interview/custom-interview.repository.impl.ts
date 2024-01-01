@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CustomInterviewDto } from 'src/application/dtos/interviews/custom-interviews.dto';
+import { CreateCustomInterviewDto } from 'src/application/dtos/interviews/custom-interviews.dto';
 import { CustomInterviews } from 'src/domain/entities/interview.entity';
 import { User } from 'src/domain/entities/user.entity';
 
@@ -13,6 +13,7 @@ import {
   Stack,
   Time,
 } from 'src/domain/value-objects/interview.vo';
+import { UserKakaoId } from 'src/domain/value-objects/user.vo';
 import { EntityManager, Repository } from 'typeorm';
 
 @Injectable()
@@ -43,7 +44,18 @@ export class CustomInterviewRepositoryImpl
     return saveInterview;
   }
 
-  //   async findAll(kakaoId: string): Promise<CustomInterviewDto[]> {
+  async findUserCustomInterviews(
+    userKakaoId: UserKakaoId,
+  ): Promise<CustomInterviews[]> {
+    const userId = userKakaoId.getValue();
+    const findUserCustomInterviews = this.customInterviewRepository
+      .createQueryBuilder('customInterviews')
+      .where('customInterviews.user =:userId', { userId })
+      .getMany();
+    return findUserCustomInterviews;
+  }
+
+  //   async findAll(kakaoId: string): Promise<CreateCustomInterviewDto[]> {
   //     const findAllInterview = await this.customInterviewRepository.find({
   //       where: {
   //         userKakaoId: kakaoId,

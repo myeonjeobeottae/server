@@ -14,7 +14,10 @@ import {
 import { Request } from 'express';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/jwt/jwt-auth.guard';
-import { CustomInterviewDto } from 'src/application/dtos/interviews/custom-interviews.dto';
+import {
+  CreateCustomInterviewDto,
+  CustomInterviewDto,
+} from 'src/application/dtos/interviews/custom-interviews.dto';
 import { User } from 'src/domain/interface/auth.interface';
 import { UserKakaoId } from 'src/domain/value-objects/user.vo';
 import {
@@ -39,7 +42,7 @@ export class InterviewsController {
   })
   @Post('/custom/create')
   async createCustomInterview(
-    @Body() customInterviewDto: CustomInterviewDto,
+    @Body() CreateCustomInterviewDto: CreateCustomInterviewDto,
     @Req() req: Request,
   ): Promise<CompletCustomQuestionDto[]> {
     const { kakaoId } = req.user as User;
@@ -49,9 +52,9 @@ export class InterviewsController {
     }
 
     const customInterviewInfo = new CustomInterviewInfo(
-      new Position(customInterviewDto.position),
-      new Stack(customInterviewDto.stack),
-      new Time(customInterviewDto.time),
+      new Position(CreateCustomInterviewDto.position),
+      new Stack(CreateCustomInterviewDto.stack),
+      new Time(CreateCustomInterviewDto.time),
       new UserKakaoId(kakaoId),
     );
 
@@ -60,6 +63,23 @@ export class InterviewsController {
     );
 
     return createInterview;
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: '커스텀 인터뷰 질문 9개 만들기 API',
+  })
+  @Get('/custom')
+  async findUserCustomInterviews(
+    @Req() req: Request,
+  ): Promise<CustomInterviewDto[]> {
+    const { kakaoId } = req.user as User;
+
+    const findUserCustomInterviews =
+      await this.interviewService.findUserCustomInterviews(kakaoId);
+
+    return findUserCustomInterviews;
   }
 
   //   @ApiBearerAuth()
@@ -89,7 +109,7 @@ export class InterviewsController {
   //     description: '커스텀 인터뷰 사용자 면접 찾기',
   //   })
   //   @Get('/custom')
-  //   async findAll(@Req() req: Request): Promise<CustomInterviewDto[]> {
+  //   async findAll(@Req() req: Request): Promise<CreateCustomInterviewDto[]> {
   //     const { kakaoId } = req.user as User;
 
   //     const findAllInterview = await this.customInterviewsService.findAll(

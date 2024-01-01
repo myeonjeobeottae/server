@@ -1,3 +1,4 @@
+import { UserKakaoId } from 'src/domain/value-objects/user.vo';
 import { Inject, Injectable } from '@nestjs/common';
 import { CustomInterviews } from 'src/domain/entities/interview.entity';
 import { User } from 'src/domain/entities/user.entity';
@@ -28,8 +29,23 @@ export class CustomInterviewsService {
       );
     return new CustomInterviewInstance(saveInterview);
   }
+  async findUserCustomInterviews(
+    userKakaoId: UserKakaoId,
+  ): Promise<CustomInterviewInstance[]> {
+    const findUserCustomInterviews =
+      await this.customInterviewRepository.findUserCustomInterviews(
+        userKakaoId,
+      );
+    const userCustomInterviews = findUserCustomInterviews.map(
+      (customInterview) => {
+        return new CustomInterviewInstance(customInterview);
+      },
+    );
 
-  //   async findAll(kakaoId: string): Promise<CustomInterviewDto[]> {
+    return userCustomInterviews;
+  }
+
+  //   async findAll(kakaoId: string): Promise<CreateCustomInterviewDto[]> {
   //     const findAllInterview = await this.customInterviewRepository.findAll(
   //       kakaoId,
   //     );
