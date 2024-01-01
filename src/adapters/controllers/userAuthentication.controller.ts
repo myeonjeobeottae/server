@@ -1,9 +1,18 @@
-import { Controller, Get, Req, Res, Query, Inject } from '@nestjs/common';
-import { Response } from 'express';
+import {
+  Controller,
+  Get,
+  Req,
+  Res,
+  Query,
+  Inject,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { Request, Response } from 'express';
 import { UserDataDto } from 'src/application/dtos/user/user.dto';
 import { IUserAuthenticationService } from 'src/application/services/user/UserAuthentication.interface';
-// import { UserData, UserInfo } from 'src/domain/interface/user.interface';
-import { Image, Nickname, UserData } from 'src/domain/value-objects/user.vo';
+import { JwtAuthGuard } from 'src/common/jwt/jwt-auth.guard';
+import { User } from 'src/domain/interface/auth.interface';
 
 @Controller('kakao')
 export class UserAuthenticationController {
@@ -61,5 +70,17 @@ export class UserAuthenticationController {
         msg: 'Not Authenticated',
       };
     }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: '사용자 정보 찾기',
+  })
+  @Get('/user')
+  async findUser(@Req() req: Request): Promise<UserDataDto> {
+    const { kakaoId } = req.user as User;
+    const findUser = this.userAuthenticationService.findUser(kakaoId);
+    return findUser;
   }
 }

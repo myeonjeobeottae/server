@@ -11,6 +11,7 @@ import { IKakaoOauthService } from 'src/domain/contracts/kakaoOauth.interface';
 import { UserService } from 'src/domain/services/user/user.service';
 import { IUserAuthenticationService } from './UserAuthentication.interface';
 import { AccessToken, UserTokenData } from 'src/domain/value-objects/user.vo';
+import { UserDataDto } from 'src/application/dtos/user/user.dto';
 
 @Injectable()
 export class UserAuthenticationService implements IUserAuthenticationService {
@@ -62,5 +63,14 @@ export class UserAuthenticationService implements IUserAuthenticationService {
     const userToken = this.userService.generateUserToken(userKakao);
 
     return userToken;
+  }
+
+  async findUser(kakaoId: string): Promise<UserDataDto> {
+    const user = await this.userService.findUser(new UserKakaoId(kakaoId));
+    const findUserInfo: UserDataDto = {
+      nickname: user.getValue().nickname,
+      image: user.getValue().image,
+    };
+    return findUserInfo;
   }
 }
