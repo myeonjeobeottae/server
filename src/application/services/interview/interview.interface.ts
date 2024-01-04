@@ -11,4 +11,5 @@ export interface IInterviewService {
     customInterviewInfo: CustomInterviewInfo,
   ): Promise<CompletCustomQuestionDto[]>;
   findUserCustomInterviews(userKakaoId: string): Promise<CustomInterviewDto[]>;
+  deleteCustomInterview(id: number, kakaoId: string): Promise<boolean>;
 }

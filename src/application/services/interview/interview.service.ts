@@ -94,6 +94,12 @@ export class InterviewsService implements IInterviewService {
     return userCustomInterviews;
   }
 
+  async deleteCustomInterview(id: number, kakaoId: string): Promise<boolean> {
+    const deleteCustomInterview =
+      await this.customInterviewsService.deleteCustomInterview(id, kakaoId);
+    return deleteCustomInterview;
+  }
+
   //   async findAll(kakaoId: string): Promise<CreateCustomInterviewDto[]> {
   //     const findAllInterview = await this.customInterviewRepository.findAll(
   //       kakaoId,

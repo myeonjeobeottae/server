@@ -26,6 +26,7 @@ export class CustomInterviewQuestion extends Question {
   @ManyToOne(
     () => CustomInterviews,
     (customInterviews) => customInterviews.question,
+    { onDelete: 'CASCADE' },
   )
   @JoinColumn()
   interview: CustomInterviews;

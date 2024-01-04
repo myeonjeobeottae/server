@@ -33,7 +33,7 @@ export class UrlInterviews extends InterviewBase {
   URL: string;
 
   @ManyToOne(() => User, (user) => user.urlInterviews)
-  @JoinColumn()
+  @JoinColumn({ name: 'user' })
   user: User;
 
   @OneToMany(
@@ -54,8 +54,10 @@ export class CustomInterviews extends InterviewBase {
   @Column()
   position: string;
 
-  @ManyToOne(() => User, (user) => user.customInterviews)
-  @JoinColumn()
+  @ManyToOne(() => User, (user) => user.customInterviews, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'user' })
   user: User;
 
   @OneToMany(

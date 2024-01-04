@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateCustomInterviewDto } from 'src/application/dtos/interviews/custom-interviews.dto';
 import { CustomInterviews } from 'src/domain/entities/interview.entity';
 import { User } from 'src/domain/entities/user.entity';
@@ -49,12 +49,28 @@ export class CustomInterviewRepositoryImpl
   ): Promise<CustomInterviews[]> {
     const userId = userKakaoId.getValue();
     const findUserCustomInterviews = this.customInterviewRepository
-      .createQueryBuilder('customInterviews')
-      .where('customInterviews.user =:userId', { userId })
+      .createQueryBuilder()
+      .where('user =:userId', { userId })
       .getMany();
     return findUserCustomInterviews;
   }
 
+  async deleteCustomInterview(id: number, kakaoId: string): Promise<boolean> {
+    const deleteCustomInterview = await this.customInterviewRepository
+      .createQueryBuilder()
+      .delete()
+      .where('user =:kakaoId', { kakaoId })
+      .andWhere('id =:id', { id })
+      .execute();
+
+    if (deleteCustomInterview.affected === 0) {
+      throw new HttpException(
+        '해당 인터뷰가 없습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return true;
+  }
   //   async findAll(kakaoId: string): Promise<CreateCustomInterviewDto[]> {
   //     const findAllInterview = await this.customInterviewRepository.find({
   //       where: {

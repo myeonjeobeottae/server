@@ -6,6 +6,8 @@ import {
   Query,
   Inject,
   UseGuards,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { Request, Response } from 'express';
@@ -76,7 +78,12 @@ export class UserAuthenticationController {
   @Get('/renew/token')
   async renewToken(@Req() req: Request): Promise<UserTokenDataDto> {
     const refreshToken = req.cookies['refresh_token'];
-
+    if (!refreshToken) {
+      throw new HttpException(
+        'refresh token이 없습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const renewToken = await this.userAuthenticationService.renewToken(
       refreshToken,
     );

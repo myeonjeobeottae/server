@@ -10,6 +10,7 @@ import {
   HttpException,
   HttpStatus,
   Inject,
+  Delete,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
@@ -68,7 +69,7 @@ export class InterviewsController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
-    description: '커스텀 인터뷰 질문 9개 만들기 API',
+    description: '커스텀 인터뷰 찾기',
   })
   @Get('/custom')
   async findUserCustomInterviews(
@@ -82,26 +83,21 @@ export class InterviewsController {
     return findUserCustomInterviews;
   }
 
-  //   @ApiBearerAuth()
-  //   @UseGuards(JwtAuthGuard)
-  //   @ApiResponse({
-  //     description: '커스텀 인터뷰 질문 9개 만들기 API',
-  //   })
-  //   @Post('createQuestions')
-  //   async createInterviewQuestions(
-  //     @Body() createQuestionsDto: CreateQuestionsDto,
-  //     @Req() req: Request,
-  //   ): Promise<any> {
-  //     const { kakaoId } = req.user as User;
-  //     if (!kakaoId) {
-  //       throw new HttpException('Kakao ID is missing', HttpStatus.BAD_REQUEST);
-  //     }
-
-  //     const createQuestions = await this.gptChatService.createQuestions(
-  //       createQuestionsDto,
-  //     );
-  //     return createQuestions;
-  //   }
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: '커스텀 인터뷰 삭제',
+  })
+  @Delete('/custom/delete/:id')
+  async deleteCustomInterview(
+    @Param('id') id: number,
+    @Req() req: Request,
+  ): Promise<any> {
+    const { kakaoId } = req.user as User;
+    const deleteCustomInterview =
+      await this.interviewService.deleteCustomInterview(id, kakaoId);
+    return deleteCustomInterview;
+  }
 
   //   @ApiBearerAuth()
   //   @UseGuards(JwtAuthGuard)
