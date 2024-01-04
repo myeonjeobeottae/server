@@ -49,7 +49,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       path: this.httpAdapter.getRequestUrl(ctx.getRequest()),
       message,
     };
-    console.log(exception);
+    // console.log(exception);
     console.log(responseBody);
 
     this.httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);

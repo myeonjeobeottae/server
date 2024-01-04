@@ -6,4 +6,5 @@ export interface JwtPayloadType {
 export interface User extends JwtPayloadType {
   iat: number;
   exp: number;
+  refreshToken: string;
 }

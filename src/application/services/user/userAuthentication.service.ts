@@ -65,6 +65,25 @@ export class UserAuthenticationService implements IUserAuthenticationService {
     return userToken;
   }
 
+  async renewToken(refreshToken: string): Promise<UserTokenData> {
+    const renewToken = await this.kakaoOauthService.renewToken(refreshToken);
+
+    const userInfo = await this.kakaoOauthService.getKakaoUserInfo(
+      renewToken.getValue(),
+    );
+    const userKakaoInfo = new UserKakaoInfo(
+      userInfo.getNickname(),
+      userInfo.getImage(),
+      userInfo.getUserKakaoId(),
+      userInfo.getEmail(),
+      new RefreshToken(refreshToken),
+    );
+
+    const generateUserToken = this.userService.generateUserToken(userKakaoInfo);
+
+    return generateUserToken;
+  }
+
   async findUser(kakaoId: string): Promise<UserDataDto> {
     const user = await this.userService.findUser(new UserKakaoId(kakaoId));
     const findUserInfo: UserDataDto = {

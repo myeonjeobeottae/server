@@ -20,13 +20,16 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
   canActivate(context: ExecutionContext): any {
     const request = context.switchToHttp().getRequest();
-    const { access_token } = request.res.req.cookies;
-    if (access_token === undefined || !access_token) {
+    const { authorization } = request.headers;
+
+    if (authorization === undefined) {
       request.user = null;
+
       throw new HttpException('토큰이 제공되지 않았습니다.', 401);
     }
-    const token = access_token;
+    const token = authorization.replace('Bearer', '').trim();
     request.user = this.validateToken(token);
+
     return true;
   }
   validateToken(token: string) {
@@ -40,7 +43,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
           throw new HttpException('유효하지 않은 토큰입니다.', 401);
 
         case 'TokenExpiredError': // 토큰 만료 오류의 이름
-          throw new HttpException('토큰이 만료되었습니다.', 410);
+          throw new HttpException('토큰이 만료되었습니다.', 403);
 
         // 여기에 추가적인 JWT 관련 오류들을 추가할 수 있습니다.
 

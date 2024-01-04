@@ -25,7 +25,9 @@ export class UserService {
   ) {}
 
   private generateJWT(payload: JwtPayloadType) {
-    return this.jwtService.sign(payload);
+    return this.jwtService.sign(payload, {
+      expiresIn: '1h',
+    });
   }
 
   public generateUserToken(userKakaoInfo: UserKakaoInfo): UserTokenData {

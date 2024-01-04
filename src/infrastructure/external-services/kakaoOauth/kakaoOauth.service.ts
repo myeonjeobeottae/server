@@ -4,6 +4,7 @@ import kakaoConfig from 'src/config/kakao.config';
 import { ConfigType } from '@nestjs/config';
 import { IKakaoOauthService } from '../../../domain/contracts/kakaoOauth.interface';
 import {
+  AccessToken,
   CreateUserInfo,
   Email,
   Image,
@@ -68,5 +69,26 @@ export class KakaoOauthService implements IKakaoOauthService {
     );
 
     return userKakaoInfo;
+  }
+
+  public async renewToken(refreshToken: string): Promise<AccessToken> {
+    const renewToken = await this.httpService.axiosRef.post(
+      `https://kauth.kakao.com/oauth/token`,
+      {
+        headers: {
+          'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+        },
+      },
+      {
+        params: {
+          grant_type: 'refresh_token',
+          client_id: this.kakaoOauthConfig.kakaoClientId,
+          refresh_token: refreshToken,
+        },
+      },
+    );
+
+    const accessToken = new AccessToken(renewToken.data.access_token);
+    return accessToken;
   }
 }

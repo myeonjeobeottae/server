@@ -10,3 +10,9 @@ export class UserDataDto {
   @ApiProperty({ type: String, description: '이미지' })
   image: string;
 }
+
+export class UserTokenDataDto extends UserDataDto {
+  @IsString()
+  @ApiProperty({ type: String, description: 'access token' })
+  accessToken: string;
+}

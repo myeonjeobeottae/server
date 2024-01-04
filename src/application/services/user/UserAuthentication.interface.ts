@@ -5,4 +5,5 @@ export interface IUserAuthenticationService {
   kakaoLogin(): Promise<any>;
   kakaoSignUp(code: string): Promise<UserTokenData>;
   findUser(userId: string): Promise<UserDataDto>;
+  renewToken(refreshToken: string): Promise<UserTokenData>;
 }

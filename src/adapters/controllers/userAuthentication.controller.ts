@@ -9,7 +9,10 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { UserDataDto } from 'src/application/dtos/user/user.dto';
+import {
+  UserDataDto,
+  UserTokenDataDto,
+} from 'src/application/dtos/user/user.dto';
 import { IUserAuthenticationService } from 'src/application/services/user/UserAuthentication.interface';
 import { JwtAuthGuard } from 'src/common/jwt/jwt-auth.guard';
 import { User } from 'src/domain/interface/auth.interface';
@@ -35,23 +38,17 @@ export class UserAuthenticationController {
     const userTokenData = await this.userAuthenticationService.kakaoSignUp(
       code,
     );
-    const accessToken = userTokenData.getAccessToken().getValue();
-    const refreshToken = userTokenData.getRefreshToken().getValue();
-    res.cookie('access_token', accessToken, {
+
+    res.cookie('refresh_token', userTokenData.getRefreshToken().getValue(), {
       maxAge: 3600000,
       sameSite: 'none',
       secure: true,
     });
 
-    res.cookie('refresh_token', refreshToken, {
-      maxAge: 3600000,
-      sameSite: 'none',
-      secure: true,
-    });
-
-    const userData: UserDataDto = {
+    const userData: UserTokenDataDto = {
       nickname: userTokenData.getNickname().getValue(),
       image: userTokenData.getImage().getValue(),
+      accessToken: userTokenData.getAccessToken().getValue(),
     };
 
     res.send(userData);
@@ -70,6 +67,27 @@ export class UserAuthenticationController {
         msg: 'Not Authenticated',
       };
     }
+  }
+
+  @ApiBearerAuth()
+  @ApiResponse({
+    description: '사용자 정보 찾기',
+  })
+  @Get('/renew/token')
+  async renewToken(@Req() req: Request): Promise<UserTokenDataDto> {
+    const refreshToken = req.cookies['refresh_token'];
+
+    const renewToken = await this.userAuthenticationService.renewToken(
+      refreshToken,
+    );
+
+    const userData: UserTokenDataDto = {
+      nickname: renewToken.getNickname().getValue(),
+      image: renewToken.getImage().getValue(),
+      accessToken: renewToken.getAccessToken().getValue(),
+    };
+
+    return userData;
   }
 
   @ApiBearerAuth()

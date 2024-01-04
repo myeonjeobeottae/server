@@ -22,7 +22,6 @@ export class InterviewId {
 export class QuestionReplace {
   constructor(private readonly value: Array<string>) {
     const duplicateCheck = [...new Set(value)];
-    console.log(duplicateCheck.length);
 
     if (duplicateCheck.length < 10) {
       throw new Error('10개의 문제가 생성되지 않았습니다.');
