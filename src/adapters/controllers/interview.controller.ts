@@ -7,8 +7,6 @@ import {
   Param,
   Post,
   Body,
-  HttpException,
-  HttpStatus,
   Inject,
   Delete,
 } from '@nestjs/common';
@@ -28,6 +26,7 @@ import {
   Time,
 } from 'src/domain/value-objects/interview.vo';
 import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
+import { CustomInterviews } from 'src/domain/entities/interview.entity';
 
 @Controller('interviews')
 export class InterviewsController {
@@ -69,7 +68,7 @@ export class InterviewsController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
-    description: '커스텀 인터뷰 찾기',
+    description: '유저 커스텀 인터뷰 전체 찾기',
   })
   @Get('/custom')
   async findUserCustomInterviews(
@@ -79,6 +78,24 @@ export class InterviewsController {
 
     const findUserCustomInterviews =
       await this.interviewService.findUserCustomInterviews(kakaoId);
+
+    return findUserCustomInterviews;
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: '유저 커스텀 인터뷰 찾기(문제 포함)',
+  })
+  @Get('/custom/:id')
+  async findCustomInterview(
+    @Param('id') id: number,
+    @Req() req: Request,
+  ): Promise<CustomInterviews> {
+    const { kakaoId } = req.user as User;
+
+    const findUserCustomInterviews =
+      await this.interviewService.findCustomInterview(id, kakaoId);
 
     return findUserCustomInterviews;
   }

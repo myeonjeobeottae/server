@@ -55,6 +55,21 @@ export class CustomInterviewRepositoryImpl
     return findUserCustomInterviews;
   }
 
+  async findCustomInterview(
+    id: number,
+    userKakaoId: UserKakaoId,
+  ): Promise<CustomInterviews> {
+    const userId = userKakaoId.getValue();
+    const findCustomInterview = await this.customInterviewRepository
+      .createQueryBuilder('customInterviews')
+      .leftJoinAndSelect('customInterviews.question', 'question')
+      .where('customInterviews.id =:id', { id })
+      .andWhere('customInterviews.user =:userId', { userId })
+      .getOne();
+
+    return findCustomInterview;
+  }
+
   async deleteCustomInterview(id: number, kakaoId: string): Promise<boolean> {
     const deleteCustomInterview = await this.customInterviewRepository
       .createQueryBuilder()

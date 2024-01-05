@@ -17,5 +17,9 @@ export interface CustomInterviewRepository {
   findUserCustomInterviews(
     userKakaoId: UserKakaoId,
   ): Promise<CustomInterviews[]>;
+  findCustomInterview(
+    id: number,
+    userKakaoId: UserKakaoId,
+  ): Promise<CustomInterviews>;
   deleteCustomInterview(id: number, kakaoId: string): Promise<boolean>;
 }

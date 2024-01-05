@@ -9,6 +9,7 @@ import { CustomInterviewQuestionService } from 'src/domain/services/question/cus
 import {
   CreateCustomInterviewInfo,
   CustomInterviewInfo,
+  CustomInterviewInstance,
   InterviewInfo,
   Position,
 } from 'src/domain/value-objects/interview.vo';
@@ -20,6 +21,7 @@ import {
   CreateCustomInterviewQuestionInfo,
   SaveQuestionInfo,
 } from 'src/domain/value-objects/question.vo';
+import { CustomInterviews } from 'src/domain/entities/interview.entity';
 
 @Injectable()
 export class InterviewsService implements IInterviewService {
@@ -92,6 +94,27 @@ export class InterviewsService implements IInterviewService {
       },
     );
     return userCustomInterviews;
+  }
+
+  async findCustomInterview(
+    id: number,
+    userKakaoId: string,
+  ): Promise<CustomInterviews> {
+    const findUserCustomInterviews =
+      await this.customInterviewsService.findCustomInterview(
+        id,
+        new UserKakaoId(userKakaoId),
+      );
+    const customInterviews: CustomInterviews = {
+      id: findUserCustomInterviews.getValue().id,
+      stack: findUserCustomInterviews.getValue().stack,
+      position: findUserCustomInterviews.getValue().position,
+      time: findUserCustomInterviews.getValue().time,
+      user: findUserCustomInterviews.getValue().user,
+      question: findUserCustomInterviews.getValue().question,
+    };
+
+    return customInterviews;
   }
 
   async deleteCustomInterview(id: number, kakaoId: string): Promise<boolean> {

@@ -1,7 +1,17 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { CreateUserInfo, UserInstance, UserKakaoId } from './user.vo';
-import { User } from '../entities/user.entity';
+import { UserInstance, UserKakaoId } from './user.vo';
 import { CustomInterviews } from '../entities/interview.entity';
+
+export class InterviewId {
+  constructor(private readonly value: number) {
+    if (!value) {
+      throw new Error('Interview Id가 없습니다.');
+    }
+  }
+
+  getValue() {
+    return this.value;
+  }
+}
 
 export class Position {
   constructor(private readonly value: string) {
@@ -38,8 +48,13 @@ export class Time {
     return this.value;
   }
 }
+
 export class CustomInterviewInstance {
-  constructor(private readonly value: CustomInterviews) {}
+  constructor(private readonly value: CustomInterviews) {
+    if (!value) {
+      throw new Error('인터뷰가 없습니다.');
+    }
+  }
 
   getValue() {
     return this.value;
@@ -91,5 +106,21 @@ export class CreateCustomInterviewInfo extends InterviewInfo {
   }
   getUser() {
     return this.user;
+  }
+}
+
+export class findCustomInterview extends CreateCustomInterviewInfo {
+  constructor(
+    private readonly interviewId: InterviewId,
+    position: Position,
+    stack: Stack,
+    time: Time,
+    user: UserInstance,
+  ) {
+    super(position, stack, time, user);
+  }
+
+  getInterviewId() {
+    return this.interviewId;
   }
 }

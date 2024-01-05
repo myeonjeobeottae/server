@@ -1,5 +1,5 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
 import { CustomInterviewInstance, Position, Stack } from './interview.vo';
+import { CustomInterviewQuestion } from '../entities/question.entity';
 
 export class Question {
   constructor(private readonly value: string) {
@@ -25,6 +25,18 @@ export class QuestionReplace {
 
     if (duplicateCheck.length < 10) {
       throw new Error('10개의 문제가 생성되지 않았습니다.');
+    }
+  }
+
+  getValue() {
+    return this.value;
+  }
+}
+
+export class CustomInterviewQuestionInstance {
+  constructor(private readonly value: CustomInterviewQuestion) {
+    if (!value) {
+      throw new Error('문제가 없습니다.');
     }
   }
 
