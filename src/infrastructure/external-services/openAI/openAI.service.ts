@@ -76,7 +76,7 @@ export class OpenAIService implements IOpenAIService {
 
   async createQuestionFeedback(
     createFeedbackInfo: CreateFeedbackInfo,
-  ): Promise<any> {
+  ): Promise<string> {
     const content = `문제:${createFeedbackInfo
       .getQuestion()
       .getValue()} 답변:${createFeedbackInfo

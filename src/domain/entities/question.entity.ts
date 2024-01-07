@@ -14,10 +14,10 @@ export abstract class Question {
   @Column()
   question: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: 'No answer' })
   answer: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: 'No feedback' })
   feedback: string;
 }
 

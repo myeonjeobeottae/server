@@ -16,6 +16,12 @@ export class Question {
   getValue() {
     return this.value;
   }
+
+  equals(other: Question): boolean {
+    const equals = this.value === other.getValue();
+
+    return equals;
+  }
 }
 
 export class QuestionId {
@@ -33,6 +39,17 @@ export class Answer {
   constructor(private readonly value: string) {
     if (value === '' || !value) {
       throw new Error('답변이 없습니다.');
+    }
+  }
+  getValue() {
+    return this.value;
+  }
+}
+
+export class Feedback {
+  constructor(private readonly value: string) {
+    if (value === '' || !value) {
+      throw new Error('피드백이 없습니다.');
     }
   }
   getValue() {
@@ -70,6 +87,7 @@ export class CreateCustomInterviewQuestionInfo {
   constructor(
     private readonly position: Position,
     private readonly stack: Stack,
+    private readonly customInterviewInstance: CustomInterviewInstance,
   ) {}
 
   getPosition() {
@@ -78,6 +96,10 @@ export class CreateCustomInterviewQuestionInfo {
 
   getStack() {
     return this.stack;
+  }
+
+  getCustomInterviewInstance() {
+    return this.customInterviewInstance;
   }
 }
 
@@ -126,6 +148,30 @@ export class FindCustomInterviewOfQuestion {
   }
 }
 
+export class FindOneCustomInterviewQuestion extends FindCustomInterviewOfQuestion {
+  constructor(
+    questionId: QuestionId,
+    question: Question,
+    private readonly answer: Answer,
+    private readonly feedback: Feedback,
+    private readonly interviewId: InterviewId,
+  ) {
+    super(questionId, question);
+  }
+
+  getAnswer() {
+    return this.answer;
+  }
+
+  getFeedback() {
+    return this.feedback;
+  }
+
+  getInterviewId() {
+    return this.interviewId;
+  }
+}
+
 export class FindQuestion {
   constructor(
     private readonly questionId: QuestionId,
@@ -137,6 +183,20 @@ export class FindQuestion {
 
   getUserKakaoId() {
     return this.userKakaoId;
+  }
+}
+
+export class SaveQuestionAnswer {
+  constructor(
+    private readonly questionId: QuestionId,
+    private readonly answer: Answer,
+  ) {}
+  getQuestionId() {
+    return this.questionId;
+  }
+
+  getAnswer() {
+    return this.answer;
   }
 }
 

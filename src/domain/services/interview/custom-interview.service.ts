@@ -60,7 +60,7 @@ export class CustomInterviewsService {
     const findCustomInterview =
       await this.customInterviewRepository.findCustomInterview(id, userKakaoId);
 
-    const FindCustomInterviewOfQuestions = findCustomInterview.question.map(
+    const findCustomInterviewOfQuestions = findCustomInterview.question.map(
       (question) => {
         return new FindCustomInterviewOfQuestion(
           new QuestionId(question.id),
@@ -74,7 +74,7 @@ export class CustomInterviewsService {
       new Position(findCustomInterview.position),
       new Stack(findCustomInterview.stack),
       new Time(findCustomInterview.time),
-      FindCustomInterviewOfQuestions,
+      findCustomInterviewOfQuestions,
     );
 
     return customInterview;

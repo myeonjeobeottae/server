@@ -3,7 +3,10 @@ import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-q
 import { CustomInterviewQuestion } from 'src/domain/entities/question.entity';
 
 import { CustomInterviewQuestionRepository } from 'src/domain/repositories/custom-interview-question.repository';
-import { FindQuestion } from 'src/domain/value-objects/question.vo';
+import {
+  FindQuestion,
+  SaveQuestionAnswer,
+} from 'src/domain/value-objects/question.vo';
 import { SaveQuestionInfo } from 'src/domain/value-objects/question.vo';
 import { EntityManager, Repository } from 'typeorm';
 
@@ -36,7 +39,9 @@ export class CustomInterviewQuestionRepositoryImpl
     // return saveQuestion;
   }
 
-  async findOneQuestion(findQuestion: FindQuestion): Promise<any> {
+  async findOneQuestion(
+    findQuestion: FindQuestion,
+  ): Promise<CustomInterviewQuestion> {
     const questionId = findQuestion.getQuestionId().getValue();
     const userId = findQuestion.getUserKakaoId().getValue();
 
@@ -55,6 +60,28 @@ export class CustomInterviewQuestionRepositoryImpl
     }
 
     return findOneQuestion;
+  }
+
+  async saveQuestionAnswer(
+    saveQuestionAnswerInfo: SaveQuestionAnswer,
+  ): Promise<boolean> {
+    const questionId = saveQuestionAnswerInfo.getQuestionId().getValue();
+    const answer = saveQuestionAnswerInfo.getAnswer().getValue();
+    const saveQuestionAnswer = await this.customInterviewQuestionRepository
+      .createQueryBuilder('')
+      .update()
+      .set({ answer })
+      .where('id=:questionId', { questionId })
+      .execute();
+
+    if (saveQuestionAnswer.affected === 0) {
+      throw new HttpException(
+        '답변이 저장되지 않았습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return saveQuestionAnswer.affected === 1 ? true : false;
   }
 
   // async QuestionsIncludedInTheInterview(interview: interview): Promise<> {

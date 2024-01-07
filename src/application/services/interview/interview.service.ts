@@ -1,5 +1,4 @@
 import { DataSource } from 'typeorm';
-import { OpenAIService } from 'src/infrastructure/external-services/openAI/openAI.service';
 import { UserService } from 'src/domain/services/user/user.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { IInterviewService } from './interview.interface';
@@ -24,7 +23,6 @@ import {
   CreateCustomInterviewQuestionInfo,
   SaveQuestionInfo,
 } from 'src/domain/value-objects/question.vo';
-import { CustomInterviews } from 'src/domain/entities/interview.entity';
 
 @Injectable()
 export class InterviewsService implements IInterviewService {
@@ -32,8 +30,6 @@ export class InterviewsService implements IInterviewService {
     private readonly userService: UserService,
     private readonly customInterviewsService: CustomInterviewsService,
     private readonly customInterviewQuestionService: CustomInterviewQuestionService,
-    @Inject('IOpenAIService')
-    private readonly openAIService: OpenAIService,
     @Inject('DATA_SOURCE')
     private dataSource: DataSource,
   ) {}
@@ -62,19 +58,21 @@ export class InterviewsService implements IInterviewService {
         new CreateCustomInterviewQuestionInfo(
           customInterviewInfo.getPosition(),
           customInterviewInfo.getStack(),
+          saveInterview,
         );
 
       const createQuestion =
-        await this.openAIService.createCustomInterviewQuestion(
+        await this.customInterviewQuestionService.createQuestion(
           createCustomInterviewQuestionInfo,
         );
+
       const saveQuestionInfo = new SaveQuestionInfo(
         createQuestion,
         saveInterview,
       );
 
       const saveQuestions =
-        await this.customInterviewQuestionService.createQuestion(
+        await this.customInterviewQuestionService.SaveQuestion(
           saveQuestionInfo,
           entityManager,
         );
