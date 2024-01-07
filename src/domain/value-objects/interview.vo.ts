@@ -1,3 +1,4 @@
+import { FindCustomInterviewOfQuestion } from './question.vo';
 import { UserInstance, UserKakaoId } from './user.vo';
 import { CustomInterviews } from '../entities/interview.entity';
 
@@ -109,18 +110,22 @@ export class CreateCustomInterviewInfo extends InterviewInfo {
   }
 }
 
-export class findCustomInterview extends CreateCustomInterviewInfo {
+export class FindCustomInterview extends InterviewInfo {
   constructor(
     private readonly interviewId: InterviewId,
     position: Position,
     stack: Stack,
     time: Time,
-    user: UserInstance,
+    private readonly findCustomInterviewOfQuestion: FindCustomInterviewOfQuestion[],
   ) {
-    super(position, stack, time, user);
+    super(position, stack, time);
   }
 
   getInterviewId() {
     return this.interviewId;
+  }
+
+  getFindCustomInterviewOfQuestion() {
+    return this.findCustomInterviewOfQuestion;
   }
 }

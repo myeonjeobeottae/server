@@ -16,6 +16,7 @@ import { JwtAuthGuard } from 'src/common/jwt/jwt-auth.guard';
 import {
   CreateCustomInterviewDto,
   CustomInterviewDto,
+  FindCustomInterviewDto,
 } from 'src/application/dtos/interviews/custom-interviews.dto';
 import { User } from 'src/domain/interface/auth.interface';
 import { UserKakaoId } from 'src/domain/value-objects/user.vo';
@@ -91,7 +92,7 @@ export class InterviewsController {
   async findCustomInterview(
     @Param('id') id: number,
     @Req() req: Request,
-  ): Promise<CustomInterviews> {
+  ): Promise<FindCustomInterviewDto> {
     const { kakaoId } = req.user as User;
 
     const findUserCustomInterviews =

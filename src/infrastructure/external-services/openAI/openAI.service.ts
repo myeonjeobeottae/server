@@ -5,6 +5,7 @@ import { IOpenAIService } from '../../../domain/contracts/openAI.interface';
 import {
   Question,
   CreateCustomInterviewQuestionInfo,
+  CreateFeedbackInfo,
 } from 'src/domain/value-objects/question.vo';
 
 @Injectable()
@@ -73,15 +74,18 @@ export class OpenAIService implements IOpenAIService {
   //     return complet;
   //   }
 
-  // async createQuestionFeedback(
-  //   questionFeedbackInfo: QuestionFeedbackInfo,
-  // ): Promise<any> {
-  //   const { question, answer } = questionFeedbackInfo;
+  async createQuestionFeedback(
+    createFeedbackInfo: CreateFeedbackInfo,
+  ): Promise<any> {
+    const content = `문제:${createFeedbackInfo
+      .getQuestion()
+      .getValue()} 답변:${createFeedbackInfo
+      .getAnswer()
+      .getValue()} 답변에 내용을 틀린점이 있으면 알려주고 부족한 점을 보안해줘`;
+    const complet = await this.openAIChatStream(content);
 
-  //   const content = `문제:${question} 답변:${answer} 답변에 내용을 틀린점이 있으면 알려주고 부족한 점을 보안해줘`;
-  //   const complet = await this.openAIChatStream(content);
-  //   return complet;
-  // }
+    return complet;
+  }
 
   // async createUrlInterviewQuestion(
   //   jobDescription: string,

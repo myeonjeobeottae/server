@@ -9,14 +9,17 @@ import { CustomInterviewQuestionService } from 'src/domain/services/question/cus
 import {
   CreateCustomInterviewInfo,
   CustomInterviewInfo,
-  CustomInterviewInstance,
-  InterviewInfo,
-  Position,
 } from 'src/domain/value-objects/interview.vo';
 
-import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
+import {
+  CompletCustomQuestionDto,
+  FindCustomInterviewOfQuestionDto,
+} from 'src/application/dtos/question/custom-question.dto';
 import { UserKakaoId } from 'src/domain/value-objects/user.vo';
-import { CustomInterviewDto } from 'src/application/dtos/interviews/custom-interviews.dto';
+import {
+  CustomInterviewDto,
+  FindCustomInterviewDto,
+} from 'src/application/dtos/interviews/custom-interviews.dto';
 import {
   CreateCustomInterviewQuestionInfo,
   SaveQuestionInfo,
@@ -99,19 +102,29 @@ export class InterviewsService implements IInterviewService {
   async findCustomInterview(
     id: number,
     userKakaoId: string,
-  ): Promise<CustomInterviews> {
+  ): Promise<FindCustomInterviewDto> {
     const findUserCustomInterviews =
       await this.customInterviewsService.findCustomInterview(
         id,
         new UserKakaoId(userKakaoId),
       );
-    const customInterviews: CustomInterviews = {
-      id: findUserCustomInterviews.getValue().id,
-      stack: findUserCustomInterviews.getValue().stack,
-      position: findUserCustomInterviews.getValue().position,
-      time: findUserCustomInterviews.getValue().time,
-      user: findUserCustomInterviews.getValue().user,
-      question: findUserCustomInterviews.getValue().question,
+
+    const findUserCustomInterviewOfQuestion = findUserCustomInterviews
+      .getFindCustomInterviewOfQuestion()
+      .map((qusetion) => {
+        const completCustomQuestionDto: FindCustomInterviewOfQuestionDto = {
+          id: qusetion.getQuestionId().getValue(),
+          question: qusetion.getQuestion().getValue(),
+        };
+        return completCustomQuestionDto;
+      });
+
+    const customInterviews: FindCustomInterviewDto = {
+      id: findUserCustomInterviews.getInterviewId().getValue(),
+      stack: findUserCustomInterviews.getStack().getValue(),
+      position: findUserCustomInterviews.getPosition().getValue(),
+      time: findUserCustomInterviews.getTime().getValue(),
+      question: findUserCustomInterviewOfQuestion,
     };
 
     return customInterviews;

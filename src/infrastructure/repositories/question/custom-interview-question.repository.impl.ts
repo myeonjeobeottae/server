@@ -1,8 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
 import { CustomInterviewQuestion } from 'src/domain/entities/question.entity';
 
 import { CustomInterviewQuestionRepository } from 'src/domain/repositories/custom-interview-question.repository';
+import { FindQuestion } from 'src/domain/value-objects/question.vo';
 import { SaveQuestionInfo } from 'src/domain/value-objects/question.vo';
 import { EntityManager, Repository } from 'typeorm';
 
@@ -33,6 +34,27 @@ export class CustomInterviewQuestionRepositoryImpl
     return saveQuestion;
     //만들어지 문제 보여주기 - 인터뷰 정보 추려서 보여줘야함 생성된 문제 전체 보여주는 함수 있어야함
     // return saveQuestion;
+  }
+
+  async findOneQuestion(findQuestion: FindQuestion): Promise<any> {
+    const questionId = findQuestion.getQuestionId().getValue();
+    const userId = findQuestion.getUserKakaoId().getValue();
+
+    const findOneQuestion = await this.customInterviewQuestionRepository
+      .createQueryBuilder('customInterviewQuestion')
+      .leftJoinAndSelect(
+        'customInterviewQuestion.interview',
+        'customInterviews',
+      )
+      .where('customInterviews.user=:userId', { userId })
+      .andWhere('customInterviewQuestion.id=:questionId', { questionId })
+      .getOne();
+
+    if (!findOneQuestion) {
+      throw new HttpException('해당 문제가 없습니다.', HttpStatus.BAD_REQUEST);
+    }
+
+    return findOneQuestion;
   }
 
   // async QuestionsIncludedInTheInterview(interview: interview): Promise<> {

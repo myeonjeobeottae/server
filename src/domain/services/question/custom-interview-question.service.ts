@@ -1,14 +1,14 @@
 import { CustomInterviewQuestionRepository } from 'src/domain/repositories/custom-interview-question.repository';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import {
-  Question,
-  CompletSaveQuestion,
-  InterviewId,
-  SaveQuestionInfo,
-  QuestionReplace,
-} from 'src/domain/value-objects/question.vo';
+
 import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
 import { EntityManager } from 'typeorm';
+import {
+  FindQuestion,
+  Question,
+  QuestionReplace,
+  SaveQuestionInfo,
+} from 'src/domain/value-objects/question.vo';
 
 @Injectable()
 export class CustomInterviewQuestionService {
@@ -75,15 +75,12 @@ export class CustomInterviewQuestionService {
   //     return questionsIncludedInTheInterview;
   //   }
 
-  //   async findOneQuestion(
-  //     findOneQuestionInfo: FindOneQuestionInfo,
-  //   ): Promise<Question> {
-  //     const findOneQuestion = await this.questionRepository.findOneQuestion(
-  //       findOneQuestionInfo,
-  //     );
-  //     if (!findOneQuestion) {
-  //       throw new HttpException('해당 문제가 없습니다.', HttpStatus.BAD_REQUEST);
-  //     }
-  //     return findOneQuestion;
-  //   }
+  async findOneQuestion(findQuestion: FindQuestion): Promise<any> {
+    const findOneQuestion =
+      await this.customInterviewQuestionRepository.findOneQuestion(
+        findQuestion,
+      );
+
+    return findOneQuestion;
+  }
 }

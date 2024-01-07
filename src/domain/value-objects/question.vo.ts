@@ -1,4 +1,10 @@
-import { CustomInterviewInstance, Position, Stack } from './interview.vo';
+import { UserKakaoId } from 'src/domain/value-objects/user.vo';
+import {
+  CustomInterviewInstance,
+  InterviewId,
+  Position,
+  Stack,
+} from './interview.vo';
 import { CustomInterviewQuestion } from '../entities/question.entity';
 
 export class Question {
@@ -12,8 +18,23 @@ export class Question {
   }
 }
 
-export class InterviewId {
-  constructor(private readonly value: number) {}
+export class QuestionId {
+  constructor(private readonly value: number) {
+    if (!value) {
+      throw new Error('Question ID 가 없습니다.');
+    }
+  }
+  getValue() {
+    return this.value;
+  }
+}
+
+export class Answer {
+  constructor(private readonly value: string) {
+    if (value === '' || !value) {
+      throw new Error('답변이 없습니다.');
+    }
+  }
   getValue() {
     return this.value;
   }
@@ -88,10 +109,67 @@ export class CompletSaveQuestion {
   getInterviewId() {
     return this.interviewId;
   }
-  toPlain() {
-    return {
-      question: this.question.getValue(), // question 객체에서 실제 값을 가져옵니다.
-      interviewId: this.interviewId.getValue(), // interviewId 객체에서 실제 값을 가져옵니다.
-    };
+}
+
+export class FindCustomInterviewOfQuestion {
+  constructor(
+    private readonly questionId: QuestionId,
+    private readonly question: Question,
+  ) {}
+
+  getQuestion() {
+    return this.question;
+  }
+
+  getQuestionId() {
+    return this.questionId;
+  }
+}
+
+export class FindQuestion {
+  constructor(
+    private readonly questionId: QuestionId,
+    private readonly userKakaoId: UserKakaoId,
+  ) {}
+  getQuestionId() {
+    return this.questionId;
+  }
+
+  getUserKakaoId() {
+    return this.userKakaoId;
+  }
+}
+
+export class CreateQuestionFeedback extends FindQuestion {
+  constructor(
+    questionId: QuestionId,
+    private readonly question: Question,
+    userKakaoId: UserKakaoId,
+    private readonly answer: Answer,
+  ) {
+    super(questionId, userKakaoId);
+  }
+
+  getQuestion() {
+    return this.question;
+  }
+
+  getAnswer() {
+    return this.answer;
+  }
+}
+
+export class CreateFeedbackInfo {
+  constructor(
+    private readonly question: Question,
+    private readonly answer: Answer,
+  ) {}
+
+  getQuestion() {
+    return this.question;
+  }
+
+  getAnswer() {
+    return this.answer;
   }
 }

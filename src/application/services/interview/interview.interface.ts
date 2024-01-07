@@ -1,6 +1,7 @@
 import {
   CreateCustomInterviewDto,
   CustomInterviewDto,
+  FindCustomInterviewDto,
 } from 'src/application/dtos/interviews/custom-interviews.dto';
 import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
 import { CustomInterviews } from 'src/domain/entities/interview.entity';
@@ -15,6 +16,6 @@ export interface IInterviewService {
   findCustomInterview(
     id: number,
     userKakaoId: string,
-  ): Promise<CustomInterviews>;
+  ): Promise<FindCustomInterviewDto>;
   deleteCustomInterview(id: number, kakaoId: string): Promise<boolean>;
 }

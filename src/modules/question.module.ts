@@ -7,10 +7,13 @@ import {
   CustomInterviewQuestionProvider,
   UrlInterviewQuestionProvider,
 } from 'src/infrastructure/database/question.repository.provider';
+import { QuestionController } from 'src/adapters/controllers/question.controller';
+import { OpenAIModule } from './openAI.module';
+import { QuestionService } from 'src/application/services/question/question.service';
 
 @Module({
-  imports: [DatabaseModule, JwtModule],
-  controllers: [],
+  imports: [DatabaseModule, JwtModule, OpenAIModule],
+  controllers: [QuestionController],
   providers: [
     ...CustomInterviewQuestionProvider,
     ...UrlInterviewQuestionProvider,
@@ -19,10 +22,10 @@ import {
       provide: 'CustomInterviewQuestionRepository',
       useClass: CustomInterviewQuestionRepositoryImpl,
     },
-    // {
-    //   provide: 'IInterviewService',
-    //   useClass: InterviewsService,
-    // },
+    {
+      provide: 'IQuestionService',
+      useClass: QuestionService,
+    },
   ],
   exports: [CustomInterviewQuestionService],
 })

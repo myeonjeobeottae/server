@@ -4,8 +4,18 @@ import { CustomInterviewRepository } from 'src/domain/repositories/custom-interv
 import {
   CreateCustomInterviewInfo,
   CustomInterviewInstance,
+  FindCustomInterview,
+  InterviewId,
+  Position,
+  Stack,
+  Time,
 } from 'src/domain/value-objects/interview.vo';
 import { EntityManager } from 'typeorm';
+import {
+  FindCustomInterviewOfQuestion,
+  Question,
+  QuestionId,
+} from 'src/domain/value-objects/question.vo';
 
 @Injectable()
 export class CustomInterviewsService {
@@ -46,10 +56,26 @@ export class CustomInterviewsService {
   async findCustomInterview(
     id: number,
     userKakaoId: UserKakaoId,
-  ): Promise<CustomInterviewInstance> {
+  ): Promise<FindCustomInterview> {
     const findCustomInterview =
       await this.customInterviewRepository.findCustomInterview(id, userKakaoId);
-    const customInterview = new CustomInterviewInstance(findCustomInterview);
+
+    const FindCustomInterviewOfQuestions = findCustomInterview.question.map(
+      (question) => {
+        return new FindCustomInterviewOfQuestion(
+          new QuestionId(question.id),
+          new Question(question.question),
+        );
+      },
+    );
+
+    const customInterview = new FindCustomInterview(
+      new InterviewId(findCustomInterview.id),
+      new Position(findCustomInterview.position),
+      new Stack(findCustomInterview.stack),
+      new Time(findCustomInterview.time),
+      FindCustomInterviewOfQuestions,
+    );
 
     return customInterview;
   }
