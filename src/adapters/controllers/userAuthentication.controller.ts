@@ -27,7 +27,9 @@ export class UserAuthenticationController {
   ) {}
 
   @Get('/login')
-  async kakaoLogin(@Res() res: Response) {
+  async kakaoLogin(@Res() res: Response, @Req() req: Request) {
+    console.log(req.headers.origin, 'dddd');
+
     const kakaoUrl = await this.userAuthenticationService.kakaoLogin();
     res.redirect(kakaoUrl);
   }

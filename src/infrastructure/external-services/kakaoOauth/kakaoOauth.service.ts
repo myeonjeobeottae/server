@@ -21,8 +21,6 @@ export class KakaoOauthService implements IKakaoOauthService {
   ) {}
 
   public async kakaoLogin(): Promise<any> {
-    console.log(this.kakaoOauthConfig.kakaoRedirectUrlLocal);
-
     const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${this.kakaoOauthConfig.kakaoClientId}&redirect_uri=${this.kakaoOauthConfig.kakaoRedirectUrlLocal}`;
 
     return kakaoUrl;
