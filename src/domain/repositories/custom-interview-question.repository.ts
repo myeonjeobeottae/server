@@ -2,6 +2,7 @@ import { CustomInterviewQuestion } from '../entities/question.entity';
 import { EntityManager } from 'typeorm';
 import {
   FindQuestion,
+  SaveFeedbackInfo,
   SaveQuestionAnswer,
   SaveQuestionInfo,
 } from '../value-objects/question.vo';
@@ -15,4 +16,5 @@ export interface CustomInterviewQuestionRepository {
   saveQuestionAnswer(
     saveQuestionAnswerInfo: SaveQuestionAnswer,
   ): Promise<boolean>;
+  saveQuestionFeedback(saveFeedbackInfo: SaveFeedbackInfo): Promise<boolean>;
 }

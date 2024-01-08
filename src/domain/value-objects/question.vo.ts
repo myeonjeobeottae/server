@@ -233,3 +233,18 @@ export class CreateFeedbackInfo {
     return this.answer;
   }
 }
+
+export class SaveFeedbackInfo {
+  constructor(
+    private readonly questionId: QuestionId,
+    private readonly feedback: Feedback,
+  ) {}
+
+  getQuestionId() {
+    return this.questionId;
+  }
+
+  getFeedback() {
+    return this.feedback;
+  }
+}

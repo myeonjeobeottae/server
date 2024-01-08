@@ -1,3 +1,4 @@
+import { FindCustomInterviewOfQuestion } from './../../../domain/value-objects/question.vo';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
 import { CustomInterviewQuestion } from 'src/domain/entities/question.entity';
@@ -5,6 +6,7 @@ import { CustomInterviewQuestion } from 'src/domain/entities/question.entity';
 import { CustomInterviewQuestionRepository } from 'src/domain/repositories/custom-interview-question.repository';
 import {
   FindQuestion,
+  SaveFeedbackInfo,
   SaveQuestionAnswer,
 } from 'src/domain/value-objects/question.vo';
 import { SaveQuestionInfo } from 'src/domain/value-objects/question.vo';
@@ -74,14 +76,42 @@ export class CustomInterviewQuestionRepositoryImpl
       .where('id=:questionId', { questionId })
       .execute();
 
-    if (saveQuestionAnswer.affected === 0) {
+    const saveQuestionAnswerResult =
+      saveQuestionAnswer.affected === 1 ? true : false;
+
+    if (saveQuestionAnswerResult === false) {
       throw new HttpException(
         '답변이 저장되지 않았습니다.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    return saveQuestionAnswer.affected === 1 ? true : false;
+    return saveQuestionAnswerResult;
+  }
+
+  async saveQuestionFeedback(
+    saveFeedbackInfo: SaveFeedbackInfo,
+  ): Promise<boolean> {
+    const questionId = saveFeedbackInfo.getQuestionId().getValue();
+    const feedback = saveFeedbackInfo.getFeedback().getValue();
+    const saveQuestionFeedback = await this.customInterviewQuestionRepository
+      .createQueryBuilder('')
+      .update()
+      .set({ feedback })
+      .where('id=:questionId', { questionId })
+      .execute();
+
+    const saveQuestionFeedbackResult =
+      saveQuestionFeedback.affected === 1 ? true : false;
+
+    if (saveQuestionFeedbackResult === false) {
+      throw new HttpException(
+        '피드백이 저장되지 않았습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return saveQuestionFeedbackResult;
   }
 
   // async QuestionsIncludedInTheInterview(interview: interview): Promise<> {

@@ -1,7 +1,11 @@
-import { CreateQuestionFeedback } from 'src/domain/value-objects/question.vo';
+import {
+  CreateQuestionFeedback,
+  SaveFeedbackInfo,
+} from 'src/domain/value-objects/question.vo';
 
 export interface IQuestionService {
   creatQuestionFeedback(
     createQuestionFeedback: CreateQuestionFeedback,
   ): Promise<any>;
+  saveQuestionFeedback(saveFeedbackInfo: SaveFeedbackInfo): Promise<boolean>;
 }

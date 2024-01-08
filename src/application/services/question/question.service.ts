@@ -1,3 +1,4 @@
+import { SaveFeedbackInfo } from './../../../domain/value-objects/question.vo';
 import { CustomInterviewQuestionService } from 'src/domain/services/question/custom-interview-question.service';
 import { CreateQuestionFeedback } from 'src/domain/value-objects/question.vo';
 import { IQuestionService } from './question.interface';
@@ -18,5 +19,15 @@ export class QuestionService implements IQuestionService {
       );
 
     return createFeedback;
+  }
+
+  async saveQuestionFeedback(
+    saveFeedbackInfo: SaveFeedbackInfo,
+  ): Promise<boolean> {
+    const saveQuestionFeedback =
+      await this.customInterviewQuestionService.saveQuestionFeedback(
+        saveFeedbackInfo,
+      );
+    return saveQuestionFeedback;
   }
 }

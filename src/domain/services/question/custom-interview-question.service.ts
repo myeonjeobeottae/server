@@ -1,4 +1,7 @@
-import { SaveQuestionAnswer } from './../../value-objects/question.vo';
+import {
+  SaveFeedbackInfo,
+  SaveQuestionAnswer,
+} from './../../value-objects/question.vo';
 import { CustomInterviewQuestionRepository } from 'src/domain/repositories/custom-interview-question.repository';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 
@@ -40,7 +43,7 @@ export class CustomInterviewQuestionService {
     return createQuestion;
   }
 
-  async SaveQuestion(
+  async saveQuestion(
     saveQuestionInfo: SaveQuestionInfo,
     entityManager?: EntityManager,
   ): Promise<CompletCustomQuestionDto[]> {
@@ -158,5 +161,15 @@ export class CustomInterviewQuestionService {
     return this.customInterviewQuestionRepository.saveQuestionAnswer(
       saveQuestionAnswerInfo,
     );
+  }
+
+  async saveQuestionFeedback(
+    saveFeedbackInfo: SaveFeedbackInfo,
+  ): Promise<boolean> {
+    const saveQuestionFeedback =
+      await this.customInterviewQuestionRepository.saveQuestionFeedback(
+        saveFeedbackInfo,
+      );
+    return saveQuestionFeedback;
   }
 }

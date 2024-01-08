@@ -26,3 +26,9 @@ export class CreateFeedbackDto {
   @ApiProperty({ type: String, description: '답변' })
   answer: string;
 }
+
+export class SaveFeedbackDto {
+  @IsString()
+  @ApiProperty({ type: String, description: '피드백' })
+  feedback: string;
+}

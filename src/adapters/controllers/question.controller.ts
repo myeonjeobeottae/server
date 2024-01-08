@@ -1,14 +1,17 @@
 import {
   Answer,
   CreateQuestionFeedback,
+  Feedback,
   Question,
   QuestionId,
+  SaveFeedbackInfo,
 } from './../../domain/value-objects/question.vo';
 import {
   Body,
   Controller,
   Inject,
   Param,
+  Patch,
   Post,
   Req,
   Res,
@@ -16,7 +19,10 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { CreateFeedbackDto } from 'src/application/dtos/question/custom-question.dto';
+import {
+  CreateFeedbackDto,
+  SaveFeedbackDto,
+} from 'src/application/dtos/question/custom-question.dto';
 import { IQuestionService } from 'src/application/services/question/question.interface';
 import { JwtAuthGuard } from 'src/common/jwt/jwt-auth.guard';
 import { User } from 'src/domain/interface/auth.interface';
@@ -34,7 +40,7 @@ export class QuestionController {
   @ApiResponse({
     description: '사용자 커스텀 문제 피드백',
   })
-  @Post('/feedback/:id')
+  @Post('/create/feedback/:id')
   async creatQuestionFeedback(
     @Param('id') id: number,
     @Body() creatAnswer: CreateFeedbackDto,
@@ -67,6 +73,25 @@ export class QuestionController {
     }
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: '사용자 커스텀 문제 피드백 저장',
+  })
+  @Patch('/save/feedback/:id')
+  async saveFeedback(
+    @Param('id') id: number,
+    @Body() saveFeedbackInfo: SaveFeedbackDto,
+  ): Promise<boolean> {
+    const saveFeedback = await this.questionService.saveQuestionFeedback(
+      new SaveFeedbackInfo(
+        new QuestionId(id),
+        new Feedback(saveFeedbackInfo.feedback),
+      ),
+    );
+
+    return saveFeedback;
+  }
   //   @ApiBearerAuth()
   //   @UseGuards(JwtAuthGuard)
   //   @ApiResponse({

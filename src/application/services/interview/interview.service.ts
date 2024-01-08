@@ -72,7 +72,7 @@ export class InterviewsService implements IInterviewService {
       );
 
       const saveQuestions =
-        await this.customInterviewQuestionService.SaveQuestion(
+        await this.customInterviewQuestionService.saveQuestion(
           saveQuestionInfo,
           entityManager,
         );
