@@ -1,6 +1,6 @@
-import { SaveFeedbackInfo } from './../../../domain/value-objects/question.vo';
+import { SaveFeedbackInfo } from '../../../domain/value-objects/question/custom-question.vo';
 import { CustomInterviewQuestionService } from 'src/domain/services/question/custom-interview-question.service';
-import { CreateQuestionFeedback } from 'src/domain/value-objects/question.vo';
+import { CreateQuestionFeedback } from 'src/domain/value-objects/question/custom-question.vo';
 import { IQuestionService } from './question.interface';
 import { Injectable } from '@nestjs/common';
 

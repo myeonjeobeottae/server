@@ -1,7 +1,7 @@
 import { CustomInterviewRepositoryImpl } from '../infrastructure/repositories/interview/custom-interview.repository.impl';
 import { Module } from '@nestjs/common';
 import { UserProvider } from 'src/infrastructure/database/user.repository.provider';
-import { UserRepositoryImpl } from 'src/infrastructure/repositories/user.repository.impl';
+import { UserRepositoryImpl } from 'src/infrastructure/repositories/user/user.repository.impl';
 import { UserAuthenticationService } from 'src/application/services/user/userAuthentication.service';
 import { DatabaseModule } from './database.module';
 import { JwtModule } from './jwt.module';
@@ -15,6 +15,9 @@ import { CustomInterviewsService } from 'src/domain/services/interview/custom-in
 import { UserModule } from './user.module';
 import { OpenAIModule } from './openAI.module';
 import { QuestionModule } from './question.module';
+import { UrlInterviewRepositoryImpl } from 'src/infrastructure/repositories/interview/url-interview.repository.impl';
+import { UrlInterviewsService } from 'src/domain/services/interview/url-interview.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -23,15 +26,26 @@ import { QuestionModule } from './question.module';
     UserModule,
     OpenAIModule,
     QuestionModule,
+    HttpModule.registerAsync({
+      useFactory: () => ({
+        timeout: 5000,
+        maxRedirects: 5,
+      }),
+    }),
   ],
   controllers: [InterviewsController],
   providers: [
     ...CustomInterviewProvider,
     ...UrlInterviewProvider,
     CustomInterviewsService,
+    UrlInterviewsService,
     {
       provide: 'CustomInterviewRepository',
       useClass: CustomInterviewRepositoryImpl,
+    },
+    {
+      provide: 'UrlInterviewRepository',
+      useClass: UrlInterviewRepositoryImpl,
     },
     {
       provide: 'IInterviewService',

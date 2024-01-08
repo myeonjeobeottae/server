@@ -3,15 +3,15 @@ import {
   CustomInterviewDto,
   FindCustomInterviewDto,
 } from 'src/application/dtos/interviews/custom-interviews.dto';
-import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
-import { CustomInterviews } from 'src/domain/entities/interview.entity';
-import { CustomInterviewInfo } from 'src/domain/value-objects/interview.vo';
-import { CompletSaveQuestion } from 'src/domain/value-objects/question.vo';
+import { CompletQuestionDto } from 'src/application/dtos/question/custom-question.dto';
+import { CustomInterviewInfo } from 'src/domain/value-objects/interview/custom-interview.vo';
+import { UrlInterviewInfo } from 'src/domain/value-objects/interview/url-interview.vo';
 
 export interface IInterviewService {
   createCustomInterview(
     customInterviewInfo: CustomInterviewInfo,
-  ): Promise<CompletCustomQuestionDto[]>;
+  ): Promise<CompletQuestionDto[]>;
+  createUrlInterview(urlInterviewInfo: UrlInterviewInfo): Promise<any>;
   findUserCustomInterviews(userKakaoId: string): Promise<CustomInterviewDto[]>;
   findCustomInterview(
     id: number,

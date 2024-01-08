@@ -1,18 +1,8 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { CreateCustomInterviewDto } from 'src/application/dtos/interviews/custom-interviews.dto';
 import { CustomInterviews } from 'src/domain/entities/interview.entity';
-import { User } from 'src/domain/entities/user.entity';
 
-import { CustomInterviewRepository } from 'src/domain/repositories/custom-interview.repository';
-import {
-  CreateCustomInterviewInfo,
-  CustomInterviewInfo,
-  CustomInterviewInstance,
-  InterviewInfo,
-  Position,
-  Stack,
-  Time,
-} from 'src/domain/value-objects/interview.vo';
+import { CustomInterviewRepository } from 'src/domain/repositories/interview/custom-interview.repository';
+import { CreateCustomInterviewInfo } from 'src/domain/value-objects/interview/custom-interview.vo';
 import { UserKakaoId } from 'src/domain/value-objects/user.vo';
 import { EntityManager, Repository } from 'typeorm';
 
@@ -86,12 +76,4 @@ export class CustomInterviewRepositoryImpl
     }
     return true;
   }
-  //   async findAll(kakaoId: string): Promise<CreateCustomInterviewDto[]> {
-  //     const findAllInterview = await this.customInterviewRepository.find({
-  //       where: {
-  //         userKakaoId: kakaoId,
-  //       },
-  //     });
-  //     return findAllInterview;
-  //   }
 }

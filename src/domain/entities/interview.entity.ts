@@ -27,7 +27,7 @@ export class UrlInterviews extends InterviewBase {
   companyName: string;
 
   @Column({ name: 'url_contents', type: 'text' })
-  UrlContents: string;
+  urlContents: string;
 
   @Column({ name: 'URL' })
   URL: string;

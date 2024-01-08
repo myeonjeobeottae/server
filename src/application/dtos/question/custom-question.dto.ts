@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
-export class FindCustomInterviewOfQuestionDto {
+export class FindInterviewOfQuestionDto {
   @IsNumber()
   @ApiProperty({ type: String, description: '문제ID' })
   id: number;
@@ -11,7 +11,7 @@ export class FindCustomInterviewOfQuestionDto {
   question: string;
 }
 
-export class CompletCustomQuestionDto extends FindCustomInterviewOfQuestionDto {
+export class CompletQuestionDto extends FindInterviewOfQuestionDto {
   @IsNumber()
   @ApiProperty({ type: String, description: '인터뷰 ID' })
   interviewId: number;

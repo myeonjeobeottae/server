@@ -1,4 +1,3 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
 import { User } from '../entities/user.entity';
 
 function isValidImageUrl(url: string): boolean {

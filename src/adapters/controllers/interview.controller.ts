@@ -25,9 +25,15 @@ import {
   Position,
   Stack,
   Time,
-} from 'src/domain/value-objects/interview.vo';
-import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
+} from 'src/domain/value-objects/interview/custom-interview.vo';
+import { CompletQuestionDto } from 'src/application/dtos/question/custom-question.dto';
 import { CustomInterviews } from 'src/domain/entities/interview.entity';
+import { CreateUrlInterviewDto } from 'src/application/dtos/interviews/url-interviews.dto';
+import {
+  CreateUrlInterviewInfo,
+  UrlInterviewInfo,
+  UrlValue,
+} from 'src/domain/value-objects/interview/url-interview.vo';
 
 @Controller('interviews')
 export class InterviewsController {
@@ -45,22 +51,16 @@ export class InterviewsController {
   async createCustomInterview(
     @Body() CreateCustomInterviewDto: CreateCustomInterviewDto,
     @Req() req: Request,
-  ): Promise<CompletCustomQuestionDto[]> {
+  ): Promise<CompletQuestionDto[]> {
     const { kakaoId } = req.user as User;
 
-    if (!kakaoId) {
-      throw new Error('Kakao ID is missing');
-    }
-
-    const customInterviewInfo = new CustomInterviewInfo(
-      new Position(CreateCustomInterviewDto.position),
-      new Stack(CreateCustomInterviewDto.stack),
-      new Time(CreateCustomInterviewDto.time),
-      new UserKakaoId(kakaoId),
-    );
-
     const createInterview = await this.interviewService.createCustomInterview(
-      customInterviewInfo,
+      new CustomInterviewInfo(
+        new Position(CreateCustomInterviewDto.position),
+        new Stack(CreateCustomInterviewDto.stack),
+        new Time(CreateCustomInterviewDto.time),
+        new UserKakaoId(kakaoId),
+      ),
     );
 
     return createInterview;
@@ -115,6 +115,29 @@ export class InterviewsController {
     const deleteCustomInterview =
       await this.interviewService.deleteCustomInterview(id, kakaoId);
     return deleteCustomInterview;
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: 'url 인터뷰 생성 및 문제 생성',
+  })
+  @Post('/url/create')
+  async createUrlInterview(
+    @Body() createUrlInterviewDto: CreateUrlInterviewDto,
+    @Req() req: Request,
+  ): Promise<CompletQuestionDto[]> {
+    const { kakaoId } = req.user as User;
+
+    const createUrlInterview = await this.interviewService.createUrlInterview(
+      new UrlInterviewInfo(
+        new UserKakaoId(kakaoId),
+        new UrlValue(createUrlInterviewDto.url),
+        new Time(createUrlInterviewDto.time),
+      ),
+    );
+
+    return createUrlInterview;
   }
 
   //   @ApiBearerAuth()

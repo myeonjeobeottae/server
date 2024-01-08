@@ -1,11 +1,11 @@
-import { CustomInterviewQuestion } from '../entities/question.entity';
+import { CustomInterviewQuestion } from '../../entities/question.entity';
 import { EntityManager } from 'typeorm';
 import {
   FindQuestion,
   SaveFeedbackInfo,
   SaveQuestionAnswer,
   SaveQuestionInfo,
-} from '../value-objects/question.vo';
+} from '../../value-objects/question/custom-question.vo';
 
 export interface CustomInterviewQuestionRepository {
   saveQuestion(

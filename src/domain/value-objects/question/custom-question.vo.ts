@@ -4,8 +4,8 @@ import {
   InterviewId,
   Position,
   Stack,
-} from './interview.vo';
-import { CustomInterviewQuestion } from '../entities/question.entity';
+} from '../interview/custom-interview.vo';
+import { CustomInterviewQuestion } from '../../entities/question.entity';
 
 export class Question {
   constructor(private readonly value: string) {
@@ -57,13 +57,22 @@ export class Feedback {
   }
 }
 
-export class QuestionReplace {
+export class OpenAIQuestion {
   constructor(private readonly value: Array<string>) {
     const duplicateCheck = [...new Set(value)];
 
     if (duplicateCheck.length < 10) {
       throw new Error('10개의 문제가 생성되지 않았습니다.');
     }
+
+    this.value = duplicateCheck;
+  }
+
+  static questionReplace(question: string): OpenAIQuestion {
+    const linesWithoutNumbers = question.replace(/^\d+\.\s+/gm, '');
+    const questionsArray = linesWithoutNumbers.split('\n');
+
+    return new OpenAIQuestion(questionsArray);
   }
 
   getValue() {

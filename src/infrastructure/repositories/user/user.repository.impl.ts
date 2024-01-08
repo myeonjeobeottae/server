@@ -1,14 +1,7 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/domain/entities/user.entity';
-import { UserRepository } from 'src/domain/repositories/user.repository';
-import {
-  CreateUserInfo,
-  Email,
-  UserInstance,
-  UserKakaoId,
-  Image,
-  Nickname,
-} from 'src/domain/value-objects/user.vo';
+import { UserRepository } from 'src/domain/repositories/user/user.repository';
+import { CreateUserInfo, UserKakaoId } from 'src/domain/value-objects/user.vo';
 import { Repository } from 'typeorm';
 
 @Injectable()

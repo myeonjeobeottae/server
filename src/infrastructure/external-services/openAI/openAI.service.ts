@@ -6,7 +6,8 @@ import {
   Question,
   CreateCustomInterviewQuestionInfo,
   CreateFeedbackInfo,
-} from 'src/domain/value-objects/question.vo';
+} from 'src/domain/value-objects/question/custom-question.vo';
+import { UrlContents } from 'src/domain/value-objects/interview/url-interview.vo';
 
 @Injectable()
 export class OpenAIService implements IOpenAIService {
@@ -87,11 +88,12 @@ export class OpenAIService implements IOpenAIService {
     return complet;
   }
 
-  // async createUrlInterviewQuestion(
-  //   jobDescription: string,
-  // ): Promise<question> {
-  //   const content = `너는 "${jobDescription}" 이 채용 공고의 회사 면접관이고 나는 면접자인데 면접관이 면접자에게 할 수 있는 기술적 역량 관련 질문 하나만 만들어서 질문 만 알려줘 `;
-  //   const complet = await this.openAICreateQuestion(content);
-  //   return complet;
-  // }
+  async createUrlInterviewQuestion(
+    urlContents: UrlContents,
+  ): Promise<Question> {
+    const content = `너는 "${urlContents.getValue()}" 이 채용 공고의 회사 면접관이고 나는 면접자인데 면접관이 면접자에게 할 수 있는  질문 10개 만들어서 질문 만 알려줘 `;
+    const complet = await this.openAICreateQuestion(content);
+    const question = new Question(complet);
+    return question;
+  }
 }

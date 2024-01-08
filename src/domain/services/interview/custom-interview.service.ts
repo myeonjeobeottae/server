@@ -1,6 +1,6 @@
 import { UserKakaoId } from 'src/domain/value-objects/user.vo';
 import { Inject, Injectable } from '@nestjs/common';
-import { CustomInterviewRepository } from 'src/domain/repositories/custom-interview.repository';
+import { CustomInterviewRepository } from 'src/domain/repositories/interview/custom-interview.repository';
 import {
   CreateCustomInterviewInfo,
   CustomInterviewInstance,
@@ -9,13 +9,13 @@ import {
   Position,
   Stack,
   Time,
-} from 'src/domain/value-objects/interview.vo';
+} from 'src/domain/value-objects/interview/custom-interview.vo';
 import { EntityManager } from 'typeorm';
 import {
   FindCustomInterviewOfQuestion,
   Question,
   QuestionId,
-} from 'src/domain/value-objects/question.vo';
+} from 'src/domain/value-objects/question/custom-question.vo';
 
 @Injectable()
 export class CustomInterviewsService {
@@ -85,11 +85,4 @@ export class CustomInterviewsService {
       await this.customInterviewRepository.deleteCustomInterview(id, kakaoId);
     return deleteCustomInterview;
   }
-
-  //   async findAll(kakaoId: string): Promise<CreateCustomInterviewDto[]> {
-  //     const findAllInterview = await this.customInterviewRepository.findAll(
-  //       kakaoId,
-  //     );
-  //     return findAllInterview;
-  //   }
 }

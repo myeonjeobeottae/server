@@ -1,7 +1,7 @@
 import {
   CreateQuestionFeedback,
   SaveFeedbackInfo,
-} from 'src/domain/value-objects/question.vo';
+} from 'src/domain/value-objects/question/custom-question.vo';
 
 export interface IQuestionService {
   creatQuestionFeedback(

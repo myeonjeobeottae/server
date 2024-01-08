@@ -1,6 +1,6 @@
-import { FindCustomInterviewOfQuestion } from './question.vo';
-import { UserInstance, UserKakaoId } from './user.vo';
-import { CustomInterviews } from '../entities/interview.entity';
+import { FindCustomInterviewOfQuestion } from '../question/custom-question.vo';
+import { UserInstance, UserKakaoId } from '../user.vo';
+import { CustomInterviews } from '../../entities/interview.entity';
 
 export class InterviewId {
   constructor(private readonly value: number) {

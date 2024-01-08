@@ -1,15 +1,13 @@
-import { FindCustomInterviewOfQuestion } from './../../../domain/value-objects/question.vo';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
 import { CustomInterviewQuestion } from 'src/domain/entities/question.entity';
 
-import { CustomInterviewQuestionRepository } from 'src/domain/repositories/custom-interview-question.repository';
+import { CustomInterviewQuestionRepository } from 'src/domain/repositories/question/custom-interview-question.repository';
 import {
   FindQuestion,
   SaveFeedbackInfo,
   SaveQuestionAnswer,
-} from 'src/domain/value-objects/question.vo';
-import { SaveQuestionInfo } from 'src/domain/value-objects/question.vo';
+} from 'src/domain/value-objects/question/custom-question.vo';
+import { SaveQuestionInfo } from 'src/domain/value-objects/question/custom-question.vo';
 import { EntityManager, Repository } from 'typeorm';
 
 @Injectable()
@@ -37,8 +35,6 @@ export class CustomInterviewQuestionRepositoryImpl
     const saveQuestion = await repository.save(createQuestion);
 
     return saveQuestion;
-    //만들어지 문제 보여주기 - 인터뷰 정보 추려서 보여줘야함 생성된 문제 전체 보여주는 함수 있어야함
-    // return saveQuestion;
   }
 
   async findOneQuestion(
@@ -113,32 +109,4 @@ export class CustomInterviewQuestionRepositoryImpl
 
     return saveQuestionFeedbackResult;
   }
-
-  // async QuestionsIncludedInTheInterview(interview: interview): Promise<> {
-  //   const { interviewId, userKakaoId } =
-  //     findQuestionsIncludedInTheInterviewInfo;
-
-  //   // const questionsIncludedInTheInterview =
-  //   //   await this.customInterviewQuestionRepository.find({
-  //   //     select: ['id', 'question', 'answer', 'feedback','interview'],
-  //   //     where: { interview: {id:interviewId}, userKakaoId: userKakaoId },
-  //   //   });
-
-  //   const questionsIncludedInTheInterview =
-  //     await this.customInterviewQuestionRepository
-  //       .createQueryBuilder('customInterviewQuestion')
-  //       .where('customInterviewQuestion.interview.id');
-  //   return questionsIncludedInTheInterview;
-  //   async findOneQuestion(
-  //     findOneQuestionInfo: FindOneQuestionInfo,
-  //   ): Promise<Question> {
-  //     const { questionId, userKakaoId } = findOneQuestionInfo;
-
-  //     const findOneQuestion = await this.questionRepository.findOne({
-  //       where: { id: questionId, userKakaoId },
-  //       select: ['id', 'question', 'answer', 'feedback'],
-  //     });
-
-  //     return findOneQuestion;
-  //   }
 }

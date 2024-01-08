@@ -5,7 +5,7 @@ import {
   Question,
   QuestionId,
   SaveFeedbackInfo,
-} from './../../domain/value-objects/question.vo';
+} from '../../domain/value-objects/question/custom-question.vo';
 import {
   Body,
   Controller,

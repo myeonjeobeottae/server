@@ -34,7 +34,9 @@ export class CustomInterviewQuestion extends Question {
 
 @Entity()
 export class UrlInterviewQuestion extends Question {
-  @ManyToOne(() => UrlInterviews, (urlInterviews) => urlInterviews.question)
+  @ManyToOne(() => UrlInterviews, (urlInterviews) => urlInterviews.question, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   interview: UrlInterviews;
 }

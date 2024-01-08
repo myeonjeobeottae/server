@@ -1,4 +1,4 @@
-import { UserRepository } from 'src/domain/repositories/user.repository';
+import { UserRepository } from 'src/domain/repositories/user/user.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayloadType } from 'src/domain/interface/auth.interface';

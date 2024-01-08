@@ -1,11 +1,12 @@
 import {
+  OpenAIQuestion,
   SaveFeedbackInfo,
   SaveQuestionAnswer,
-} from './../../value-objects/question.vo';
-import { CustomInterviewQuestionRepository } from 'src/domain/repositories/custom-interview-question.repository';
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+} from '../../value-objects/question/custom-question.vo';
+import { CustomInterviewQuestionRepository } from 'src/domain/repositories/question/custom-interview-question.repository';
+import { Inject, Injectable } from '@nestjs/common';
 
-import { CompletCustomQuestionDto } from 'src/application/dtos/question/custom-question.dto';
+import { CompletQuestionDto } from 'src/application/dtos/question/custom-question.dto';
 import { EntityManager } from 'typeorm';
 import {
   Answer,
@@ -17,11 +18,10 @@ import {
   FindQuestion,
   Question,
   QuestionId,
-  QuestionReplace,
   SaveQuestionInfo,
-} from 'src/domain/value-objects/question.vo';
+} from 'src/domain/value-objects/question/custom-question.vo';
 import { IOpenAIService } from 'src/domain/contracts/openAI.interface';
-import { InterviewId } from 'src/domain/value-objects/interview.vo';
+import { InterviewId } from 'src/domain/value-objects/interview/custom-interview.vo';
 
 @Injectable()
 export class CustomInterviewQuestionService {
@@ -46,8 +46,8 @@ export class CustomInterviewQuestionService {
   async saveQuestion(
     saveQuestionInfo: SaveQuestionInfo,
     entityManager?: EntityManager,
-  ): Promise<CompletCustomQuestionDto[]> {
-    const questionArray = this.questionReplace(
+  ): Promise<CompletQuestionDto[]> {
+    const questionArray = OpenAIQuestion.questionReplace(
       saveQuestionInfo.getquestion().getValue(),
     );
 
@@ -66,7 +66,7 @@ export class CustomInterviewQuestionService {
           entityManager,
         );
 
-      const CompletCustomQuestion: CompletCustomQuestionDto = {
+      const CompletCustomQuestion: CompletQuestionDto = {
         id: completSave.id,
         question: completSave.question,
         interviewId: completSave.interview.id,
@@ -83,23 +83,6 @@ export class CustomInterviewQuestionService {
 
     return sortCompletSaveQuestion;
   }
-
-  private questionReplace(question: string): QuestionReplace {
-    const linesWithoutNumbers = question.replace(/^\d+\.\s+/gm, '');
-    const questionsArray = linesWithoutNumbers.split('\n');
-
-    return new QuestionReplace(questionsArray);
-  }
-
-  //   async QuestionsIncludedInTheInterview(
-  //     findQuestionsIncludedInTheInterviewInfo: FindQuestionsIncludedInTheInterviewInfo,
-  //   ): Promise<Question[]> {
-  //     const questionsIncludedInTheInterview =
-  //       await this.questionRepository.QuestionsIncludedInTheInterview(
-  //         findQuestionsIncludedInTheInterviewInfo,
-  //       );
-  //     return questionsIncludedInTheInterview;
-  //   }
 
   async findOneQuestion(
     findQuestion: FindQuestion,

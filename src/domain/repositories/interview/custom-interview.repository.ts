@@ -1,13 +1,13 @@
 import { EntityManager } from 'typeorm';
-import { CustomInterviews } from '../entities/interview.entity';
-import { User } from '../entities/user.entity';
+import { CustomInterviews } from '../../entities/interview.entity';
+import { User } from '../../entities/user.entity';
 import {
   CreateCustomInterviewInfo,
   CustomInterviewInfo,
   CustomInterviewInstance,
   InterviewInfo,
-} from '../value-objects/interview.vo';
-import { UserKakaoId } from '../value-objects/user.vo';
+} from '../../value-objects/interview/custom-interview.vo';
+import { UserKakaoId } from '../../value-objects/user.vo';
 
 export interface CustomInterviewRepository {
   createCustomInterview(

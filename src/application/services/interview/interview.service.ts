@@ -1,3 +1,10 @@
+import { UrlInterviewQuestionService } from './../../../domain/services/question/url-interview-question.service';
+import { UrlInterviewsService } from './../../../domain/services/interview/url-interview.service';
+import {
+  CreateUrlInterviewInfo,
+  UrlContents,
+  UrlInterviewInfo,
+} from './../../../domain/value-objects/interview/url-interview.vo';
 import { DataSource } from 'typeorm';
 import { UserService } from 'src/domain/services/user/user.service';
 import { Inject, Injectable } from '@nestjs/common';
@@ -8,11 +15,11 @@ import { CustomInterviewQuestionService } from 'src/domain/services/question/cus
 import {
   CreateCustomInterviewInfo,
   CustomInterviewInfo,
-} from 'src/domain/value-objects/interview.vo';
+} from 'src/domain/value-objects/interview/custom-interview.vo';
 
 import {
-  CompletCustomQuestionDto,
-  FindCustomInterviewOfQuestionDto,
+  CompletQuestionDto,
+  FindInterviewOfQuestionDto,
 } from 'src/application/dtos/question/custom-question.dto';
 import { UserKakaoId } from 'src/domain/value-objects/user.vo';
 import {
@@ -22,60 +29,85 @@ import {
 import {
   CreateCustomInterviewQuestionInfo,
   SaveQuestionInfo,
-} from 'src/domain/value-objects/question.vo';
+} from 'src/domain/value-objects/question/custom-question.vo';
+import { SaveUrlQuestionInfo } from 'src/domain/value-objects/question/url-question.vo';
 
 @Injectable()
 export class InterviewsService implements IInterviewService {
   constructor(
     private readonly userService: UserService,
     private readonly customInterviewsService: CustomInterviewsService,
+    private readonly urlInterviewsService: UrlInterviewsService,
     private readonly customInterviewQuestionService: CustomInterviewQuestionService,
+    private readonly urlInterviewQuestionService: UrlInterviewQuestionService,
     @Inject('DATA_SOURCE')
     private dataSource: DataSource,
   ) {}
 
   async createCustomInterview(
     customInterviewInfo: CustomInterviewInfo,
-  ): Promise<CompletCustomQuestionDto[]> {
+  ): Promise<CompletQuestionDto[]> {
     return await this.dataSource.transaction(async (entityManager) => {
       const findUser = await this.userService.findUser(
         customInterviewInfo.getUserKakaoId(),
       );
 
-      const createCustomInterviewInfo = new CreateCustomInterviewInfo(
-        customInterviewInfo.getPosition(),
-        customInterviewInfo.getStack(),
-        customInterviewInfo.getTime(),
-        findUser,
-      );
       const saveInterview =
         await this.customInterviewsService.createCustomInterview(
-          createCustomInterviewInfo,
+          new CreateCustomInterviewInfo(
+            customInterviewInfo.getPosition(),
+            customInterviewInfo.getStack(),
+            customInterviewInfo.getTime(),
+            findUser,
+          ),
           entityManager,
-        );
-
-      const createCustomInterviewQuestionInfo =
-        new CreateCustomInterviewQuestionInfo(
-          customInterviewInfo.getPosition(),
-          customInterviewInfo.getStack(),
-          saveInterview,
         );
 
       const createQuestion =
         await this.customInterviewQuestionService.createQuestion(
-          createCustomInterviewQuestionInfo,
+          new CreateCustomInterviewQuestionInfo(
+            customInterviewInfo.getPosition(),
+            customInterviewInfo.getStack(),
+            saveInterview,
+          ),
         );
-
-      const saveQuestionInfo = new SaveQuestionInfo(
-        createQuestion,
-        saveInterview,
-      );
 
       const saveQuestions =
         await this.customInterviewQuestionService.saveQuestion(
-          saveQuestionInfo,
+          new SaveQuestionInfo(createQuestion, saveInterview),
           entityManager,
         );
+
+      return saveQuestions;
+    });
+  }
+
+  async createUrlInterview(
+    urlInterviewInfo: UrlInterviewInfo,
+  ): Promise<CompletQuestionDto[]> {
+    return await this.dataSource.transaction(async (entityManager) => {
+      const findUser = await this.userService.findUser(
+        urlInterviewInfo.getUserKakaoId(),
+      );
+
+      const saveInterview = await this.urlInterviewsService.createUrlInterview(
+        new CreateUrlInterviewInfo(
+          findUser,
+          urlInterviewInfo.getUrlValue(),
+          urlInterviewInfo.getTime(),
+        ),
+        entityManager,
+      );
+
+      const createQuestion =
+        await this.urlInterviewQuestionService.createQuestion(
+          new UrlContents(saveInterview.getValue().urlContents),
+        );
+
+      const saveQuestions = await this.urlInterviewQuestionService.saveQuestion(
+        new SaveUrlQuestionInfo(createQuestion, saveInterview),
+        entityManager,
+      );
 
       return saveQuestions;
     });
@@ -110,11 +142,11 @@ export class InterviewsService implements IInterviewService {
     const findUserCustomInterviewOfQuestion = findUserCustomInterviews
       .getFindCustomInterviewOfQuestion()
       .map((qusetion) => {
-        const completCustomQuestionDto: FindCustomInterviewOfQuestionDto = {
+        const CompletQuestionDto: FindInterviewOfQuestionDto = {
           id: qusetion.getQuestionId().getValue(),
           question: qusetion.getQuestion().getValue(),
         };
-        return completCustomQuestionDto;
+        return CompletQuestionDto;
       });
 
     const customInterviews: FindCustomInterviewDto = {
