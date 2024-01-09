@@ -1,6 +1,9 @@
-import { FindCustomInterviewOfQuestion } from '../question/custom-question.vo';
 import { UserInstance, UserKakaoId } from '../user.vo';
 import { CustomInterviews } from '../../entities/interview.entity';
+import {
+  FindInterviewOfQuestion,
+  FindOneCustomInterviewQuestion,
+} from '../question/custom-question.vo';
 
 export class InterviewId {
   constructor(private readonly value: number) {
@@ -116,9 +119,12 @@ export class FindCustomInterview extends InterviewInfo {
     position: Position,
     stack: Stack,
     time: Time,
-    private readonly findCustomInterviewOfQuestion: FindCustomInterviewOfQuestion[],
+    private readonly findCustomInterviewOfQuestions: FindInterviewOfQuestion[],
   ) {
     super(position, stack, time);
+    if (findCustomInterviewOfQuestions.length > 10) {
+      throw new Error('문제를 10개 이상 찾았습니다.확인 요망');
+    }
   }
 
   getInterviewId() {
@@ -126,11 +132,11 @@ export class FindCustomInterview extends InterviewInfo {
   }
 
   getFindCustomInterviewOfQuestion() {
-    return this.findCustomInterviewOfQuestion;
+    return this.findCustomInterviewOfQuestions;
   }
 }
 
-export class FindOneCustomInterview {
+export class FindOneInterview {
   constructor(
     private readonly interviewId: InterviewId,
 

@@ -6,7 +6,7 @@ import { UrlinterviewDto } from 'src/application/dtos/interviews/url-interviews.
 import { CompletQuestionDto } from 'src/application/dtos/question/custom-question.dto';
 import {
   CustomInterviewInfo,
-  FindOneCustomInterview,
+  FindOneInterview,
 } from 'src/domain/value-objects/interview/custom-interview.vo';
 import { UrlInterviewInfo } from 'src/domain/value-objects/interview/url-interview.vo';
 import { UserKakaoId } from 'src/domain/value-objects/user.vo';
@@ -21,9 +21,9 @@ export interface IInterviewService {
   ): Promise<CustomInterviewDto[]>;
   findUserUrlInterviews(userKakaoId: UserKakaoId): Promise<UrlinterviewDto[]>;
   findOneCustomInterview(
-    findOneCustomInterview: FindOneCustomInterview,
+    findOneInterview: FindOneInterview,
   ): Promise<FindCustomInterviewDto>;
-  deleteCustomInterview(
-    findOneCustomInterview: FindOneCustomInterview,
-  ): Promise<boolean>;
+  findOneUrlomInterview(findOneInterview: FindOneInterview): Promise<any>;
+  deleteCustomInterview(findOneInterview: FindOneInterview): Promise<boolean>;
+  deleteUrlInterview(findOneInterview: FindOneInterview): Promise<boolean>;
 }

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
+import { FindInterviewOfQuestionDto } from '../question/custom-question.dto';
 
 export class CreateUrlInterviewDto {
   @IsString()
@@ -23,4 +24,10 @@ export class UrlinterviewDto extends CreateUrlInterviewDto {
   @IsString()
   @ApiProperty({ type: String, description: '원티드 채용공고 URL 모집공고' })
   urlContents: string;
+}
+
+export class FindUrlInterviewDto extends UrlinterviewDto {
+  @IsArray()
+  @ApiProperty({ type: Number, description: '인터뷰에 포함된 문제들' })
+  question: FindInterviewOfQuestionDto[];
 }

@@ -4,7 +4,7 @@ import { CustomInterviews } from 'src/domain/entities/interview.entity';
 import { CustomInterviewRepository } from 'src/domain/repositories/interview/custom-interview.repository';
 import {
   CreateCustomInterviewInfo,
-  FindOneCustomInterview,
+  FindOneInterview,
 } from 'src/domain/value-objects/interview/custom-interview.vo';
 import { UserKakaoId } from 'src/domain/value-objects/user.vo';
 import { EntityManager, Repository } from 'typeorm';
@@ -49,10 +49,10 @@ export class CustomInterviewRepositoryImpl
   }
 
   async findOneCustomInterview(
-    findOneCustomInterview: FindOneCustomInterview,
+    findOneInterview: FindOneInterview,
   ): Promise<CustomInterviews> {
-    const interviewId = findOneCustomInterview.getInterviewId().getValue();
-    const userId = findOneCustomInterview.getUserKakaoId().getValue();
+    const interviewId = findOneInterview.getInterviewId().getValue();
+    const userId = findOneInterview.getUserKakaoId().getValue();
     const findCustomInterview = await this.customInterviewRepository
       .createQueryBuilder('customInterviews')
       .leftJoinAndSelect('customInterviews.question', 'question')
@@ -64,24 +64,28 @@ export class CustomInterviewRepositoryImpl
   }
 
   async deleteCustomInterview(
-    findOneCustomInterview: FindOneCustomInterview,
+    findOneInterview: FindOneInterview,
   ): Promise<boolean> {
-    const interviewId = findOneCustomInterview.getInterviewId().getValue();
-    const userId = findOneCustomInterview.getUserKakaoId().getValue();
+    const interviewId = findOneInterview.getInterviewId().getValue();
+    const userId = findOneInterview.getUserKakaoId().getValue();
 
     const deleteCustomInterview = await this.customInterviewRepository
       .createQueryBuilder()
       .delete()
-      .where('user =:kakaoId', { userId })
+      .where('user =:userId', { userId })
       .andWhere('id =:interviewId', { interviewId })
       .execute();
 
-    if (deleteCustomInterview.affected === 0) {
+    const deleteCustomInterviewResult =
+      deleteCustomInterview.affected === 1 ? true : false;
+
+    if (deleteCustomInterviewResult === false) {
       throw new HttpException(
-        '해당 인터뷰가 없습니다.',
+        '해당 인터뷰가 삭제 되지 않았습니다.',
         HttpStatus.BAD_REQUEST,
       );
     }
-    return true;
+
+    return deleteCustomInterviewResult;
   }
 }

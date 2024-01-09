@@ -15,7 +15,7 @@ import { CustomInterviewQuestionService } from 'src/domain/services/question/cus
 import {
   CreateCustomInterviewInfo,
   CustomInterviewInfo,
-  FindOneCustomInterview,
+  FindOneInterview,
 } from 'src/domain/value-objects/interview/custom-interview.vo';
 
 import {
@@ -32,7 +32,10 @@ import {
   SaveQuestionInfo,
 } from 'src/domain/value-objects/question/custom-question.vo';
 import { SaveUrlQuestionInfo } from 'src/domain/value-objects/question/url-question.vo';
-import { UrlinterviewDto } from 'src/application/dtos/interviews/url-interviews.dto';
+import {
+  FindUrlInterviewDto,
+  UrlinterviewDto,
+} from 'src/application/dtos/interviews/url-interviews.dto';
 
 @Injectable()
 export class InterviewsService implements IInterviewService {
@@ -143,11 +146,11 @@ export class InterviewsService implements IInterviewService {
   }
 
   async findOneCustomInterview(
-    findOneCustomInterview: FindOneCustomInterview,
+    findOneInterview: FindOneInterview,
   ): Promise<FindCustomInterviewDto> {
     const findUserCustomInterviews =
       await this.customInterviewsService.findOneCustomInterview(
-        findOneCustomInterview,
+        findOneInterview,
       );
 
     const findUserCustomInterviewOfQuestion = findUserCustomInterviews
@@ -171,20 +174,49 @@ export class InterviewsService implements IInterviewService {
     return customInterviews;
   }
 
+  async findOneUrlomInterview(
+    findOneInterview: FindOneInterview,
+  ): Promise<FindUrlInterviewDto> {
+    const findUserurlInterviews =
+      await this.urlInterviewsService.findOneUrlInterview(findOneInterview);
+
+    const findUserUrlInterviewOfQuestion = findUserurlInterviews
+      .getFindUrlInterviewOfQuestion()
+      .map((qusetion) => {
+        const CompletQuestionDto: FindInterviewOfQuestionDto = {
+          id: qusetion.getQuestionId().getValue(),
+          question: qusetion.getQuestion().getValue(),
+        };
+        return CompletQuestionDto;
+      });
+
+    const urlInterviews: FindUrlInterviewDto = {
+      id: findUserurlInterviews.getInterviewId().getValue(),
+      companyName: findUserurlInterviews.getCompanyName().getValue(),
+      URL: findUserurlInterviews.getUrlValue().getValue(),
+      urlContents: findUserurlInterviews.getUrlContents().getValue(),
+      time: findUserurlInterviews.getTime().getValue(),
+      question: findUserUrlInterviewOfQuestion,
+    };
+
+    return urlInterviews;
+  }
+
   async deleteCustomInterview(
-    findOneCustomInterview: FindOneCustomInterview,
+    findOneInterview: FindOneInterview,
   ): Promise<boolean> {
     const deleteCustomInterview =
       await this.customInterviewsService.deleteCustomInterview(
-        findOneCustomInterview,
+        findOneInterview,
       );
     return deleteCustomInterview;
   }
 
-  //   async findAll(kakaoId: string): Promise<CreateCustomInterviewDto[]> {
-  //     const findAllInterview = await this.customInterviewRepository.findAll(
-  //       kakaoId,
-  //     );
-  //     return findAllInterview;
-  //   }
+  async deleteUrlInterview(
+    findOneInterview: FindOneInterview,
+  ): Promise<boolean> {
+    const deleteUrlInterview =
+      await this.urlInterviewsService.deleteUrlInterview(findOneInterview);
+    return deleteUrlInterview;
+  }
 }

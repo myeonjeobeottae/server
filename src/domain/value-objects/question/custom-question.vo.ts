@@ -142,7 +142,7 @@ export class CompletSaveQuestion {
   }
 }
 
-export class FindCustomInterviewOfQuestion {
+export class FindInterviewOfQuestion {
   constructor(
     private readonly questionId: QuestionId,
     private readonly question: Question,
@@ -157,7 +157,7 @@ export class FindCustomInterviewOfQuestion {
   }
 }
 
-export class FindOneCustomInterviewQuestion extends FindCustomInterviewOfQuestion {
+export class FindOneCustomInterviewQuestion extends FindInterviewOfQuestion {
   constructor(
     questionId: QuestionId,
     question: Question,

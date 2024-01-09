@@ -5,7 +5,7 @@ import {
   CreateCustomInterviewInfo,
   CustomInterviewInstance,
   FindCustomInterview,
-  FindOneCustomInterview,
+  FindOneInterview,
   InterviewId,
   Position,
   Stack,
@@ -13,7 +13,7 @@ import {
 } from 'src/domain/value-objects/interview/custom-interview.vo';
 import { EntityManager } from 'typeorm';
 import {
-  FindCustomInterviewOfQuestion,
+  FindInterviewOfQuestion,
   Question,
   QuestionId,
 } from 'src/domain/value-objects/question/custom-question.vo';
@@ -55,16 +55,16 @@ export class CustomInterviewsService {
   }
 
   async findOneCustomInterview(
-    findOneCustomInterview: FindOneCustomInterview,
+    findOneInterview: FindOneInterview,
   ): Promise<FindCustomInterview> {
     const findCustomInterview =
       await this.customInterviewRepository.findOneCustomInterview(
-        findOneCustomInterview,
+        findOneInterview,
       );
 
     const findCustomInterviewOfQuestions = findCustomInterview.question.map(
       (question) => {
-        return new FindCustomInterviewOfQuestion(
+        return new FindInterviewOfQuestion(
           new QuestionId(question.id),
           new Question(question.question),
         );
@@ -83,11 +83,11 @@ export class CustomInterviewsService {
   }
 
   async deleteCustomInterview(
-    findOneCustomInterview: FindOneCustomInterview,
+    findOneInterview: FindOneInterview,
   ): Promise<boolean> {
     const deleteCustomInterview =
       await this.customInterviewRepository.deleteCustomInterview(
-        findOneCustomInterview,
+        findOneInterview,
       );
     return deleteCustomInterview;
   }

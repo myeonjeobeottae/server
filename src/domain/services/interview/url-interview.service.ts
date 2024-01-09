@@ -4,6 +4,7 @@ import { UrlInterviewRepository } from 'src/domain/repositories/interview/url-in
 import {
   CompanyName,
   CreateUrlInterviewInfo,
+  FindUrlInterview,
   SaveUrlInterviewInfo,
   UrlContents,
   UrlContentsInfo,
@@ -13,6 +14,16 @@ import {
 import { EntityManager } from 'typeorm';
 import Cheerio from 'cheerio';
 import { UserKakaoId } from 'src/domain/value-objects/user.vo';
+import {
+  FindOneInterview,
+  InterviewId,
+  Time,
+} from 'src/domain/value-objects/interview/custom-interview.vo';
+import {
+  FindInterviewOfQuestion,
+  Question,
+  QuestionId,
+} from 'src/domain/value-objects/question/custom-question.vo';
 
 @Injectable()
 export class UrlInterviewsService {
@@ -94,5 +105,39 @@ export class UrlInterviewsService {
     });
 
     return userUrlInterviews;
+  }
+
+  async findOneUrlInterview(
+    findOneInterview: FindOneInterview,
+  ): Promise<FindUrlInterview> {
+    const findUrlInterview =
+      await this.urlInterviewRepository.findOneUrlomInterview(findOneInterview);
+
+    const findUrlInterviewOfQuestions = findUrlInterview.question.map(
+      (question) => {
+        return new FindInterviewOfQuestion(
+          new QuestionId(question.id),
+          new Question(question.question),
+        );
+      },
+    );
+
+    const urlInterview = new FindUrlInterview(
+      new InterviewId(findUrlInterview.id),
+      new CompanyName(findUrlInterview.companyName),
+      new UrlContents(findUrlInterview.urlContents),
+      new UrlValue(findUrlInterview.URL),
+      new Time(findUrlInterview.time),
+      findUrlInterviewOfQuestions,
+    );
+    return urlInterview;
+  }
+
+  async deleteUrlInterview(
+    findOneInterview: FindOneInterview,
+  ): Promise<boolean> {
+    const deleteUrlInterview =
+      await this.urlInterviewRepository.deleteUrlInterview(findOneInterview);
+    return deleteUrlInterview;
   }
 }
