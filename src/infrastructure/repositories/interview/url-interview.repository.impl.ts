@@ -2,13 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UrlInterviews } from 'src/domain/entities/interview.entity';
 import { UrlInterviewRepository } from 'src/domain/repositories/interview/url-interview.repository';
 import { SaveUrlInterviewInfo } from 'src/domain/value-objects/interview/url-interview.vo';
+import { UserKakaoId } from 'src/domain/value-objects/user.vo';
 import { EntityManager, Repository } from 'typeorm';
 
 @Injectable()
 export class UrlInterviewRepositoryImpl implements UrlInterviewRepository {
   constructor(
     @Inject('URL_INTERVIEW_REPOSITORY')
-    private customInterviewRepository: Repository<UrlInterviews>,
+    private urlInterviewRepository: Repository<UrlInterviews>,
   ) {}
 
   async createUrlInterview(
@@ -17,7 +18,7 @@ export class UrlInterviewRepositoryImpl implements UrlInterviewRepository {
   ): Promise<UrlInterviews> {
     const repository =
       entityManager?.getRepository(UrlInterviews) ??
-      this.customInterviewRepository;
+      this.urlInterviewRepository;
 
     const urlInterview = repository.create({
       companyName: saveUrlInterviewInfo.getCompanyName().getCompanyName(),
@@ -30,5 +31,17 @@ export class UrlInterviewRepositoryImpl implements UrlInterviewRepository {
     const saveUrlInterview = await repository.save(urlInterview);
 
     return saveUrlInterview;
+  }
+
+  async findUserUrlInterviews(
+    userKakaoId: UserKakaoId,
+  ): Promise<UrlInterviews[]> {
+    const userId = userKakaoId.getValue();
+    const findUserCustomInterviews = this.urlInterviewRepository
+      .createQueryBuilder()
+      .where('user =:userId', { userId })
+      .getMany();
+
+    return findUserCustomInterviews;
   }
 }

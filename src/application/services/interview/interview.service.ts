@@ -15,6 +15,7 @@ import { CustomInterviewQuestionService } from 'src/domain/services/question/cus
 import {
   CreateCustomInterviewInfo,
   CustomInterviewInfo,
+  FindOneCustomInterview,
 } from 'src/domain/value-objects/interview/custom-interview.vo';
 
 import {
@@ -31,6 +32,7 @@ import {
   SaveQuestionInfo,
 } from 'src/domain/value-objects/question/custom-question.vo';
 import { SaveUrlQuestionInfo } from 'src/domain/value-objects/question/url-question.vo';
+import { UrlinterviewDto } from 'src/application/dtos/interviews/url-interviews.dto';
 
 @Injectable()
 export class InterviewsService implements IInterviewService {
@@ -114,12 +116,10 @@ export class InterviewsService implements IInterviewService {
   }
 
   async findUserCustomInterviews(
-    userKakaoId: string,
+    userKakaoId: UserKakaoId,
   ): Promise<CustomInterviewDto[]> {
     const findUserCustomInterviews =
-      await this.customInterviewsService.findUserCustomInterviews(
-        new UserKakaoId(userKakaoId),
-      );
+      await this.customInterviewsService.findUserCustomInterviews(userKakaoId);
 
     const userCustomInterviews = findUserCustomInterviews.map(
       (customInterview) => {
@@ -129,14 +129,25 @@ export class InterviewsService implements IInterviewService {
     return userCustomInterviews;
   }
 
-  async findCustomInterview(
-    id: number,
-    userKakaoId: string,
+  async findUserUrlInterviews(
+    userKakaoId: UserKakaoId,
+  ): Promise<UrlinterviewDto[]> {
+    const findUserUrlInterviews =
+      await this.urlInterviewsService.findUserUrlInterviews(userKakaoId);
+
+    const userUrlInterviews = findUserUrlInterviews.map((urlInterview) => {
+      return urlInterview.getValue();
+    });
+
+    return userUrlInterviews;
+  }
+
+  async findOneCustomInterview(
+    findOneCustomInterview: FindOneCustomInterview,
   ): Promise<FindCustomInterviewDto> {
     const findUserCustomInterviews =
-      await this.customInterviewsService.findCustomInterview(
-        id,
-        new UserKakaoId(userKakaoId),
+      await this.customInterviewsService.findOneCustomInterview(
+        findOneCustomInterview,
       );
 
     const findUserCustomInterviewOfQuestion = findUserCustomInterviews
@@ -160,9 +171,13 @@ export class InterviewsService implements IInterviewService {
     return customInterviews;
   }
 
-  async deleteCustomInterview(id: number, kakaoId: string): Promise<boolean> {
+  async deleteCustomInterview(
+    findOneCustomInterview: FindOneCustomInterview,
+  ): Promise<boolean> {
     const deleteCustomInterview =
-      await this.customInterviewsService.deleteCustomInterview(id, kakaoId);
+      await this.customInterviewsService.deleteCustomInterview(
+        findOneCustomInterview,
+      );
     return deleteCustomInterview;
   }
 

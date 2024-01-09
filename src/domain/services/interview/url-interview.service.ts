@@ -12,6 +12,7 @@ import {
 } from 'src/domain/value-objects/interview/url-interview.vo';
 import { EntityManager } from 'typeorm';
 import Cheerio from 'cheerio';
+import { UserKakaoId } from 'src/domain/value-objects/user.vo';
 
 @Injectable()
 export class UrlInterviewsService {
@@ -80,5 +81,18 @@ export class UrlInterviewsService {
     );
 
     return careersInterviewInfo;
+  }
+
+  async findUserUrlInterviews(
+    userKakaoId: UserKakaoId,
+  ): Promise<UrlInterviewInstance[]> {
+    const findUserUrlInterviews =
+      await this.urlInterviewRepository.findUserUrlInterviews(userKakaoId);
+
+    const userUrlInterviews = findUserUrlInterviews.map((urlInterview) => {
+      return new UrlInterviewInstance(urlInterview);
+    });
+
+    return userUrlInterviews;
   }
 }

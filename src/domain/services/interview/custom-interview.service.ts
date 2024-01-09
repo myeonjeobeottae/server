@@ -5,6 +5,7 @@ import {
   CreateCustomInterviewInfo,
   CustomInterviewInstance,
   FindCustomInterview,
+  FindOneCustomInterview,
   InterviewId,
   Position,
   Stack,
@@ -53,12 +54,13 @@ export class CustomInterviewsService {
     return userCustomInterviews;
   }
 
-  async findCustomInterview(
-    id: number,
-    userKakaoId: UserKakaoId,
+  async findOneCustomInterview(
+    findOneCustomInterview: FindOneCustomInterview,
   ): Promise<FindCustomInterview> {
     const findCustomInterview =
-      await this.customInterviewRepository.findCustomInterview(id, userKakaoId);
+      await this.customInterviewRepository.findOneCustomInterview(
+        findOneCustomInterview,
+      );
 
     const findCustomInterviewOfQuestions = findCustomInterview.question.map(
       (question) => {
@@ -80,9 +82,13 @@ export class CustomInterviewsService {
     return customInterview;
   }
 
-  async deleteCustomInterview(id: number, kakaoId: string): Promise<boolean> {
+  async deleteCustomInterview(
+    findOneCustomInterview: FindOneCustomInterview,
+  ): Promise<boolean> {
     const deleteCustomInterview =
-      await this.customInterviewRepository.deleteCustomInterview(id, kakaoId);
+      await this.customInterviewRepository.deleteCustomInterview(
+        findOneCustomInterview,
+      );
     return deleteCustomInterview;
   }
 }

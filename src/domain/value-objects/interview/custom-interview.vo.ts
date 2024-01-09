@@ -129,3 +129,19 @@ export class FindCustomInterview extends InterviewInfo {
     return this.findCustomInterviewOfQuestion;
   }
 }
+
+export class FindOneCustomInterview {
+  constructor(
+    private readonly interviewId: InterviewId,
+
+    private readonly userKakaoId: UserKakaoId,
+  ) {}
+
+  getInterviewId() {
+    return this.interviewId;
+  }
+
+  getUserKakaoId() {
+    return this.userKakaoId;
+  }
+}

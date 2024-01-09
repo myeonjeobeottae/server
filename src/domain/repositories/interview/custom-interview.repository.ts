@@ -5,6 +5,7 @@ import {
   CreateCustomInterviewInfo,
   CustomInterviewInfo,
   CustomInterviewInstance,
+  FindOneCustomInterview,
   InterviewInfo,
 } from '../../value-objects/interview/custom-interview.vo';
 import { UserKakaoId } from '../../value-objects/user.vo';
@@ -17,9 +18,10 @@ export interface CustomInterviewRepository {
   findUserCustomInterviews(
     userKakaoId: UserKakaoId,
   ): Promise<CustomInterviews[]>;
-  findCustomInterview(
-    id: number,
-    userKakaoId: UserKakaoId,
+  findOneCustomInterview(
+    findOneCustomInterview: FindOneCustomInterview,
   ): Promise<CustomInterviews>;
-  deleteCustomInterview(id: number, kakaoId: string): Promise<boolean>;
+  deleteCustomInterview(
+    findOneCustomInterview: FindOneCustomInterview,
+  ): Promise<boolean>;
 }
