@@ -5,6 +5,7 @@ import {
   CreateCustomInterviewInfo,
   CustomInterviewInstance,
   FindCustomInterview,
+  FindOneInterview,
   InterviewId,
   Position,
   Stack,
@@ -12,7 +13,7 @@ import {
 } from 'src/domain/value-objects/interview/custom-interview.vo';
 import { EntityManager } from 'typeorm';
 import {
-  FindCustomInterviewOfQuestion,
+  FindInterviewOfQuestion,
   Question,
   QuestionId,
 } from 'src/domain/value-objects/question/custom-question.vo';
@@ -53,16 +54,17 @@ export class CustomInterviewsService {
     return userCustomInterviews;
   }
 
-  async findCustomInterview(
-    id: number,
-    userKakaoId: UserKakaoId,
+  async findOneCustomInterview(
+    findOneInterview: FindOneInterview,
   ): Promise<FindCustomInterview> {
     const findCustomInterview =
-      await this.customInterviewRepository.findCustomInterview(id, userKakaoId);
+      await this.customInterviewRepository.findOneCustomInterview(
+        findOneInterview,
+      );
 
     const findCustomInterviewOfQuestions = findCustomInterview.question.map(
       (question) => {
-        return new FindCustomInterviewOfQuestion(
+        return new FindInterviewOfQuestion(
           new QuestionId(question.id),
           new Question(question.question),
         );
@@ -80,9 +82,13 @@ export class CustomInterviewsService {
     return customInterview;
   }
 
-  async deleteCustomInterview(id: number, kakaoId: string): Promise<boolean> {
+  async deleteCustomInterview(
+    findOneInterview: FindOneInterview,
+  ): Promise<boolean> {
     const deleteCustomInterview =
-      await this.customInterviewRepository.deleteCustomInterview(id, kakaoId);
+      await this.customInterviewRepository.deleteCustomInterview(
+        findOneInterview,
+      );
     return deleteCustomInterview;
   }
 }

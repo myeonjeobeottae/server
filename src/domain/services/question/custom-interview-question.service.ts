@@ -1,4 +1,5 @@
 import {
+  FindOneCustomInterviewQuestion,
   OpenAIQuestion,
   SaveFeedbackInfo,
   SaveQuestionAnswer,
@@ -14,7 +15,6 @@ import {
   CreateFeedbackInfo,
   CreateQuestionFeedback,
   Feedback,
-  FindOneCustomInterviewQuestion,
   FindQuestion,
   Question,
   QuestionId,
@@ -92,7 +92,7 @@ export class CustomInterviewQuestionService {
         findQuestion,
       );
 
-    const findOneCustomInterviewQuestion = new FindOneCustomInterviewQuestion(
+    const FindOneInterviewQuestion = new FindOneCustomInterviewQuestion(
       new QuestionId(findOneQuestion.id),
       new Question(findOneQuestion.question),
       new Answer(findOneQuestion.answer),
@@ -100,7 +100,7 @@ export class CustomInterviewQuestionService {
       new InterviewId(findOneQuestion.interview.id),
     );
 
-    return findOneCustomInterviewQuestion;
+    return FindOneInterviewQuestion;
   }
 
   async creatQuestionFeedback(

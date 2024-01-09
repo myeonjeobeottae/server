@@ -1,3 +1,5 @@
+import { FindInterviewOfQuestion } from './../question/custom-question.vo';
+import { InterviewId } from 'src/domain/value-objects/interview/custom-interview.vo';
 import { UserInstance, UserKakaoId } from 'src/domain/value-objects/user.vo';
 import { Time } from './custom-interview.vo';
 import { UrlInterviews } from 'src/domain/entities/interview.entity';
@@ -27,7 +29,7 @@ export class CompanyName {
     }
   }
 
-  getCompanyName() {
+  getValue() {
     return this.value;
   }
 }
@@ -130,5 +132,36 @@ export class SaveUrlInterviewInfo extends CreateUrlInterviewInfo {
 
   getUrlContent() {
     return this.urlContent;
+  }
+}
+
+export class FindUrlInterview extends UrlContentsInfo {
+  constructor(
+    private readonly interviewId: InterviewId,
+    companyName: CompanyName,
+    urlContent: UrlContents,
+    private readonly urlValue: UrlValue,
+    private readonly time: Time,
+    private readonly findUrlInterviewOfQuestion: FindInterviewOfQuestion[],
+  ) {
+    super(companyName, urlContent);
+    if (findUrlInterviewOfQuestion.length > 10) {
+      throw new Error('문제를 10개 이상 찾았습니다.확인 요망');
+    }
+  }
+  getInterviewId() {
+    return this.interviewId;
+  }
+
+  getUrlValue() {
+    return this.urlValue;
+  }
+
+  getTime() {
+    return this.time;
+  }
+
+  getFindUrlInterviewOfQuestion() {
+    return this.findUrlInterviewOfQuestion;
   }
 }

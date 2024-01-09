@@ -22,13 +22,19 @@ import { User } from 'src/domain/interface/auth.interface';
 import { UserKakaoId } from 'src/domain/value-objects/user.vo';
 import {
   CustomInterviewInfo,
+  FindOneInterview,
+  InterviewId,
   Position,
   Stack,
   Time,
 } from 'src/domain/value-objects/interview/custom-interview.vo';
 import { CompletQuestionDto } from 'src/application/dtos/question/custom-question.dto';
 import { CustomInterviews } from 'src/domain/entities/interview.entity';
-import { CreateUrlInterviewDto } from 'src/application/dtos/interviews/url-interviews.dto';
+import {
+  CreateUrlInterviewDto,
+  FindUrlInterviewDto,
+  UrlinterviewDto,
+} from 'src/application/dtos/interviews/url-interviews.dto';
 import {
   CreateUrlInterviewInfo,
   UrlInterviewInfo,
@@ -78,7 +84,9 @@ export class InterviewsController {
     const { kakaoId } = req.user as User;
 
     const findUserCustomInterviews =
-      await this.interviewService.findUserCustomInterviews(kakaoId);
+      await this.interviewService.findUserCustomInterviews(
+        new UserKakaoId(kakaoId),
+      );
 
     return findUserCustomInterviews;
   }
@@ -86,17 +94,19 @@ export class InterviewsController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
-    description: '유저 커스텀 인터뷰 찾기(문제 포함)',
+    description: '유저 커스텀 인터뷰 개별 찾기(문제 포함)',
   })
   @Get('/custom/:id')
-  async findCustomInterview(
+  async FindOneInterview(
     @Param('id') id: number,
     @Req() req: Request,
   ): Promise<FindCustomInterviewDto> {
     const { kakaoId } = req.user as User;
 
     const findUserCustomInterviews =
-      await this.interviewService.findCustomInterview(id, kakaoId);
+      await this.interviewService.findOneCustomInterview(
+        new FindOneInterview(new InterviewId(id), new UserKakaoId(kakaoId)),
+      );
 
     return findUserCustomInterviews;
   }
@@ -110,10 +120,12 @@ export class InterviewsController {
   async deleteCustomInterview(
     @Param('id') id: number,
     @Req() req: Request,
-  ): Promise<any> {
+  ): Promise<boolean> {
     const { kakaoId } = req.user as User;
     const deleteCustomInterview =
-      await this.interviewService.deleteCustomInterview(id, kakaoId);
+      await this.interviewService.deleteCustomInterview(
+        new FindOneInterview(new InterviewId(id), new UserKakaoId(kakaoId)),
+      );
     return deleteCustomInterview;
   }
 
@@ -132,12 +144,66 @@ export class InterviewsController {
     const createUrlInterview = await this.interviewService.createUrlInterview(
       new UrlInterviewInfo(
         new UserKakaoId(kakaoId),
-        new UrlValue(createUrlInterviewDto.url),
+        new UrlValue(createUrlInterviewDto.URL),
         new Time(createUrlInterviewDto.time),
       ),
     );
 
     return createUrlInterview;
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: '유저 URL 인터뷰 전체 찾기',
+  })
+  @Get('/url')
+  async findUserUrlInterviews(@Req() req: Request): Promise<UrlinterviewDto[]> {
+    const { kakaoId } = req.user as User;
+
+    const findUserCustomInterviews =
+      await this.interviewService.findUserUrlInterviews(
+        new UserKakaoId(kakaoId),
+      );
+
+    return findUserCustomInterviews;
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: '유저 Url 인터뷰 개별 찾기(문제 포함)',
+  })
+  @Get('/url/:id')
+  async findOneUrlInterview(
+    @Param('id') id: number,
+    @Req() req: Request,
+  ): Promise<FindUrlInterviewDto> {
+    const { kakaoId } = req.user as User;
+
+    const findUserUrlInterview =
+      await this.interviewService.findOneUrlomInterview(
+        new FindOneInterview(new InterviewId(id), new UserKakaoId(kakaoId)),
+      );
+
+    return findUserUrlInterview;
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: 'Url 인터뷰 삭제',
+  })
+  @Delete('/url/delete/:id')
+  async deleteUrlInterview(
+    @Param('id') id: number,
+    @Req() req: Request,
+  ): Promise<boolean> {
+    const { kakaoId } = req.user as User;
+    const deleteUrlInterview = await this.interviewService.deleteUrlInterview(
+      new FindOneInterview(new InterviewId(id), new UserKakaoId(kakaoId)),
+    );
+    return deleteUrlInterview;
   }
 
   //   @ApiBearerAuth()

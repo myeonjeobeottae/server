@@ -2,7 +2,10 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CustomInterviews } from 'src/domain/entities/interview.entity';
 
 import { CustomInterviewRepository } from 'src/domain/repositories/interview/custom-interview.repository';
-import { CreateCustomInterviewInfo } from 'src/domain/value-objects/interview/custom-interview.vo';
+import {
+  CreateCustomInterviewInfo,
+  FindOneInterview,
+} from 'src/domain/value-objects/interview/custom-interview.vo';
 import { UserKakaoId } from 'src/domain/value-objects/user.vo';
 import { EntityManager, Repository } from 'typeorm';
 
@@ -45,35 +48,44 @@ export class CustomInterviewRepositoryImpl
     return findUserCustomInterviews;
   }
 
-  async findCustomInterview(
-    id: number,
-    userKakaoId: UserKakaoId,
+  async findOneCustomInterview(
+    findOneInterview: FindOneInterview,
   ): Promise<CustomInterviews> {
-    const userId = userKakaoId.getValue();
+    const interviewId = findOneInterview.getInterviewId().getValue();
+    const userId = findOneInterview.getUserKakaoId().getValue();
     const findCustomInterview = await this.customInterviewRepository
       .createQueryBuilder('customInterviews')
       .leftJoinAndSelect('customInterviews.question', 'question')
-      .where('customInterviews.id =:id', { id })
+      .where('customInterviews.id =:interviewId', { interviewId })
       .andWhere('customInterviews.user =:userId', { userId })
       .getOne();
 
     return findCustomInterview;
   }
 
-  async deleteCustomInterview(id: number, kakaoId: string): Promise<boolean> {
+  async deleteCustomInterview(
+    findOneInterview: FindOneInterview,
+  ): Promise<boolean> {
+    const interviewId = findOneInterview.getInterviewId().getValue();
+    const userId = findOneInterview.getUserKakaoId().getValue();
+
     const deleteCustomInterview = await this.customInterviewRepository
       .createQueryBuilder()
       .delete()
-      .where('user =:kakaoId', { kakaoId })
-      .andWhere('id =:id', { id })
+      .where('user =:userId', { userId })
+      .andWhere('id =:interviewId', { interviewId })
       .execute();
 
-    if (deleteCustomInterview.affected === 0) {
+    const deleteCustomInterviewResult =
+      deleteCustomInterview.affected === 1 ? true : false;
+
+    if (deleteCustomInterviewResult === false) {
       throw new HttpException(
-        '해당 인터뷰가 없습니다.',
+        '해당 인터뷰가 삭제 되지 않았습니다.',
         HttpStatus.BAD_REQUEST,
       );
     }
-    return true;
+
+    return deleteCustomInterviewResult;
   }
 }

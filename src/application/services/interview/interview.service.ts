@@ -15,6 +15,7 @@ import { CustomInterviewQuestionService } from 'src/domain/services/question/cus
 import {
   CreateCustomInterviewInfo,
   CustomInterviewInfo,
+  FindOneInterview,
 } from 'src/domain/value-objects/interview/custom-interview.vo';
 
 import {
@@ -31,6 +32,10 @@ import {
   SaveQuestionInfo,
 } from 'src/domain/value-objects/question/custom-question.vo';
 import { SaveUrlQuestionInfo } from 'src/domain/value-objects/question/url-question.vo';
+import {
+  FindUrlInterviewDto,
+  UrlinterviewDto,
+} from 'src/application/dtos/interviews/url-interviews.dto';
 
 @Injectable()
 export class InterviewsService implements IInterviewService {
@@ -114,12 +119,10 @@ export class InterviewsService implements IInterviewService {
   }
 
   async findUserCustomInterviews(
-    userKakaoId: string,
+    userKakaoId: UserKakaoId,
   ): Promise<CustomInterviewDto[]> {
     const findUserCustomInterviews =
-      await this.customInterviewsService.findUserCustomInterviews(
-        new UserKakaoId(userKakaoId),
-      );
+      await this.customInterviewsService.findUserCustomInterviews(userKakaoId);
 
     const userCustomInterviews = findUserCustomInterviews.map(
       (customInterview) => {
@@ -129,14 +132,25 @@ export class InterviewsService implements IInterviewService {
     return userCustomInterviews;
   }
 
-  async findCustomInterview(
-    id: number,
-    userKakaoId: string,
+  async findUserUrlInterviews(
+    userKakaoId: UserKakaoId,
+  ): Promise<UrlinterviewDto[]> {
+    const findUserUrlInterviews =
+      await this.urlInterviewsService.findUserUrlInterviews(userKakaoId);
+
+    const userUrlInterviews = findUserUrlInterviews.map((urlInterview) => {
+      return urlInterview.getValue();
+    });
+
+    return userUrlInterviews;
+  }
+
+  async findOneCustomInterview(
+    findOneInterview: FindOneInterview,
   ): Promise<FindCustomInterviewDto> {
     const findUserCustomInterviews =
-      await this.customInterviewsService.findCustomInterview(
-        id,
-        new UserKakaoId(userKakaoId),
+      await this.customInterviewsService.findOneCustomInterview(
+        findOneInterview,
       );
 
     const findUserCustomInterviewOfQuestion = findUserCustomInterviews
@@ -160,16 +174,49 @@ export class InterviewsService implements IInterviewService {
     return customInterviews;
   }
 
-  async deleteCustomInterview(id: number, kakaoId: string): Promise<boolean> {
+  async findOneUrlomInterview(
+    findOneInterview: FindOneInterview,
+  ): Promise<FindUrlInterviewDto> {
+    const findUserurlInterviews =
+      await this.urlInterviewsService.findOneUrlInterview(findOneInterview);
+
+    const findUserUrlInterviewOfQuestion = findUserurlInterviews
+      .getFindUrlInterviewOfQuestion()
+      .map((qusetion) => {
+        const CompletQuestionDto: FindInterviewOfQuestionDto = {
+          id: qusetion.getQuestionId().getValue(),
+          question: qusetion.getQuestion().getValue(),
+        };
+        return CompletQuestionDto;
+      });
+
+    const urlInterviews: FindUrlInterviewDto = {
+      id: findUserurlInterviews.getInterviewId().getValue(),
+      companyName: findUserurlInterviews.getCompanyName().getValue(),
+      URL: findUserurlInterviews.getUrlValue().getValue(),
+      urlContents: findUserurlInterviews.getUrlContents().getValue(),
+      time: findUserurlInterviews.getTime().getValue(),
+      question: findUserUrlInterviewOfQuestion,
+    };
+
+    return urlInterviews;
+  }
+
+  async deleteCustomInterview(
+    findOneInterview: FindOneInterview,
+  ): Promise<boolean> {
     const deleteCustomInterview =
-      await this.customInterviewsService.deleteCustomInterview(id, kakaoId);
+      await this.customInterviewsService.deleteCustomInterview(
+        findOneInterview,
+      );
     return deleteCustomInterview;
   }
 
-  //   async findAll(kakaoId: string): Promise<CreateCustomInterviewDto[]> {
-  //     const findAllInterview = await this.customInterviewRepository.findAll(
-  //       kakaoId,
-  //     );
-  //     return findAllInterview;
-  //   }
+  async deleteUrlInterview(
+    findOneInterview: FindOneInterview,
+  ): Promise<boolean> {
+    const deleteUrlInterview =
+      await this.urlInterviewsService.deleteUrlInterview(findOneInterview);
+    return deleteUrlInterview;
+  }
 }
