@@ -21,7 +21,7 @@ import {
 import {
   CompletQuestionDto,
   FindInterviewOfQuestionDto,
-} from 'src/application/dtos/question/custom-question.dto';
+} from 'src/application/dtos/question/question.dto';
 import { UserKakaoId } from 'src/domain/value-objects/user.vo';
 import {
   CustomInterviewDto,

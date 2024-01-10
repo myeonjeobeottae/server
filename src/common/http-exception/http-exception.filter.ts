@@ -18,11 +18,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    // let message =
-    //   exception instanceof HttpException
-    //     ? exception.getResponse()
-    //     : 'Internal server error';
-
     let message: string | object = 'Internal server error'; // 기본 에러 메시지 설정
 
     if (exception instanceof HttpException) {

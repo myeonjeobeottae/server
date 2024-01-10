@@ -1,5 +1,8 @@
 import { UrlInterviewQuestion } from 'src/domain/entities/question.entity';
-import { UrlContents } from 'src/domain/value-objects/interview/url-interview.vo';
+import {
+  FindQuestion,
+  SaveAnswerFeedbackInfo,
+} from 'src/domain/value-objects/question/custom-question.vo';
 import { SaveUrlQuestionInfo } from 'src/domain/value-objects/question/url-question.vo';
 import { EntityManager } from 'typeorm';
 
@@ -8,4 +11,8 @@ export interface UrlInterviewQuestionRepository {
     saveQuestionInfo: SaveUrlQuestionInfo,
     entityManager?: EntityManager,
   ): Promise<UrlInterviewQuestion>;
+  findOneQuestion(findQuestion: FindQuestion): Promise<UrlInterviewQuestion>;
+  saveUrlQuestionAnswerFeedback(
+    saveAnswerFeedbackInfo: SaveAnswerFeedbackInfo,
+  ): Promise<boolean>;
 }

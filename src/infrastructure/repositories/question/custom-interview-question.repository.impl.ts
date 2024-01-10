@@ -4,7 +4,7 @@ import { CustomInterviewQuestion } from 'src/domain/entities/question.entity';
 import { CustomInterviewQuestionRepository } from 'src/domain/repositories/question/custom-interview-question.repository';
 import {
   FindQuestion,
-  SaveFeedbackInfo,
+  SaveAnswerFeedbackInfo,
   SaveQuestionAnswer,
 } from 'src/domain/value-objects/question/custom-question.vo';
 import { SaveQuestionInfo } from 'src/domain/value-objects/question/custom-question.vo';
@@ -85,15 +85,17 @@ export class CustomInterviewQuestionRepositoryImpl
     return saveQuestionAnswerResult;
   }
 
-  async saveQuestionFeedback(
-    saveFeedbackInfo: SaveFeedbackInfo,
+  async saveCustomQuestionAnswerFeedback(
+    saveAnswerFeedbackInfo: SaveAnswerFeedbackInfo,
   ): Promise<boolean> {
-    const questionId = saveFeedbackInfo.getQuestionId().getValue();
-    const feedback = saveFeedbackInfo.getFeedback().getValue();
+    const questionId = saveAnswerFeedbackInfo.getQuestionId().getValue();
+    const answer = saveAnswerFeedbackInfo.getAnswer().getValue();
+    const feedback = saveAnswerFeedbackInfo.getFeedback().getValue();
+
     const saveQuestionFeedback = await this.customInterviewQuestionRepository
       .createQueryBuilder('')
       .update()
-      .set({ feedback })
+      .set({ answer, feedback })
       .where('id=:questionId', { questionId })
       .execute();
 
@@ -102,7 +104,7 @@ export class CustomInterviewQuestionRepositoryImpl
 
     if (saveQuestionFeedbackResult === false) {
       throw new HttpException(
-        '피드백이 저장되지 않았습니다.',
+        '커스텀 인터뷰 답변,피드백이 저장되지 않았습니다.',
         HttpStatus.BAD_REQUEST,
       );
     }

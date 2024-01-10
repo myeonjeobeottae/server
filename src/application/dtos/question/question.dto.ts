@@ -27,8 +27,26 @@ export class CreateFeedbackDto {
   answer: string;
 }
 
-export class SaveFeedbackDto {
+export class SaveAnswerFeedbackDto {
+  @IsString()
+  @ApiProperty({ type: String, description: '답변' })
+  answer: string;
+
   @IsString()
   @ApiProperty({ type: String, description: '피드백' })
   feedback: string;
+}
+
+export class FindOneQuestionDto extends FindInterviewOfQuestionDto {
+  @IsString()
+  @ApiProperty({ type: String, description: '답변' })
+  answer: string;
+
+  @IsString()
+  @ApiProperty({ type: String, description: '피드백' })
+  feedback: string;
+
+  @IsNumber()
+  @ApiProperty({ type: String, description: '인터뷰 ID' })
+  interviewId: number;
 }

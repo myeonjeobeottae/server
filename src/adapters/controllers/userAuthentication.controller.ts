@@ -9,7 +9,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import {
   UserDataDto,
@@ -26,6 +26,7 @@ export class UserAuthenticationController {
     private userAuthenticationService: IUserAuthenticationService,
   ) {}
 
+  @ApiTags('Authentication')
   @Get('/login')
   async kakaoLogin(@Res() res: Response, @Req() req: Request) {
     console.log(req.headers.origin, 'dddd');
@@ -34,6 +35,7 @@ export class UserAuthenticationController {
     res.redirect(kakaoUrl);
   }
 
+  @ApiTags('Authentication')
   @Get('/redirect')
   async kakaoOauthCallback(
     @Query('code') code: string,
@@ -58,24 +60,10 @@ export class UserAuthenticationController {
     res.send(userData);
   }
 
-  @Get('/status')
-  async user(@Req() req: any) {
-    if (req.user) {
-      console.log(req.user, 'Authenticated User');
-      return {
-        msg: 'Authenticated',
-      };
-    } else {
-      console.log(req.user, 'User cannot found');
-      return {
-        msg: 'Not Authenticated',
-      };
-    }
-  }
-
-  @ApiBearerAuth()
+  @ApiTags('Authentication')
+  @ApiBearerAuth('access-token')
   @ApiResponse({
-    description: '사용자 정보 찾기',
+    description: 'refresh token으로 토큰 재 발급',
   })
   @Get('/renew/token')
   async renewToken(@Req() req: Request): Promise<UserTokenDataDto> {
@@ -99,7 +87,8 @@ export class UserAuthenticationController {
     return userData;
   }
 
-  @ApiBearerAuth()
+  @ApiTags('User')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: '사용자 정보 찾기',

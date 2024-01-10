@@ -11,7 +11,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/jwt/jwt-auth.guard';
 import {
   CreateCustomInterviewDto,
@@ -28,15 +28,13 @@ import {
   Stack,
   Time,
 } from 'src/domain/value-objects/interview/custom-interview.vo';
-import { CompletQuestionDto } from 'src/application/dtos/question/custom-question.dto';
-import { CustomInterviews } from 'src/domain/entities/interview.entity';
+import { CompletQuestionDto } from 'src/application/dtos/question/question.dto';
 import {
   CreateUrlInterviewDto,
   FindUrlInterviewDto,
   UrlinterviewDto,
 } from 'src/application/dtos/interviews/url-interviews.dto';
 import {
-  CreateUrlInterviewInfo,
   UrlInterviewInfo,
   UrlValue,
 } from 'src/domain/value-objects/interview/url-interview.vo';
@@ -48,7 +46,8 @@ export class InterviewsController {
     private readonly interviewService: IInterviewService,
   ) {}
 
-  @ApiBearerAuth()
+  @ApiTags('Interview')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: '커스텀 인터뷰 생성 및 문제 생성',
@@ -72,7 +71,8 @@ export class InterviewsController {
     return createInterview;
   }
 
-  @ApiBearerAuth()
+  @ApiTags('Interview')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: '유저 커스텀 인터뷰 전체 찾기',
@@ -91,7 +91,8 @@ export class InterviewsController {
     return findUserCustomInterviews;
   }
 
-  @ApiBearerAuth()
+  @ApiTags('Interview')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: '유저 커스텀 인터뷰 개별 찾기(문제 포함)',
@@ -111,7 +112,8 @@ export class InterviewsController {
     return findUserCustomInterviews;
   }
 
-  @ApiBearerAuth()
+  @ApiTags('Interview')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: '커스텀 인터뷰 삭제',
@@ -129,7 +131,8 @@ export class InterviewsController {
     return deleteCustomInterview;
   }
 
-  @ApiBearerAuth()
+  @ApiTags('Interview')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: 'url 인터뷰 생성 및 문제 생성',
@@ -152,7 +155,8 @@ export class InterviewsController {
     return createUrlInterview;
   }
 
-  @ApiBearerAuth()
+  @ApiTags('Interview')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: '유저 URL 인터뷰 전체 찾기',
@@ -169,7 +173,8 @@ export class InterviewsController {
     return findUserCustomInterviews;
   }
 
-  @ApiBearerAuth()
+  @ApiTags('Interview')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: '유저 Url 인터뷰 개별 찾기(문제 포함)',
@@ -189,7 +194,8 @@ export class InterviewsController {
     return findUserUrlInterview;
   }
 
-  @ApiBearerAuth()
+  @ApiTags('Interview')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: 'Url 인터뷰 삭제',
@@ -205,111 +211,4 @@ export class InterviewsController {
     );
     return deleteUrlInterview;
   }
-
-  //   @ApiBearerAuth()
-  //   @UseGuards(JwtAuthGuard)
-  //   @ApiResponse({
-  //     description: '커스텀 인터뷰 사용자 면접 찾기',
-  //   })
-  //   @Get('/custom')
-  //   async findAll(@Req() req: Request): Promise<CreateCustomInterviewDto[]> {
-  //     const { kakaoId } = req.user as User;
-
-  //     const findAllInterview = await this.customInterviewsService.findAll(
-  //       kakaoId,
-  //     );
-  //     return findAllInterview;
-  //   }
-
-  //   @ApiBearerAuth()
-  //   @UseGuards(JwtAuthGuard)
-  //   @ApiResponse({
-  //     description: '커스텀 인터뷰에 포함되어있는 문제들 전체 보여주기',
-  //   })
-  //   @Get('/custom/:id')
-  //   async findAllQuestionsIncludedInTheInterview(
-  //     @Param('id') id: number,
-  //     @Req() req: Request,
-  //   ): Promise<Question[]> {
-  //     const { kakaoId } = req.user as User;
-  //     const findQuestionsIncludedInTheInterviewInfo: FindQuestionsIncludedInTheInterviewInfo =
-  //       {
-  //         interviewId: id,
-  //         userKakaoId: kakaoId,
-  //       };
-
-  //     const findQuestionsIncludedInTheInterview =
-  //       await this.questionService.QuestionsIncludedInTheInterview(
-  //         findQuestionsIncludedInTheInterviewInfo,
-  //       );
-
-  //     return findQuestionsIncludedInTheInterview;
-  //   }
-
-  //   @ApiBearerAuth()
-  //   @UseGuards(JwtAuthGuard)
-  //   @ApiResponse({
-  //     description: 'URL 분석 질문 10개 만들기 API',
-  //   })
-  //   @Post('/url')
-  //   async createUrlInterview(
-  //     @Body() careersInterviewDto: CareersInterviewDto,
-  //     @Req() req: Request,
-  //   ): Promise<any> {
-  //     const { kakaoId } = req.user as User;
-  //     if (!kakaoId) {
-  //       throw new HttpException('Kakao ID is missing', HttpStatus.BAD_REQUEST);
-  //     }
-
-  //     const jobDescription =
-  //       await this.careersInterviewsService.careersContentsRemoveSpace(
-  //         careersInterviewDto,
-  //         kakaoId,
-  //       );
-
-  //     const createQuestions = await this.gptChatService.createQuestionOfURL(
-  //       jobDescription,
-  //     );
-  //     return createQuestions;
-  //   }
-
-  //   @ApiBearerAuth()
-  //   @UseGuards(JwtAuthGuard)
-  //   @ApiResponse({
-  //     description: 'URL분석 인터뷰 사용자 면접 찾기',
-  //   })
-  //   @Get('/url')
-  //   async urlInterviewFindAll(@Req() req: Request): Promise<CareersInterviews[]> {
-  //     const { kakaoId } = req.user as User;
-
-  //     const findAllInterviews = await this.careersInterviewsService.findAll(
-  //       kakaoId,
-  //     );
-  //     return findAllInterviews;
-  //   }
-
-  //   @ApiBearerAuth()
-  //   @UseGuards(JwtAuthGuard)
-  //   @ApiResponse({
-  //     description: 'URL분석 인터뷰 에 포함되어있는 문제들 전체 보여주기',
-  //   })
-  //   @Get('/url/:id')
-  //   async findAllQuestionsIncludedInTheUrlInterview(
-  //     @Param('id') id: number,
-  //     @Req() req: Request,
-  //   ): Promise<CareersQuestion[]> {
-  //     const { kakaoId } = req.user as User;
-  //     const findQuestionsIncludedInTheInterviewInfo: FindQuestionsIncludedInTheInterviewInfo =
-  //       {
-  //         interviewId: id,
-  //         userKakaoId: kakaoId,
-  //       };
-
-  //     const findQuestionsIncludedInTheUrlInterview =
-  //       await this.careersQuestionService.QuestionsIncludedInTheInterview(
-  //         findQuestionsIncludedInTheInterviewInfo,
-  //       );
-
-  //     return findQuestionsIncludedInTheUrlInterview;
-  //   }
 }

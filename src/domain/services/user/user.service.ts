@@ -14,7 +14,6 @@ import {
   UserKakaoInfo,
   UserTokenData,
 } from 'src/domain/value-objects/user.vo';
-import { User } from 'src/domain/entities/user.entity';
 
 @Injectable()
 export class UserService {

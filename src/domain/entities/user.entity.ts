@@ -1,15 +1,5 @@
-import {
-  Column,
-  Entity,
-  OneToMany,
-  PrimaryColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import {
-  CustomInterviews,
-  InterviewBase,
-  UrlInterviews,
-} from './interview.entity';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { CustomInterviews, UrlInterviews } from './interview.entity';
 
 @Entity()
 export class User {

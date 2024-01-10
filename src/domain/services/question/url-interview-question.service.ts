@@ -1,11 +1,18 @@
 import { UrlContents } from './../../value-objects/interview/url-interview.vo';
 import { Inject, Injectable } from '@nestjs/common';
-import { CompletQuestionDto } from 'src/application/dtos/question/custom-question.dto';
+import { CompletQuestionDto } from 'src/application/dtos/question/question.dto';
 import { IOpenAIService } from 'src/domain/contracts/openAI.interface';
 import { UrlInterviewQuestionRepository } from 'src/domain/repositories/question/url-interview-question.repository';
+import { InterviewId } from 'src/domain/value-objects/interview/custom-interview.vo';
 import {
+  Answer,
+  Feedback,
+  FindOneInterviewQuestion,
+  FindQuestion,
   OpenAIQuestion,
   Question,
+  QuestionId,
+  SaveAnswerFeedbackInfo,
 } from 'src/domain/value-objects/question/custom-question.vo';
 import { SaveUrlQuestionInfo } from 'src/domain/value-objects/question/url-question.vo';
 import { EntityManager } from 'typeorm';
@@ -65,5 +72,32 @@ export class UrlInterviewQuestionService {
     );
 
     return sortCompletSaveQuestion;
+  }
+
+  async findOneQuestion(
+    findQuestion: FindQuestion,
+  ): Promise<FindOneInterviewQuestion> {
+    const findOneQuestion =
+      await this.urlInterviewQuestionRepository.findOneQuestion(findQuestion);
+
+    const findOneInterviewQuestion = new FindOneInterviewQuestion(
+      new QuestionId(findOneQuestion.id),
+      new Question(findOneQuestion.question),
+      new Answer(findOneQuestion.answer),
+      new Feedback(findOneQuestion.feedback),
+      new InterviewId(findOneQuestion.interview.id),
+    );
+
+    return findOneInterviewQuestion;
+  }
+
+  async saveUrlQuestionAnswerFeedback(
+    saveAnswerFeedbackInfo: SaveAnswerFeedbackInfo,
+  ): Promise<boolean> {
+    const saveQuestionFeedback =
+      await this.urlInterviewQuestionRepository.saveUrlQuestionAnswerFeedback(
+        saveAnswerFeedbackInfo,
+      );
+    return saveQuestionFeedback;
   }
 }

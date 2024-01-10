@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNumber, IsString } from 'class-validator';
-import { FindInterviewOfQuestionDto } from '../question/custom-question.dto';
+import { FindInterviewOfQuestionDto } from '../question/question.dto';
 
 export class CreateUrlInterviewDto {
   @IsString()
