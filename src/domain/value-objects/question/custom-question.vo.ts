@@ -157,7 +157,7 @@ export class FindInterviewOfQuestion {
   }
 }
 
-export class FindOneCustomInterviewQuestion extends FindInterviewOfQuestion {
+export class FindOneInterviewQuestion extends FindInterviewOfQuestion {
   constructor(
     questionId: QuestionId,
     question: Question,
@@ -209,25 +209,6 @@ export class SaveQuestionAnswer {
   }
 }
 
-export class CreateQuestionFeedback extends FindQuestion {
-  constructor(
-    questionId: QuestionId,
-    private readonly question: Question,
-    userKakaoId: UserKakaoId,
-    private readonly answer: Answer,
-  ) {
-    super(questionId, userKakaoId);
-  }
-
-  getQuestion() {
-    return this.question;
-  }
-
-  getAnswer() {
-    return this.answer;
-  }
-}
-
 export class CreateFeedbackInfo {
   constructor(
     private readonly question: Question,
@@ -243,9 +224,10 @@ export class CreateFeedbackInfo {
   }
 }
 
-export class SaveFeedbackInfo {
+export class SaveAnswerFeedbackInfo {
   constructor(
     private readonly questionId: QuestionId,
+    private readonly answer: Answer,
     private readonly feedback: Feedback,
   ) {}
 
@@ -255,5 +237,9 @@ export class SaveFeedbackInfo {
 
   getFeedback() {
     return this.feedback;
+  }
+
+  getAnswer() {
+    return this.answer;
   }
 }

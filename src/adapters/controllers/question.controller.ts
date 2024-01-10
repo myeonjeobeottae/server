@@ -1,14 +1,16 @@
 import {
   Answer,
-  CreateQuestionFeedback,
+  CreateFeedbackInfo,
   Feedback,
+  FindQuestion,
   Question,
   QuestionId,
-  SaveFeedbackInfo,
+  SaveAnswerFeedbackInfo,
 } from '../../domain/value-objects/question/custom-question.vo';
 import {
   Body,
   Controller,
+  Get,
   Inject,
   Param,
   Patch,
@@ -21,7 +23,8 @@ import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import {
   CreateFeedbackDto,
-  SaveFeedbackDto,
+  FindOneQuestionDto,
+  SaveAnswerFeedbackDto,
 } from 'src/application/dtos/question/custom-question.dto';
 import { IQuestionService } from 'src/application/services/question/question.interface';
 import { JwtAuthGuard } from 'src/common/jwt/jwt-auth.guard';
@@ -38,29 +41,24 @@ export class QuestionController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
-    description: '사용자 커스텀 문제 피드백',
+    description: ' 문제 피드백',
   })
-  @Post('/create/feedback/:id')
+  @Post('/create/feedback')
   async creatQuestionFeedback(
-    @Param('id') id: number,
     @Body() creatAnswer: CreateFeedbackDto,
-    @Req() req: Request,
     @Res() res: Response,
   ): Promise<any> {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
 
-    const { kakaoId } = req.user as User;
-    const createQuestionFeedback = new CreateQuestionFeedback(
-      new QuestionId(id),
-      new Question(creatAnswer.question),
-      new UserKakaoId(kakaoId),
-      new Answer(creatAnswer.answer),
-    );
-
     const creatQuestionFeedback =
-      await this.questionService.creatQuestionFeedback(createQuestionFeedback);
+      await this.questionService.creatQuestionFeedback(
+        new CreateFeedbackInfo(
+          new Question(creatAnswer.question),
+          new Answer(creatAnswer.answer),
+        ),
+      );
 
     for await (const chunk of creatQuestionFeedback) {
       if (chunk.choices[0].finish_reason === 'stop') {
@@ -76,66 +74,82 @@ export class QuestionController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
+    description: '사용자 커스텀 문제 하나 찾기',
+  })
+  @Get('/custom/:id')
+  async findOneCustomInterviewQuestion(
+    @Param('id') id: number,
+    @Req() req: Request,
+  ): Promise<FindOneQuestionDto> {
+    const { kakaoId } = req.user as User;
+
+    const findOneCustomInterviewQuestion =
+      this.questionService.findOneCustomInterviewQuestion(
+        new FindQuestion(new QuestionId(id), new UserKakaoId(kakaoId)),
+      );
+    return findOneCustomInterviewQuestion;
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: '사용자 url 문제 하나 찾기',
+  })
+  @Get('/url/:id')
+  async findOneUrlInterviewQuestion(
+    @Param('id') id: number,
+    @Req() req: Request,
+  ): Promise<FindOneQuestionDto> {
+    const { kakaoId } = req.user as User;
+
+    const findOneUrlInterviewQuestion =
+      this.questionService.findOneUrlInterviewQuestion(
+        new FindQuestion(new QuestionId(id), new UserKakaoId(kakaoId)),
+      );
+    return findOneUrlInterviewQuestion;
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
     description: '사용자 커스텀 문제 피드백 저장',
   })
-  @Patch('/save/feedback/:id')
-  async saveFeedback(
+  @Patch('/cutom/save/:id')
+  async saveCustomQuestionAnswerFeedback(
     @Param('id') id: number,
-    @Body() saveFeedbackInfo: SaveFeedbackDto,
+    @Body() saveAnswerFeedbackDto: SaveAnswerFeedbackDto,
   ): Promise<boolean> {
-    const saveFeedback = await this.questionService.saveQuestionFeedback(
-      new SaveFeedbackInfo(
-        new QuestionId(id),
-        new Feedback(saveFeedbackInfo.feedback),
-      ),
-    );
+    const saveFeedback =
+      await this.questionService.saveCustomQuestionAnswerFeedback(
+        new SaveAnswerFeedbackInfo(
+          new QuestionId(id),
+          new Answer(saveAnswerFeedbackDto.answer),
+          new Feedback(saveAnswerFeedbackDto.feedback),
+        ),
+      );
 
     return saveFeedback;
   }
-  //   @ApiBearerAuth()
-  //   @UseGuards(JwtAuthGuard)
-  //   @ApiResponse({
-  //     description: '사용자 인터뷰 저장',
-  //   })
-  //   @Post()
-  //   async saveQuestion(
-  //     @Body() saveQuestionDto: SaveQuestionDto,
-  //     @Req() req: Request,
-  //   ): Promise<SaveQuestionDto> {
-  //     const { kakaoId } = req.user as User;
 
-  //     const saveQuestionInfo: SaveQuestionInfo = {
-  //       ...saveQuestionDto,
-  //       userKakaoId: kakaoId,
-  //     };
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: '사용자 url 문제 피드백 저장',
+  })
+  @Patch('/url/save/:id')
+  async saveUrlQuestionAnswerFeedback(
+    @Param('id') id: number,
+    @Body() saveAnswerFeedbackDto: SaveAnswerFeedbackDto,
+  ): Promise<boolean> {
+    const saveFeedback =
+      await this.questionService.saveUrlQuestionAnswerFeedback(
+        new SaveAnswerFeedbackInfo(
+          new QuestionId(id),
+          new Answer(saveAnswerFeedbackDto.answer),
+          new Feedback(saveAnswerFeedbackDto.feedback),
+        ),
+      );
 
-  //     const saveQuestion = await this.questionService.saveQuestion(
-  //       saveQuestionInfo,
-  //     );
-
-  //     return saveQuestion;
-  //   }
-
-  //   @ApiBearerAuth()
-  //   @UseGuards(JwtAuthGuard)
-  //   @ApiResponse({
-  //     description: '문제 하나 보기',
-  //   })
-  //   @Get(':id')
-  //   async findOneQuestion(
-  //     @Param('id') id: number,
-  //     @Req() req: Request,
-  //   ): Promise<Question> {
-  //     const { kakaoId } = req.user as User;
-  //     const findOneQuestionInfo: FindOneQuestionInfo = {
-  //       questionId: id,
-  //       userKakaoId: kakaoId,
-  //     };
-
-  //     const findOneQuestion = await this.questionService.findOneQuestion(
-  //       findOneQuestionInfo,
-  //     );
-
-  //     return findOneQuestion;
-  //   }
+    return saveFeedback;
+  }
 }

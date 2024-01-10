@@ -1,7 +1,7 @@
 import {
-  FindOneCustomInterviewQuestion,
+  FindOneInterviewQuestion,
   OpenAIQuestion,
-  SaveFeedbackInfo,
+  SaveAnswerFeedbackInfo,
   SaveQuestionAnswer,
 } from '../../value-objects/question/custom-question.vo';
 import { CustomInterviewQuestionRepository } from 'src/domain/repositories/question/custom-interview-question.repository';
@@ -13,7 +13,6 @@ import {
   Answer,
   CreateCustomInterviewQuestionInfo,
   CreateFeedbackInfo,
-  CreateQuestionFeedback,
   Feedback,
   FindQuestion,
   Question,
@@ -86,13 +85,13 @@ export class CustomInterviewQuestionService {
 
   async findOneQuestion(
     findQuestion: FindQuestion,
-  ): Promise<FindOneCustomInterviewQuestion> {
+  ): Promise<FindOneInterviewQuestion> {
     const findOneQuestion =
       await this.customInterviewQuestionRepository.findOneQuestion(
         findQuestion,
       );
 
-    const FindOneInterviewQuestion = new FindOneCustomInterviewQuestion(
+    const findOneInterviewQuestion = new FindOneInterviewQuestion(
       new QuestionId(findOneQuestion.id),
       new Question(findOneQuestion.question),
       new Answer(findOneQuestion.answer),
@@ -100,43 +99,43 @@ export class CustomInterviewQuestionService {
       new InterviewId(findOneQuestion.interview.id),
     );
 
-    return FindOneInterviewQuestion;
+    return findOneInterviewQuestion;
   }
 
-  async creatQuestionFeedback(
-    createQuestionFeedback: CreateQuestionFeedback,
-  ): Promise<string> {
-    const findQuestion = await this.findOneQuestion(
-      new FindQuestion(
-        createQuestionFeedback.getQuestionId(),
-        createQuestionFeedback.getUserKakaoId(),
-      ),
-    );
+  // async creatQuestionFeedback(
+  //   createQuestionFeedback: CreateQuestionFeedback,
+  // ): Promise<string> {
+  //   const findQuestion = await this.findOneQuestion(
+  //     new FindQuestion(
+  //       createQuestionFeedback.getQuestionId(),
+  //       createQuestionFeedback.getUserKakaoId(),
+  //     ),
+  //   );
 
-    const questionEquals = findQuestion
-      .getQuestion()
-      .equals(createQuestionFeedback.getQuestion());
+  //   const questionEquals = findQuestion
+  //     .getQuestion()
+  //     .equals(createQuestionFeedback.getQuestion());
 
-    if (questionEquals === false) {
-      throw new Error('문제가 일치 하지 않습니다.');
-    }
+  //   if (questionEquals === false) {
+  //     throw new Error('문제가 일치 하지 않습니다.');
+  //   }
 
-    await this.saveQuestionAnswer(
-      new SaveQuestionAnswer(
-        findQuestion.getQuestionId(),
-        createQuestionFeedback.getAnswer(),
-      ),
-    );
+  //   await this.saveQuestionAnswer(
+  //     new SaveQuestionAnswer(
+  //       findQuestion.getQuestionId(),
+  //       createQuestionFeedback.getAnswer(),
+  //     ),
+  //   );
 
-    const createFeedback = await this.openAIService.createQuestionFeedback(
-      new CreateFeedbackInfo(
-        createQuestionFeedback.getQuestion(),
-        createQuestionFeedback.getAnswer(),
-      ),
-    );
+  //   const createFeedback = await this.openAIService.createQuestionFeedback(
+  //     new CreateFeedbackInfo(
+  //       createQuestionFeedback.getQuestion(),
+  //       createQuestionFeedback.getAnswer(),
+  //     ),
+  //   );
 
-    return createFeedback;
-  }
+  //   return createFeedback;
+  // }
 
   async saveQuestionAnswer(
     saveQuestionAnswerInfo: SaveQuestionAnswer,
@@ -146,12 +145,12 @@ export class CustomInterviewQuestionService {
     );
   }
 
-  async saveQuestionFeedback(
-    saveFeedbackInfo: SaveFeedbackInfo,
+  async saveCustomQuestionAnswerFeedback(
+    saveAnswerFeedbackInfo: SaveAnswerFeedbackInfo,
   ): Promise<boolean> {
     const saveQuestionFeedback =
-      await this.customInterviewQuestionRepository.saveQuestionFeedback(
-        saveFeedbackInfo,
+      await this.customInterviewQuestionRepository.saveCustomQuestionAnswerFeedback(
+        saveAnswerFeedbackInfo,
       );
     return saveQuestionFeedback;
   }
