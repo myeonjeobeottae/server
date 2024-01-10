@@ -19,13 +19,13 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import {
   CreateFeedbackDto,
   FindOneQuestionDto,
   SaveAnswerFeedbackDto,
-} from 'src/application/dtos/question/custom-question.dto';
+} from 'src/application/dtos/question/question.dto';
 import { IQuestionService } from 'src/application/services/question/question.interface';
 import { JwtAuthGuard } from 'src/common/jwt/jwt-auth.guard';
 import { User } from 'src/domain/interface/auth.interface';
@@ -38,7 +38,8 @@ export class QuestionController {
     private readonly questionService: IQuestionService,
   ) {}
 
-  @ApiBearerAuth()
+  @ApiTags('Question')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: ' 문제 피드백',
@@ -71,7 +72,8 @@ export class QuestionController {
     }
   }
 
-  @ApiBearerAuth()
+  @ApiTags('Question')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: '사용자 커스텀 문제 하나 찾기',
@@ -90,7 +92,8 @@ export class QuestionController {
     return findOneCustomInterviewQuestion;
   }
 
-  @ApiBearerAuth()
+  @ApiTags('Question')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: '사용자 url 문제 하나 찾기',
@@ -109,7 +112,8 @@ export class QuestionController {
     return findOneUrlInterviewQuestion;
   }
 
-  @ApiBearerAuth()
+  @ApiTags('Question')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: '사용자 커스텀 문제 피드백 저장',
@@ -131,7 +135,8 @@ export class QuestionController {
     return saveFeedback;
   }
 
-  @ApiBearerAuth()
+  @ApiTags('Question')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     description: '사용자 url 문제 피드백 저장',

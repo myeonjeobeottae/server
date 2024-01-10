@@ -1,8 +1,5 @@
 import { CustomInterviewRepositoryImpl } from '../infrastructure/repositories/interview/custom-interview.repository.impl';
 import { Module } from '@nestjs/common';
-import { UserProvider } from 'src/infrastructure/database/user.repository.provider';
-import { UserRepositoryImpl } from 'src/infrastructure/repositories/user/user.repository.impl';
-import { UserAuthenticationService } from 'src/application/services/user/userAuthentication.service';
 import { DatabaseModule } from './database.module';
 import { JwtModule } from './jwt.module';
 import {

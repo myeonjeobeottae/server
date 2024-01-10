@@ -1,6 +1,6 @@
 import { UrlContents } from './../../value-objects/interview/url-interview.vo';
 import { Inject, Injectable } from '@nestjs/common';
-import { CompletQuestionDto } from 'src/application/dtos/question/custom-question.dto';
+import { CompletQuestionDto } from 'src/application/dtos/question/question.dto';
 import { IOpenAIService } from 'src/domain/contracts/openAI.interface';
 import { UrlInterviewQuestionRepository } from 'src/domain/repositories/question/url-interview-question.repository';
 import { InterviewId } from 'src/domain/value-objects/interview/custom-interview.vo';

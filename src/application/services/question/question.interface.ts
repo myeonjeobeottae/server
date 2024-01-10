@@ -1,4 +1,4 @@
-import { FindOneQuestionDto } from 'src/application/dtos/question/custom-question.dto';
+import { FindOneQuestionDto } from 'src/application/dtos/question/question.dto';
 import {
   CreateFeedbackInfo,
   FindQuestion,

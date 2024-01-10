@@ -7,7 +7,7 @@ import {
 import { CustomInterviewQuestionRepository } from 'src/domain/repositories/question/custom-interview-question.repository';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { CompletQuestionDto } from 'src/application/dtos/question/custom-question.dto';
+import { CompletQuestionDto } from 'src/application/dtos/question/question.dto';
 import { EntityManager } from 'typeorm';
 import {
   Answer,
@@ -100,49 +100,6 @@ export class CustomInterviewQuestionService {
     );
 
     return findOneInterviewQuestion;
-  }
-
-  // async creatQuestionFeedback(
-  //   createQuestionFeedback: CreateQuestionFeedback,
-  // ): Promise<string> {
-  //   const findQuestion = await this.findOneQuestion(
-  //     new FindQuestion(
-  //       createQuestionFeedback.getQuestionId(),
-  //       createQuestionFeedback.getUserKakaoId(),
-  //     ),
-  //   );
-
-  //   const questionEquals = findQuestion
-  //     .getQuestion()
-  //     .equals(createQuestionFeedback.getQuestion());
-
-  //   if (questionEquals === false) {
-  //     throw new Error('문제가 일치 하지 않습니다.');
-  //   }
-
-  //   await this.saveQuestionAnswer(
-  //     new SaveQuestionAnswer(
-  //       findQuestion.getQuestionId(),
-  //       createQuestionFeedback.getAnswer(),
-  //     ),
-  //   );
-
-  //   const createFeedback = await this.openAIService.createQuestionFeedback(
-  //     new CreateFeedbackInfo(
-  //       createQuestionFeedback.getQuestion(),
-  //       createQuestionFeedback.getAnswer(),
-  //     ),
-  //   );
-
-  //   return createFeedback;
-  // }
-
-  async saveQuestionAnswer(
-    saveQuestionAnswerInfo: SaveQuestionAnswer,
-  ): Promise<boolean> {
-    return this.customInterviewQuestionRepository.saveQuestionAnswer(
-      saveQuestionAnswerInfo,
-    );
   }
 
   async saveCustomQuestionAnswerFeedback(

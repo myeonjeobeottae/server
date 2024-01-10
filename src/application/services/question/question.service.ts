@@ -8,7 +8,7 @@ import { CustomInterviewQuestionService } from 'src/domain/services/question/cus
 import { IQuestionService } from './question.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { IOpenAIService } from 'src/domain/contracts/openAI.interface';
-import { FindOneQuestionDto } from 'src/application/dtos/question/custom-question.dto';
+import { FindOneQuestionDto } from 'src/application/dtos/question/question.dto';
 
 @Injectable()
 export class QuestionService implements IQuestionService {

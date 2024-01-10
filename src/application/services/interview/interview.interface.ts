@@ -3,7 +3,7 @@ import {
   FindCustomInterviewDto,
 } from 'src/application/dtos/interviews/custom-interviews.dto';
 import { UrlinterviewDto } from 'src/application/dtos/interviews/url-interviews.dto';
-import { CompletQuestionDto } from 'src/application/dtos/question/custom-question.dto';
+import { CompletQuestionDto } from 'src/application/dtos/question/question.dto';
 import {
   CustomInterviewInfo,
   FindOneInterview,
