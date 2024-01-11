@@ -61,7 +61,6 @@ export class UserAuthenticationController {
   }
 
   @ApiTags('Authentication')
-  @ApiBearerAuth('access-token')
   @ApiResponse({
     description: 'refresh token으로 토큰 재 발급',
   })
@@ -69,11 +68,9 @@ export class UserAuthenticationController {
   async renewToken(@Req() req: Request): Promise<UserTokenDataDto> {
     const refreshToken = req.cookies['refresh_token'];
     if (!refreshToken) {
-      throw new HttpException(
-        'refresh token이 없습니다.',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('refresh token이 없습니다.', 403);
     }
+
     const renewToken = await this.userAuthenticationService.renewToken(
       refreshToken,
     );
