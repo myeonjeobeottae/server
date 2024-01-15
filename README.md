@@ -1,73 +1,61 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## 면접어때 프로젝트 소개 
+‘면접어때’는 개발자를 위한 면접 준비 플랫폼입니다. 이 서비스는 OpenAI API를 활용하여 사용자가 선택한 포지션과 스킬 또는 원티드 채용 공고 URL을 기반으로 적합한 면접 질문을 10개 생성합니다.
+사용자가 질문에 답변하면 ‘면접어때’는 피드백을 제공하여 면접 스킬을 향상 시키는데 도움을 줍니다.
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 개발 기간 
+   
+- 2023.08.01 ~진행중 (FE2,BE1)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 🛠 개발 환경 
+- Node.js
+- TypeScript
+- Framework : Nest.js
+- Database : MySQL
+- Docker
+- Github Actions
 
-## Installation
 
-```bash
+
+## 설치 및 실행방법
+1.설치 방법
+```
+$ git clone https://github.com/myeonjeobeottae/server.git
+$ cd mjproject 
 $ yarn install
 ```
 
-## Running the app
+2.환경변수 설정
+```
+ cat .env.dev
 
-```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+NODE_ENV=development
+PORT=3000
+HOST=localhost
+DATABASE_HOST=<YOUR MYSQL_HOST>
+DATABASE_USER=<YOUR MYSQL>
+DATABASE_NAME=<YOUR MYSQL>
+DATABASE_PASSWORD=<YOUR MYSQL_PASSWORD>
+DATABASE_PORT=<YOUR MYSQL_PORT>
+DATABASE_TYPE=mysql
+OPENAI_API_KEY=<YOUR OPENAI_API_KEY>
+KAKAO_CLIENT_ID=<YOUR kakao Client ID>
+KAKAO_REDIRECTURL=<YOUR Redirect URL>
+JWT_SECRET_KEY=<YOUR JWT SECRET KEY>
 ```
 
-## Test
+3.실행 방법
+```
+yarn start
 
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+docker-compose -f docker-compose-dev.yml up -d --build 
 ```
 
-## Support
+## ERD
+![스크린샷 2024-01-15 오후 4 48 07](https://github.com/myeonjeobeottae/server/assets/105371325/0344020e-b4ba-460d-8db7-a021b462e986)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+## Swagger API 명세 
+http://localhost:3000/api <br>
+https://interviewee.store/api
