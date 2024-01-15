@@ -68,13 +68,6 @@ export class OpenAIService implements IOpenAIService {
     return question;
   }
 
-  //   async createQuestions(createQuestionsDto: CreateQuestionsDto): Promise<any> {
-  //     const { firstQuestion, position, stack } = createQuestionsDto;
-  //     const content = `${position} ${stack}면접 질문 다시 9개 만들어주는데 ${firstQuestion}. 를 제외한 질문 만들어줘  `;
-  //     const complet = await this.openAICreateQuestion(content);
-  //     return complet;
-  //   }
-
   async createQuestionFeedback(
     createFeedbackInfo: CreateFeedbackInfo,
   ): Promise<string> {

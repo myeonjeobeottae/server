@@ -26,8 +26,11 @@ export class UserAuthenticationService implements IUserAuthenticationService {
     return kakaoUrl;
   }
 
-  async kakaoSignUp(code: string): Promise<UserTokenData> {
-    const kakaoTokenInfo = await this.kakaoOauthService.getKakaoTokenInfo(code);
+  async kakaoSignUp(code: string, clientUrl: string): Promise<UserTokenData> {
+    const kakaoTokenInfo = await this.kakaoOauthService.getKakaoTokenInfo(
+      code,
+      clientUrl,
+    );
 
     const accessToken = new AccessToken(kakaoTokenInfo.access_token).getValue();
     const refreshToken = new RefreshToken(kakaoTokenInfo.refresh_token);

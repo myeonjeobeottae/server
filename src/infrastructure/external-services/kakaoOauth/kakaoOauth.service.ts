@@ -26,7 +26,15 @@ export class KakaoOauthService implements IKakaoOauthService {
     return kakaoUrl;
   }
 
-  public async getKakaoTokenInfo(code: string): Promise<any> {
+  public async getKakaoTokenInfo(
+    code: string,
+    clientUrl: string,
+  ): Promise<any> {
+    const redirectUrl =
+      clientUrl === 'http://localhost:3001' || !clientUrl
+        ? this.kakaoOauthConfig.kakaoRedirectUrlLocal
+        : this.kakaoOauthConfig.kakaoRedirectUrl;
+
     const kakaoTokenInfo = await this.httpService.axiosRef.post(
       `https://kauth.kakao.com/oauth/token`,
       {
@@ -38,7 +46,7 @@ export class KakaoOauthService implements IKakaoOauthService {
         params: {
           grant_type: 'authorization_code',
           client_id: this.kakaoOauthConfig.kakaoClientId,
-          redirect_uri: this.kakaoOauthConfig.kakaoRedirectUrlLocal,
+          redirect_uri: redirectUrl,
           code,
         },
       },

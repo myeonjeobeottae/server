@@ -8,6 +8,7 @@ import {
   UseGuards,
   HttpException,
   HttpStatus,
+  Redirect,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
@@ -28,11 +29,10 @@ export class UserAuthenticationController {
 
   @ApiTags('Authentication')
   @Get('/login')
-  async kakaoLogin(@Res() res: Response, @Req() req: Request) {
-    console.log(req.headers.origin, 'dddd');
-
+  @Redirect()
+  async kakaoLogin() {
     const kakaoUrl = await this.userAuthenticationService.kakaoLogin();
-    res.redirect(kakaoUrl);
+    return { url: kakaoUrl };
   }
 
   @ApiTags('Authentication')
@@ -40,9 +40,13 @@ export class UserAuthenticationController {
   async kakaoOauthCallback(
     @Query('code') code: string,
     @Res() res: Response,
+    @Req() req: Request,
   ): Promise<void> {
+    const clientUrl = req.headers.origin;
+
     const userTokenData = await this.userAuthenticationService.kakaoSignUp(
       code,
+      clientUrl,
     );
 
     res.cookie('refresh_token', userTokenData.getRefreshToken().getValue(), {
@@ -65,10 +69,15 @@ export class UserAuthenticationController {
     description: 'refresh token으로 토큰 재 발급',
   })
   @Get('/renew/token')
-  async renewToken(@Req() req: Request): Promise<UserTokenDataDto> {
+  async renewToken(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<UserTokenDataDto | void> {
     const refreshToken = req.cookies['refresh_token'];
+    const redirectUrl = req.headers.origin;
     if (!refreshToken) {
-      throw new HttpException('refresh token이 없습니다.', 403);
+      res.redirect(`${redirectUrl}/login`);
+      return;
     }
 
     const renewToken = await this.userAuthenticationService.renewToken(
