@@ -69,15 +69,10 @@ export class UserAuthenticationController {
     description: 'refresh token으로 토큰 재 발급',
   })
   @Get('/renew/token')
-  async renewToken(
-    @Req() req: Request,
-    @Res() res: Response,
-  ): Promise<UserTokenDataDto | void> {
+  async renewToken(@Req() req: Request): Promise<UserTokenDataDto | void> {
     const refreshToken = req.cookies['refresh_token'];
-    const redirectUrl = req.headers.origin;
     if (!refreshToken) {
-      res.redirect(`${redirectUrl}/login`);
-      return;
+      throw new HttpException('refresh token이 없습니다.', 403);
     }
 
     const renewToken = await this.userAuthenticationService.renewToken(
