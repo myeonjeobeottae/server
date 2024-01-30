@@ -48,15 +48,14 @@ export class InterviewsService implements IInterviewService {
     @Inject('DATA_SOURCE')
     private dataSource: DataSource,
   ) {}
-
+  //CompletQuestionDto[]
   async createCustomInterview(
     customInterviewInfo: CustomInterviewInfo,
-  ): Promise<CompletQuestionDto[]> {
+  ): Promise<any> {
     return await this.dataSource.transaction(async (entityManager) => {
       const findUser = await this.userService.findUser(
         customInterviewInfo.getUserKakaoId(),
       );
-
       const saveInterview =
         await this.customInterviewsService.createCustomInterview(
           new CreateCustomInterviewInfo(

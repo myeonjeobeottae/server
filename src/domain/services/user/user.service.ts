@@ -25,7 +25,7 @@ export class UserService {
 
   private generateJWT(payload: JwtPayloadType) {
     return this.jwtService.sign(payload, {
-      expiresIn: '1h',
+      expiresIn: '1m',
     });
   }
 
