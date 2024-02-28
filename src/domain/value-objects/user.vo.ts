@@ -26,9 +26,9 @@ export class Nickname {
 
 export class Image {
   constructor(private readonly value: string) {
-    if (value === '' || !isValidImageUrl(value)) {
-      throw new Error('이미지가 없습니다.');
-    }
+    // if (!isValidImageUrl(value)) {
+    //   throw new Error('이미지가 없습니다.');
+    // }
   }
 
   getValue() {
