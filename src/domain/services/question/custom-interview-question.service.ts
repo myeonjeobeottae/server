@@ -33,13 +33,22 @@ export class CustomInterviewQuestionService {
 
   async createQuestion(
     createCustomInterviewQuestionInfo: CreateCustomInterviewQuestionInfo,
-  ): Promise<Question> {
+    entityManager?: EntityManager,
+  ): Promise<CompletQuestionDto[]> {
     const createQuestion =
       await this.openAIService.createCustomInterviewQuestion(
         createCustomInterviewQuestionInfo,
       );
 
-    return createQuestion;
+    const saveQuestion = this.saveQuestion(
+      new SaveQuestionInfo(
+        createQuestion,
+        createCustomInterviewQuestionInfo.getCustomInterviewInstance(),
+      ),
+      entityManager,
+    );
+
+    return saveQuestion;
   }
 
   async saveQuestion(
