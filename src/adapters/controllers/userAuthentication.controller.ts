@@ -100,4 +100,14 @@ export class UserAuthenticationController {
     const findUser = this.userAuthenticationService.findUser(kakaoId);
     return findUser;
   }
+
+  @Get('/logout')
+  async logout(@Req() req: Request, @Res() res: Response): Promise<any> {
+    res.clearCookie('refresh_token', {
+      sameSite: 'none',
+      secure: true,
+    });
+
+    return res.send('logout');
+  }
 }
