@@ -108,6 +108,6 @@ export class UserAuthenticationController {
       secure: true,
     });
 
-    return res.send('logout');
+    return res.send();
   }
 }
